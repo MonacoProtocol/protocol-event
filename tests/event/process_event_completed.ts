@@ -14,7 +14,7 @@ describe("Process Event", () => {
 
     it("Update Event Status - Event Completed", async () => {
 
-        const eventProgram = anchor.workspace.Event;
+        const eventProgram = anchor.workspace.Externalevent;
 
         // keypair for new Events` state account
         const eventAccount = anchor.web3.Keypair.generate();
@@ -28,14 +28,14 @@ describe("Process Event", () => {
             awayScore,
             {
                 accounts: {
-                    event: eventAccount.publicKey,
+                    externalEvent: eventAccount.publicKey,
                     authority: provider.wallet.publicKey,
                     systemProgram: SystemProgram.programId,
                 }
             }
         )
 
-        let updatedAccount = await eventProgram.account.event.fetch(
+        let updatedAccount = await eventProgram.account.externalEvent.fetch(
           eventAccount.publicKey
         );
 

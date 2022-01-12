@@ -10,13 +10,13 @@ describe("Create Event", () => {
     anchor.setProvider(provider);
 
     it("Create Event - Success", async () => {
-        const eventProgram = anchor.workspace.Event;
+        const eventProgram = anchor.workspace.Externalevent;
 
         // keypair for new Event state account
         const eventAccount = anchor.web3.Keypair.generate();
         let {eventName, eventStartTS} = await createEventAccount(eventAccount, eventProgram, provider);
 
-        let createdAccount = await eventProgram.account.event.fetch(
+        let createdAccount = await eventProgram.account.externalEvent.fetch(
           eventAccount.publicKey
         );
 

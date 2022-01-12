@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 use solana_program::clock::UnixTimestamp;
 
 pub fn process_event_started(ctx: Context<ProcessEventStarted>) -> ProgramResult {
-    let event = &mut ctx.accounts.event;
+    let event = &mut ctx.accounts.external_event;
 
     event.score_home = 0;
     event.score_away = 0;
@@ -20,7 +20,7 @@ pub fn process_event_completed(
     score_home: u16,
     score_away: u16,
 ) -> ProgramResult {
-    let event = &mut ctx.accounts.event;
+    let event = &mut ctx.accounts.external_event;
 
     event.score_home = score_home;
     event.score_away = score_away;

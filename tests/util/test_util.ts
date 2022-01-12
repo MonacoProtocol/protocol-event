@@ -25,7 +25,7 @@ export async function createEventAccount(eventAccount: Keypair, eventProgram, pr
         awayTeamName,
         {
             accounts: {
-                event: eventAccount.publicKey,
+                externalEvent: eventAccount.publicKey,
                 authority: provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             },

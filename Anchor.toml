@@ -1,5 +1,5 @@
 [programs.localnet]
-event = "BSCXoMoxyjS7qgCASMCDbKiq8wsa6n59HLNWWpi1Eykk"
+externalevent = "9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1"
 
 [registry]
 url = "https://anchor.projectserum.com"

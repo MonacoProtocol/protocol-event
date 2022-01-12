@@ -5,14 +5,14 @@ use anchor_lang::solana_program::system_program;
 
 use std::mem::size_of;
 
-use crate::event_account::Event;
+use crate::event_account::ExternalEvent;
 
 pub mod instructions;
 
-declare_id!("BSCXoMoxyjS7qgCASMCDbKiq8wsa6n59HLNWWpi1Eykk");
+declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
 
 #[program]
-pub mod event {
+pub mod externalevent {
     use super::*;
 
     pub fn create_event(
@@ -22,20 +22,20 @@ pub mod event {
         team_name_home: String,
         team_name_away: String,
     ) -> ProgramResult {
-        msg!("Creating event...");
+        msg!("Creating external event...");
 
         instructions::create(ctx, name, start_timestamp, team_name_home, team_name_away)?;
 
-        msg!("Created event.");
+        msg!("Created external event.");
         Ok(())
     }
 
     pub fn process_event_started(ctx: Context<ProcessEventStarted>) -> ProgramResult {
-        msg!("Processing external event...");
+        msg!("Processing external start event...");
 
         instructions::process_event_started(ctx)?;
 
-        msg!("Processed external event.");
+        msg!("Processed external start event.");
         Ok(())
     }
 
@@ -44,19 +44,19 @@ pub mod event {
         score_home: u16,
         score_away: u16,
     ) -> ProgramResult {
-        msg!("Processing external event end...");
+        msg!("Processing external end event...");
 
         instructions::process_event_completed(ctx, score_home, score_away)?;
 
-        msg!("Processed external event end.");
+        msg!("Processed external end event.");
         Ok(())
     }
 }
 
 #[derive(Accounts)]
 pub struct CreateEvent<'info> {
-    #[account(init, payer = authority, space = 8 + size_of::< Event > ())]
-    pub event: Account<'info, Event>,
+    #[account(init, payer = authority, space = 8 + size_of::< ExternalEvent > ())]
+    pub external_event: Account<'info, ExternalEvent>,
     #[account(mut)]
     pub authority: Signer<'info>,
     #[account(address = system_program::ID)]
@@ -66,13 +66,13 @@ pub struct CreateEvent<'info> {
 #[derive(Accounts)]
 pub struct ProcessEventStarted<'info> {
     #[account(mut, has_one = authority)]
-    pub event: Account<'info, Event>,
+    pub external_event: Account<'info, ExternalEvent>,
     pub authority: Signer<'info>,
 }
 
 #[derive(Accounts)]
 pub struct ProcessEventEnd<'info> {
     #[account(mut, has_one = authority)]
-    pub event: Account<'info, Event>,
+    pub external_event: Account<'info, ExternalEvent>,
     pub authority: Signer<'info>,
 }

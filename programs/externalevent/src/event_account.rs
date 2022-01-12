@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[account]
 #[derive(Default)]
-pub struct Event {
+pub struct ExternalEvent {
     pub authority: Pubkey,
     pub name: String,
     pub start_expected_timestamp: i64,
