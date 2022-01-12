@@ -1,0 +1,12 @@
+[programs.localnet]
+event = "BSCXoMoxyjS7qgCASMCDbKiq8wsa6n59HLNWWpi1Eykk"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

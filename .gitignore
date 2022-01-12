@@ -1,0 +1,14 @@
+.idea
+.anchor
+.DS_Store
+.vs
+*.iml
+target
+**/*.rs.bk
+node_modules
+tmp
+test_log
+build_log
+
+test-ledger/
+
