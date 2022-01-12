@@ -16,8 +16,6 @@ describe("Create Event", () => {
         const eventAccount = anchor.web3.Keypair.generate();
         let {eventName, eventStartTS} = await createEventAccount(eventAccount, eventProgram, provider);
 
-console.log(eventProgram.account.externalevent);
-
         let createdAccount = await eventProgram.account.event.fetch(
           eventAccount.publicKey
         );
