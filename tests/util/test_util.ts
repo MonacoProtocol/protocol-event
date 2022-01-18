@@ -11,15 +11,21 @@ export async function generateMarketPoolPda(marketAccount: PublicKey, program: P
     return pda;
 }
 
-export async function createEventAccount(eventAccount: Keypair, eventProgram, provider: Provider) {
+export async function createEventAccount(
+        eventName,
+        eventReference: String,
+        eventAccount: Keypair,
+        eventProgram,
+        provider: Provider
+    ) {
 
-    let eventName = "TEST EVENT NAME";
     let eventStartTS = new anchor.BN(1924200000);
     let homeTeamName = "Home Team";
     let awayTeamName = "Away Team";
 
-    await eventProgram.rpc.createEvent(
+    await eventProgram.rpc.createExternalEvent(
         eventName,
+        eventReference,
         eventStartTS,
         homeTeamName,
         awayTeamName,
