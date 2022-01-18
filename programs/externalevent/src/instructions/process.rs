@@ -62,6 +62,10 @@ fn convert_to_event_period(event_period_string: String) -> EventPeriod {
         return EventPeriod::FirstHalf;
     }
 
+    if event_period_string == "HALFTIME" {
+        return EventPeriod::HalfTime;
+    }
+
     if event_period_string == "SECONDHALF" {
         return EventPeriod::SecondHalf;
     }

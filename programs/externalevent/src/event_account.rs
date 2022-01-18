@@ -58,6 +58,7 @@ pub enum EventPeriod {
     Unknown,
     PreEvent,
     FirstHalf,
+    HalfTime,
     SecondHalf,
     FullTime,
     PostEvent,
