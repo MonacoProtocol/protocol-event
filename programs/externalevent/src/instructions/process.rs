@@ -32,14 +32,16 @@ pub fn process_update(
     event.score_home = score_vec[0].trim().parse().unwrap();
     event.score_away = score_vec[1].trim().parse().unwrap();
 
-    // set status
     let to_event_period: EventPeriod = convert_to_event_period(status);
 
     if to_event_period == EventPeriod::Unknown {
         return Err(EventError::EventLifeCycleInvalid.into())
     }
 
-    if event.current_period == EventPeriod::PreEvent {
+    if event.current_period == EventPeriod::PreEvent
+        && to_event_period != EventPeriod::PreEvent
+        && to_event_period != EventPeriod::FullTime
+    {
         event.lifecycle_status = EventLifeCycle::Started;
         event.start_actual_timestamp = UnixTimestamp::default();
     }
@@ -57,24 +59,13 @@ pub fn process_update(
 }
 
 fn convert_to_event_period(event_period_string: String) -> EventPeriod {
-
-    if event_period_string == "FIRSTHALF" {
-        return EventPeriod::FirstHalf;
-    }
-
-    if event_period_string == "HALFTIME" {
-        return EventPeriod::HalfTime;
-    }
-
-    if event_period_string == "SECONDHALF" {
-        return EventPeriod::SecondHalf;
-    }
-
-    if event_period_string == "FULLTIME" {
-        return EventPeriod::FullTime;
-    }
-
-    return EventPeriod::Unknown;
+    return match event_period_string.as_str() {
+        "FIRSTHALF" => EventPeriod::FirstHalf,
+        "HALFTIME" => EventPeriod::HalfTime,
+        "SECONDHALF" => EventPeriod::SecondHalf,
+        "FULLTIME" => EventPeriod::FullTime,
+        _ => EventPeriod::Unknown,
+    };
 }
 
 fn validate_period_change (
