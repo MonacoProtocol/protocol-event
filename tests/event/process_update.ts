@@ -4,12 +4,13 @@ const assert = require("assert");
 import * as anchor from '@project-serum/anchor';
 import {createEventAccount} from "../util/test_util";
 import {EventLifeCycleStatus, EventPeriod} from "../util/constants";
+import {AnchorError} from "@project-serum/anchor";
 
 const {SystemProgram} = anchor.web3;
 
 describe("Process Update", () => {
 
-    const provider = anchor.Provider.local();
+    const provider = anchor.AnchorProvider.local();
     anchor.setProvider(provider);
 
     const eventProgram = anchor.workspace.Externalevent;
@@ -152,9 +153,9 @@ describe("Process Update", () => {
              function (_) {
                  assert.ok(false, "This test should have thrown an error");
              },
-             function (err: ProgramError) {
-                 assert.equal(err.code,6000);
-                 assert.equal(err.msg, "Invalid event reference");
+             function (err: AnchorError) {
+                 assert.equal(err.error.errorCode.number,6000);
+                 assert.equal(err.error.errorMessage, "Invalid event reference");
              });
 
         let updatedAccount = await eventProgram.account.externalEvent.fetch(

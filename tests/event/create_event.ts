@@ -6,7 +6,7 @@ import {createEventAccount} from "../util/test_util";
 
 describe("Create Event", () => {
 
-    const provider = anchor.Provider.local();
+    const provider = anchor.AnchorProvider.local();
     anchor.setProvider(provider);
 
     it("Create Event - Success", async () => {

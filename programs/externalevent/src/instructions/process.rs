@@ -11,7 +11,7 @@ pub fn process_update(
     participants: String,
     scores: String,
     status: String,
-) -> ProgramResult {
+) -> Result<()> {
     let event = &mut ctx.accounts.external_event;
 
     // reference must match
@@ -79,7 +79,7 @@ fn convert_to_event_period(event_period_string: String) -> EventPeriod {
 
 fn validate_period_change (
     from_status: &EventPeriod,
-    _to_status: &EventPeriod) -> ProgramResult {
+    _to_status: &EventPeriod) -> Result<()> {
 
     if from_status == &EventPeriod::PostEvent {
         return Err(EventError::EventPeriodUpdateInvalid.into())
@@ -88,7 +88,7 @@ fn validate_period_change (
     Ok(())
 }
 
-#[error]
+#[error_code]
 pub enum EventError {
     #[msg("Invalid event reference")]
     EventReferenceInvalid,

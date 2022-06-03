@@ -17,4 +17,4 @@ default = []
 
 [dependencies]
 solana-program = "1.9.4"
-anchor-lang = "0.20.1"
+anchor-lang = "0.24.2"

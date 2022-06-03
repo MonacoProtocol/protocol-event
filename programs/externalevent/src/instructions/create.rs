@@ -9,7 +9,7 @@ pub fn create(
     start_timestamp: i64,
     team_name_home: String,
     team_name_away: String,
-) -> ProgramResult {
+) -> Result<()> {
     ctx.accounts.external_event.authority = ctx.accounts.authority.key();
     ctx.accounts.external_event.status = EventStatus::InActive;
     ctx.accounts.external_event.name = name;
