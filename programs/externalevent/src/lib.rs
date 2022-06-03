@@ -22,7 +22,7 @@ pub mod externalevent {
         start_timestamp: i64,
         team_name_home: String,
         team_name_away: String,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         msg!("Creating external event...");
 
         instructions::create(ctx, name, reference, start_timestamp, team_name_home, team_name_away)?;
@@ -37,7 +37,7 @@ pub mod externalevent {
         participants: String,
         scores: String,
         status: String,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         msg!("Processing event update...");
 
         instructions::process_update(ctx, reference, participants, scores, status)?;
