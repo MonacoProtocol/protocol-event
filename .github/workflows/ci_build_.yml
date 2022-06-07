@@ -1,0 +1,117 @@
+name: CI - Build
+on:
+  workflow_call:
+    inputs:
+      build_type:
+        type: string
+        description: Type of build
+        required: true
+    secrets:
+      access_key_id:
+        required: true
+      access_key:
+        required: true
+      region:
+        required: true
+    outputs:
+      build_version:
+        description: "Version of program build"
+        value: ${{ jobs.build.outputs.build_version }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.set-build-version.outputs.BUILD_VERSION }}
+
+    env:
+      SOLANA_PATH: /home/runner/.local/share/solana/install/active_release/bin
+      AWS_ACCESS_KEY_ID: ${{ secrets.access_key_id }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.access_key }}
+      AWS_REGION: ${{ secrets.region }}
+      PROGRAM: externalevent
+      VERSION_MANAGER: ./ci/version_manager
+      BUILD_MANAGER: ./ci/build_manager
+      BUCKET: betdex-core-programs
+      BUILD_TYPE: ${{ inputs.build_type }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Solana Cache
+        id: cache-solana
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/share/solana/
+          key: ${{ runner.os }}-solana-${{ secrets.ORG_SOLANA_VERSION }}
+
+      - name: Yarn Cache
+        uses: actions/setup-node@v2
+        with:
+          cache: 'yarn'
+
+      - name: Cargo Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+            target/bpfel-unknown-unknown/
+            target/debug/
+            target/release/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Set Solana Path
+        run: |
+          echo "${{ env.SOLANA_PATH }}" >> $GITHUB_PATH
+
+      - name: Check Solana Version
+        run: |
+          solana --version
+
+      - name: Install anchor
+        run: |
+          sudo apt update
+          sudo apt install -y libudev-dev
+          sudo apt install -y pkg-config
+          ANCHOR_VERSION=`grep -A1 'name = "anchor-lang"' Cargo.lock | tail -n 1 | cut -d = -f 2 | xargs`
+          echo "Installing anchor-cli version ${ANCHOR_VERSION}"
+          cargo install --git https://github.com/project-serum/anchor --tag v${ANCHOR_VERSION} anchor-cli --locked
+          anchor --version
+
+      - name: Anchor build & test
+        run: |
+          set -o pipefail
+          solana-keygen new --no-bip39-passphrase
+          yarn
+          bash ${{ env.BUILD_MANAGER }}/build_and_test.sh -t ${{ env.BUILD_TYPE}}
+
+      - name: Get Version
+        run: |
+          echo "VERSION=`bash ${{ env.VERSION_MANAGER }}/get_toml_version.sh -p ${{ env.PROGRAM }}`" >> $GITHUB_ENV
+
+      - name: Get Build Name
+        run: |
+          echo "BUILD=`bash ${{ env.BUILD_MANAGER }}/generate_build_name.sh -v ${{ env.VERSION }} -t ${{ env.BUILD_TYPE}}`" >> $GITHUB_ENV
+
+      - name: Set Build Version
+        id: set-build-version
+        run: |
+          echo "Build Version: ${{ env.BUILD }}"
+          echo '::set-output name=BUILD_VERSION::${{ env.BUILD }}'
+
+      - name: Create IDL & Build Upload Dir
+        run: |
+          bash ${{ env.BUILD_MANAGER }}/save_build_artifacts.sh -v ${{ env.VERSION }} -t ${{ env.BUILD_TYPE }}
+
+      - name: Publish IDL, Build & Logs
+        run: |
+          bash ${{ env.BUILD_MANAGER }}/upload_build_artifacts.sh -t ${{ env.BUILD_TYPE }} -b ${{ env.BUCKET }}

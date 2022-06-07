@@ -1,26 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
 # bash script to log deployment history taking in arguement flags and checking the deploy history file for previous deploy information
-# usage ./update_deploy_history.sh -a ACTIONEER -e ENVIRONMENT -v SEMANTIC_VERSION -s SHA_CHECKSUM -p PROGRAM -n "additional notes"
+# usage ./ci/deploy_manager/update_deploy_history.sh -a ACTIONEER -e ENVIRONMENT -b BUILD -t DEPLOY_TYPE -n "additional notes"
 
 NOTES="Standard deploy"
 
-while getopts p:e:a:v:s:n: flag
+while getopts t:e:a:b:s:n: flag
 do
     case "${flag}" in
-        p) PROGRAM=${OPTARG};;
+        t) DEPLOY_TYPE=${OPTARG};;
         e) ENVIRONMENT=${OPTARG};;
         a) ACTIONED_BY=${OPTARG};;
-        v) VERSION=${OPTARG};;
-        s) SHA_CHECKSUM=${OPTARG};;
+        b) BUILD=${OPTARG};;
         n) NOTES=${OPTARG};;
     esac
 done
 
-HISTORY_FILE="./ci/deploy_manager/${ENVIRONMENT}_history/${PROGRAM}.json"
+HISTORY_FILE="./ci/deploy_manager/${ENVIRONMENT}_history/${DEPLOY_TYPE}.json"
 
 # getting previous deploy info and constructing deploy id + timestamp
-GET_LAST_DEPLOY=`echo ./ci/deploy_manager/get_last_deploy.sh -p $PROGRAM -e $ENVIRONMENT`
+GET_LAST_DEPLOY=`echo ./ci/deploy_manager/get_last_deploy.sh -t $DEPLOY_TYPE -e $ENVIRONMENT`
 PREVIOUS_VERSION=`$GET_LAST_DEPLOY | jq .new_version`
 PREVIOUS_DEPLOY_ID=`$GET_LAST_DEPLOY | jq .deployment_id`
 DEPLOY_ID=`echo ${PREVIOUS_DEPLOY_ID} + 1 | bc`
@@ -31,8 +30,7 @@ DEPLOY_JSON=$( cat << END
     {
         "deployment_id": ${DEPLOY_ID},
         "new_version": {
-            "version": "${VERSION}",
-            "checksum": "${SHA_CHECKSUM}"
+            "build": "${BUILD}"
         },
         "previous_version": ${PREVIOUS_VERSION},
         "time": "${TIME}",

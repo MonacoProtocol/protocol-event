@@ -1,0 +1,17 @@
+name: PJMT - Sync labels
+on:
+  push:
+    paths:
+      - '.github/pjmt_label_config.yml'
+
+jobs:
+  sync:
+    name: Run EndBug/label-sync
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: EndBug/label-sync@v2
+        with:
+          config-file: '.github/pjmt_label_config.yml'
+          delete-other-labels: false
+          dry-run: false

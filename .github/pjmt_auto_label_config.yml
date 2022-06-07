@@ -1,0 +1,18 @@
+Program Changes:
+- programs/externalevent/**/*
+
+Documentation:
+- any: ['**/*.md']
+
+Github Config:
+- '.github/**/*'
+- '.gitignore'
+
+CICD Tools:
+- 'ci/**/*'
+
+Security:
+- 'ci/security_manager/**/*'
+
+Tests:
+- 'tests/**/*'

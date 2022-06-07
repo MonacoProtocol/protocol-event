@@ -1,0 +1,22 @@
+{
+    "externalevent": {
+        "devnet": {
+            "stable": {
+                "program_id": "9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1",
+                "idl_account": "Bw1JY5jbKTfyQBvFHCs3HjS6y4bjd8vhDbYvcGx4tKKE"
+            }
+        },
+        "testnet": {
+            "stable": {
+                "program_id": "9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1",
+                "idl_account": "Bw1JY5jbKTfyQBvFHCs3HjS6y4bjd8vhDbYvcGx4tKKE"
+            }
+        },
+        "mainnet": {
+            "stable": {
+                "program_id": null,
+                "idl_account": null
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+name: CICD - Stable Build & Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ci_build:
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@main
+    with:
+      build_type: stable
+    secrets:
+      access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      region: ${{ secrets.AWS_REGION }}
+
+  cd_deploy:
+    needs: ci_build
+    uses: BetDexLabs/external-events/.github/workflows/cd_deploy_.yml@main
+    with:
+      deploy_type: stable
+      build: ${{ needs.ci_build.outputs.build_version }}
+      environment: devnet
+      note: "Auto-Deploy to Devnet"
+    secrets:
+      access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      region: ${{ secrets.AWS_REGION }}
+      wallet_pass: ${{ secrets.WALLET_PASSPHRASE }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

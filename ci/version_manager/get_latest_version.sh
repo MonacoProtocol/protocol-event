@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # get the latest version info of the supplied program
 

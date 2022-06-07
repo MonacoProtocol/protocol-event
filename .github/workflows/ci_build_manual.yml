@@ -1,0 +1,22 @@
+name: CI - [re]Build Program (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        type: string
+        description: Type of build
+        required: true
+        options:
+        - dev
+        - stable
+
+jobs:
+  ci_build:
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@main
+    with:
+      build_type: ${{ github.event.inputs.build_type }}
+    secrets:
+      access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      region: ${{ secrets.AWS_REGION }}

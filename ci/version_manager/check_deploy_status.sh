@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # script to check if the version in the TOML for a program has been deployed
 # if the version has been deployed, exit with an error

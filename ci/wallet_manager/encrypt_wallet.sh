@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
-gpg --symmetric --cipher-algo AES256 "$WALLET_JSON.json"
+gpg --symmetric --cipher-algo AES256 wallet.json
 echo 'Done'

@@ -1,0 +1,27 @@
+name: PJMT - Project Manage PRs
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [ main ]
+
+jobs:
+  apply-labels-to-pr:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+    - uses: actions/labeler@main
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: '.github/pjmt_auto_label_config.yml'
+        sync-labels: true
+
+  apply-milestone-to-pr:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+    - uses: andrefcdias/add-to-milestone@v1.0
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        use-expression: true
+        allow-inactive: true
+        milestone: "Episode *"
