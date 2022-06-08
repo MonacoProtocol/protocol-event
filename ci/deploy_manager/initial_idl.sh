@@ -6,17 +6,18 @@
 
 # usage  ./ci/deploy_manager/initial_idl.sh -p PROGRAM -e ENVIRONMENT
 
-while getopts p:e: flag
+while getopts p:e:t: flag
 do
     case "${flag}" in
         p) PROGRAM=${OPTARG};;
         e) ENVIRONMENT=${OPTARG};;
+        t) TYPE=${OPTARG};;
     esac
 done
 
 WALLET_MANAGER="./ci/wallet_manager"
 DEPLOY_MANAGER="./ci/deploy_manager"
-PROGRAM_ID=`$DEPLOY_MANAGER/get_program_data.sh -p $PROGRAM -e $ENVIRONMENT | jq -r .program_id`
+PROGRAM_ID=`$DEPLOY_MANAGER/get_program_data.sh -t $TYPE -e $ENVIRONMENT | jq -r .program_id`
 
 if [ $PROGRAM_ID == null ]
 then
