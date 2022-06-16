@@ -9,6 +9,11 @@ use crate::event_account::ExternalEvent;
 
 pub mod instructions;
 
+#[cfg(feature = "stable")]
+declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
+#[cfg(feature = "dev")]
+declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
+#[cfg(not(any(feature = "stable", feature = "dev")))]
 declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
 
 #[program]
