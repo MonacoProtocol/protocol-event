@@ -1,0 +1,20 @@
+name: CI - Build BetDex Core
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - 'programs/externalevent/**'
+      - 'tests/**'
+    branches: [ main ]
+
+jobs:
+  ci_build:
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@main
+    if: github.event.pull_request.draft == false
+    with:
+      build_type: dev
+    secrets:
+      access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      region: ${{ secrets.AWS_REGION }}

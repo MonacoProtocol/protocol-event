@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # bash script to check/update a version history recording semantic versioning alongside sha checksum and commit sha
 # version bump based on Cargo.toml version in program dir
