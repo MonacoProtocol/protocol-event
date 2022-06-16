@@ -35,8 +35,8 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       note: ${{ github.event.inputs.note }}
     secrets:
-      access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      access_key_id: ${{ secrets.ORG_AWS_ACCESS_KEY_ID }}
+      access_key: ${{ secrets.ORG_AWS_SECRET_KEY }}
       region: ${{ secrets.AWS_REGION }}
       wallet_pass: ${{ secrets.WALLET_PASSPHRASE }}
       gh_token: ${{ secrets.GITHUB_TOKEN }}
