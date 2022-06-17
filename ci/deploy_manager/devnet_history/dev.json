@@ -35,6 +35,18 @@
       "time": "17-06-22-15:02:45",
       "actioned_by": "obi-ewan",
       "notes": "Auto-Deploy to Devnet"
+    },
+    {
+      "deployment_id": 4,
+      "new_version": {
+        "build": "0.1.0.dev.293c5616"
+      },
+      "previous_version": {
+        "build": "0.1.0.dev.afc5a3de"
+      },
+      "time": "17-06-22-15:32:12",
+      "actioned_by": "obi-ewan",
+      "notes": "Auto-Deploy to Devnet"
     }
   ]
 }
