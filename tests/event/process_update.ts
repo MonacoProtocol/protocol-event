@@ -1,5 +1,3 @@
-import {describe} from "mocha";
-
 const assert = require("assert");
 import * as anchor from '@project-serum/anchor';
 import {createEventAccount} from "../util/test_util";
