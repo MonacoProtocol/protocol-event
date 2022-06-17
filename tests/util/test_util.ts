@@ -1,11 +1,13 @@
 import * as anchor from "@project-serum/anchor";
+import {Keypair, PublicKey} from "@solana/web3.js";
+import {AnchorProvider, Provider} from "@project-serum/anchor";
 
 const {SystemProgram} = anchor.web3;
 
 export async function generateMarketPoolPda(marketAccount: PublicKey, program: PublicKey, betDirection: string, competitor: string) {
     let [pda, _] = await anchor.web3.PublicKey.findProgramAddress(
         [Buffer.from(betDirection), marketAccount.toBuffer(), Buffer.from(competitor)],
-        program.programId
+        program
     );
 
     return pda;
@@ -16,7 +18,7 @@ export async function createEventAccount(
         eventReference: String,
         eventAccount: Keypair,
         eventProgram,
-        provider: Provider
+        provider: AnchorProvider
     ) {
 
     let eventStartTS = new anchor.BN(1924200000);
