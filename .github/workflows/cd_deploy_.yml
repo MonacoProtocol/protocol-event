@@ -128,6 +128,6 @@ jobs:
 
         - name: Create PR
           run: |
-            gh pr create --title "[DEPLOY] ${{ env.BUILD }} on ${{ env.ENVIRONMENT }}" --body "Update deploy history please"
+            gh pr create --title "[DEPLOY] External Events ${{ env.BUILD }} on ${{ env.ENVIRONMENT }}" --body "Update deploy history please"
           env:
             GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
