@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
-import { createEventAccount } from "../util/test_util";
 import assert from "assert";
+import {Program} from "@project-serum/anchor";
+import {createEventAccount, findEventPda} from "../util/test_util";
 
 describe("Create Event", () => {
   const provider = anchor.AnchorProvider.local();
@@ -9,27 +10,23 @@ describe("Create Event", () => {
   it("Create Event - Success", async () => {
     const eventProgram = anchor.workspace.Externalevent;
 
-    const name = "TEST NAME";
-    const reference = "TEST REFERENCE";
+        const name = "TEST NAME";
+        const startTime = 1924200000;
 
-    // keypair for new Event state account
-    const eventAccount = anchor.web3.Keypair.generate();
-    const { eventName, eventStartTS } = await createEventAccount(
-      name,
-      reference,
-      eventAccount,
-      eventProgram,
-      provider,
-    );
+        const oracle = "TEST ORACLE"
+        const reference = "TEST REFERENCE";
 
-    const createdAccount = await eventProgram.account.externalEvent.fetch(
-      eventAccount.publicKey,
-    );
+        const participants = ["A", "B", "C"];
 
-    assert.equal(createdAccount.name, eventName);
-    assert.equal(
-      createdAccount.startExpectedTimestamp.toNumber(),
-      eventStartTS.toNumber(),
-    );
-  });
+        // pda for new Event state account
+        const eventPk = await findEventPda(name, startTime, eventProgram as Program);
+        let {eventName} = await createEventAccount(name, startTime, participants, oracle, reference, eventPk, eventProgram, provider);
+
+        let createdAccount = await eventProgram.account.event.fetch(
+          eventPk
+        );
+
+        assert.equal(createdAccount.name, eventName);
+        assert.equal(createdAccount.startExpectedTimestamp.toNumber(), startTime);
+    });
 });
