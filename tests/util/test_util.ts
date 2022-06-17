@@ -1,53 +1,45 @@
 import * as anchor from "@project-serum/anchor";
-import { Keypair, PublicKey } from "@solana/web3.js";
-import { AnchorProvider } from "@project-serum/anchor";
+import {  PublicKey } from "@solana/web3.js";
+import { AnchorProvider, Program } from "@project-serum/anchor";
+import { Externalevent } from "../../target/types/externalevent";
 
 const { SystemProgram } = anchor.web3;
 
-export async function generateMarketPoolPda(
-  marketAccount: PublicKey,
-  program: PublicKey,
-  betDirection: string,
-  competitor: string,
-) {
-  const [pda, _] = await anchor.web3.PublicKey.findProgramAddress(
-    [
-      Buffer.from(betDirection),
-      marketAccount.toBuffer(),
-      Buffer.from(competitor),
-    ],
-    program,
-  );
-
-  return pda;
+export async function findEventPda(name: String, startTime: number, program: Program): Promise<PublicKey> {
+    let [pda] = await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(name), Buffer.from(startTime.toString())],
+        program.programId
+    );
+    return pda;
 }
 
 export async function createEventAccount(
-  eventName,
-  eventReference: string,
-  eventAccount: Keypair,
-  eventProgram,
-  provider: AnchorProvider,
-) {
-  const eventStartTS = new anchor.BN(1924200000);
-  const homeTeamName = "Home Team";
-  const awayTeamName = "Away Team";
+        eventName,
+        eventStartTime,
+        eventParticipants: string[],
+        eventOracle: string,
+        eventReference: string,
+        eventPk: PublicKey,
+        eventProgram: Program<Externalevent>,
+        provider: AnchorProvider
+    ) {
 
-  await eventProgram.rpc.createExternalEvent(
-    eventName,
-    eventReference,
-    eventStartTS,
-    homeTeamName,
-    awayTeamName,
-    {
-      accounts: {
-        externalEvent: eventAccount.publicKey,
-        authority: provider.wallet.publicKey,
-        systemProgram: SystemProgram.programId,
-      },
-      signers: [eventAccount],
-    },
-  );
-
-  return { eventName, eventStartTS };
+    await eventProgram.methods.createEvent(
+        eventName,
+        new anchor.BN(eventStartTime),
+        eventParticipants,
+        eventOracle,
+        eventReference).accounts(
+            {
+                event: eventPk,
+                authority: provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
+            }
+        )
+        .rpc()
+        .catch((e) => {
+            console.error(e);
+            throw e;
+        });
+    return {eventName};
 }

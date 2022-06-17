@@ -1,13 +1,11 @@
-mod event_account;
+pub mod context;
+pub mod instructions;
+pub mod state;
 
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::system_program;
 
-use std::mem::size_of;
-
-use crate::event_account::ExternalEvent;
-
-pub mod instructions;
+use crate::context::*;
+use crate::state::event_account::Event;
 
 #[cfg(feature = "stable")]
 declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
@@ -20,52 +18,15 @@ declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 pub mod externalevent {
     use super::*;
 
-    pub fn create_external_event(
+    pub fn create_event(
         ctx: Context<CreateEvent>,
         name: String,
-        reference: String,
-        start_timestamp: i64,
-        team_name_home: String,
-        team_name_away: String,
+        start_expected_timestamp: i64,
+        participants: Vec<String>,
+        oracle: String,
+        oracle_reference: String,
     ) -> Result<()> {
-        msg!("Creating external event...");
-
-        instructions::create(ctx, name, reference, start_timestamp, team_name_home, team_name_away)?;
-
-        msg!("Created external event.");
+        instructions::create(ctx, name, start_expected_timestamp, participants, oracle, oracle_reference)?;
         Ok(())
     }
-
-    pub fn process_update(
-        ctx: Context<ProcessExternalEventUpdate>,
-        reference: String,
-        participants: String,
-        scores: String,
-        status: String,
-    ) -> Result<()> {
-        msg!("Processing event update...");
-
-        instructions::process_update(ctx, reference, participants, scores, status)?;
-
-        msg!("Processed event update.");
-        Ok(())
-    }
-
-}
-
-#[derive(Accounts)]
-pub struct CreateEvent<'info> {
-    #[account(init, payer = authority, space = 8 + size_of::< ExternalEvent > ())]
-    pub external_event: Account<'info, ExternalEvent>,
-    #[account(mut)]
-    pub authority: Signer<'info>,
-    #[account(address = system_program::ID)]
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct ProcessExternalEventUpdate<'info> {
-    #[account(mut, has_one = authority)]
-    pub external_event: Account<'info, ExternalEvent>,
-    pub authority: Signer<'info>,
 }
