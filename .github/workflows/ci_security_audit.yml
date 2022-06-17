@@ -41,7 +41,7 @@ jobs:
 
     env:
       SOLANA_PATH: /home/runner/.local/share/solana/install/active_release/bin
-      WALLET_PASSPHRASE: ${{ secrets.WALLET_PASSPHRASE }}
+      WALLET_PASSPHRASE: ${{ secrets.ORG_DEV_WALLET_PASSPHRASE }}
       WALLET_MANAGER: ./ci/wallet_manager
       SECURITY_MANAGER: ./ci/security_manager
       ENVIRONMENT: testnet
