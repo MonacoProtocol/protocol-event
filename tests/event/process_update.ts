@@ -1,200 +1,241 @@
-const assert = require("assert");
-import * as anchor from '@project-serum/anchor';
-import {createEventAccount} from "../util/test_util";
-import {EventLifeCycleStatus, EventPeriod} from "../util/constants";
-import {AnchorError} from "@project-serum/anchor";
+import * as anchor from "@project-serum/anchor";
+import { createEventAccount } from "../util/test_util";
+import { EventLifeCycleStatus, EventPeriod } from "../util/constants";
+import { AnchorError } from "@project-serum/anchor";
+import assert from "assert";
 
-const {SystemProgram} = anchor.web3;
+const { SystemProgram } = anchor.web3;
 
 describe("Process Update", () => {
+  const provider = anchor.AnchorProvider.local();
+  anchor.setProvider(provider);
 
-    const provider = anchor.AnchorProvider.local();
-    anchor.setProvider(provider);
+  const eventProgram = anchor.workspace.Externalevent;
 
-    const eventProgram = anchor.workspace.Externalevent;
+  const nameDefault = "TEST NAME";
+  const referenceDefault = "TEST REFERENCE";
+  const referenceInvalid = "TEST REFERENCE INVALID";
+  const participantsDefault = '["TEST 1", "TEST 2"]';
+  const scoresNilNil = "[0, 0]";
+  const scoresDefault = "[1, 2]";
+  const periodFirstHalf = "FIRSTHALF";
+  const periodFullTime = "FULLTIME";
 
-    const nameDefault = "TEST NAME";
-    const referenceDefault = "TEST REFERENCE";
-    const referenceInvalid = "TEST REFERENCE INVALID";
-    const participantsDefault = "[\"TEST 1\", \"TEST 2\"]";
-    const scoresNilNil = "[0, 0]";
-    const scoresDefault = "[1, 2]";
-    const periodFirstHalf = "FIRSTHALF";
-    const periodFullTime = "FULLTIME";
+  it("Update Event Status - Event Update (Period - First Half)", async () => {
+    // keypair for new Events` state account
+    const eventAccount = anchor.web3.Keypair.generate();
+    await createEventAccount(
+      nameDefault,
+      referenceDefault,
+      eventAccount,
+      eventProgram,
+      provider,
+    );
 
-    it("Update Event Status - Event Update (Period - First Half)", async () => {
+    await eventProgram.rpc.processUpdate(
+      referenceDefault,
+      participantsDefault,
+      scoresNilNil,
+      periodFirstHalf,
+      {
+        accounts: {
+          externalEvent: eventAccount.publicKey,
+          authority: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      },
+    );
 
-        // keypair for new Events` state account
-        const eventAccount = anchor.web3.Keypair.generate();
-        await createEventAccount(nameDefault, referenceDefault, eventAccount, eventProgram, provider);
+    const updatedAccount = await eventProgram.account.externalEvent.fetch(
+      eventAccount.publicKey,
+    );
 
-        await eventProgram.rpc.processUpdate(
-            referenceDefault,
-            participantsDefault,
-            scoresNilNil,
-            periodFirstHalf,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )
+    assert.equal(updatedAccount.reference, referenceDefault);
+    assert.equal(updatedAccount.scoreHome, 0);
+    assert.equal(updatedAccount.scoreAway, 0);
+    assert.deepStrictEqual(
+      updatedAccount.lifecycleStatus,
+      EventLifeCycleStatus.Started,
+    );
+    assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
+  });
 
-        let updatedAccount = await eventProgram.account.externalEvent.fetch(
-          eventAccount.publicKey
-        );
+  it("Update Event Status - Event Update (Period - Full Time)", async () => {
+    // keypair for new Events` state account
+    const eventAccount = anchor.web3.Keypair.generate();
+    await createEventAccount(
+      nameDefault,
+      referenceDefault,
+      eventAccount,
+      eventProgram,
+      provider,
+    );
 
-        assert.equal(updatedAccount.reference, referenceDefault);
-        assert.equal(updatedAccount.scoreHome, 0);
-        assert.equal(updatedAccount.scoreAway, 0);
-        assert.deepStrictEqual(updatedAccount.lifecycleStatus, EventLifeCycleStatus.Started);
-        assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
-    });
+    await eventProgram.rpc.processUpdate(
+      referenceDefault,
+      participantsDefault,
+      scoresNilNil,
+      periodFullTime,
+      {
+        accounts: {
+          externalEvent: eventAccount.publicKey,
+          authority: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      },
+    );
 
-    it("Update Event Status - Event Update (Period - Full Time)", async () => {
+    const updatedAccount = await eventProgram.account.externalEvent.fetch(
+      eventAccount.publicKey,
+    );
 
-        // keypair for new Events` state account
-        const eventAccount = anchor.web3.Keypair.generate();
-        await createEventAccount(nameDefault, referenceDefault, eventAccount, eventProgram, provider);
+    assert.equal(updatedAccount.reference, referenceDefault);
+    assert.equal(updatedAccount.scoreHome, 0);
+    assert.equal(updatedAccount.scoreAway, 0);
+    assert.deepStrictEqual(
+      updatedAccount.lifecycleStatus,
+      EventLifeCycleStatus.Completed,
+    );
+    assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FullTime);
+  });
 
-        await eventProgram.rpc.processUpdate(
-            referenceDefault,
-            participantsDefault,
-            scoresNilNil,
-            periodFullTime,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )
+  it("Update Event Status - Event Update (Scores)", async () => {
+    // keypair for new Events` state account
+    const eventAccount = anchor.web3.Keypair.generate();
+    await createEventAccount(
+      nameDefault,
+      referenceDefault,
+      eventAccount,
+      eventProgram,
+      provider,
+    );
 
-        let updatedAccount = await eventProgram.account.externalEvent.fetch(
-          eventAccount.publicKey
-        );
+    await eventProgram.rpc.processUpdate(
+      referenceDefault,
+      participantsDefault,
+      scoresDefault,
+      periodFirstHalf,
+      {
+        accounts: {
+          externalEvent: eventAccount.publicKey,
+          authority: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      },
+    );
 
-        assert.equal(updatedAccount.reference, referenceDefault);
-        assert.equal(updatedAccount.scoreHome, 0);
-        assert.equal(updatedAccount.scoreAway, 0);
-        assert.deepStrictEqual(updatedAccount.lifecycleStatus, EventLifeCycleStatus.Completed);
-        assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FullTime);
-    });
+    const updatedAccount = await eventProgram.account.externalEvent.fetch(
+      eventAccount.publicKey,
+    );
 
-    it("Update Event Status - Event Update (Scores)", async () => {
+    assert.equal(updatedAccount.reference, referenceDefault);
+    assert.equal(updatedAccount.scoreHome, 1);
+    assert.equal(updatedAccount.scoreAway, 2);
+    assert.deepStrictEqual(
+      updatedAccount.lifecycleStatus,
+      EventLifeCycleStatus.Started,
+    );
+    assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
+  });
 
-        // keypair for new Events` state account
-        const eventAccount = anchor.web3.Keypair.generate();
-        await createEventAccount(nameDefault, referenceDefault, eventAccount, eventProgram, provider);
+  it("Update Event Status - Reference not valid", async () => {
+    // keypair for new Events` state account
+    const eventAccount = anchor.web3.Keypair.generate();
+    await createEventAccount(
+      nameDefault,
+      referenceDefault,
+      eventAccount,
+      eventProgram,
+      provider,
+    );
 
-        await eventProgram.rpc.processUpdate(
-            referenceDefault,
-            participantsDefault,
-            scoresDefault,
-            periodFirstHalf,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )
+    await eventProgram.rpc.processUpdate(
+      referenceDefault,
+      participantsDefault,
+      scoresDefault,
+      periodFirstHalf,
+      {
+        accounts: {
+          externalEvent: eventAccount.publicKey,
+          authority: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      },
+    );
 
-        let updatedAccount = await eventProgram.account.externalEvent.fetch(
-          eventAccount.publicKey
-        );
+    await eventProgram.rpc
+      .processUpdate(
+        referenceInvalid,
+        "[99, 100]",
+        scoresDefault,
+        periodFullTime,
+        {
+          accounts: {
+            externalEvent: eventAccount.publicKey,
+            authority: provider.wallet.publicKey,
+            systemProgram: SystemProgram.programId,
+          },
+        },
+      )
+      .then(
+        function (_) {
+          assert.ok(false, "This test should have thrown an error");
+        },
+        function (err: AnchorError) {
+          assert.equal(err.error.errorCode.number, 6000);
+          assert.equal(err.error.errorMessage, "Invalid event reference");
+        },
+      );
 
-        assert.equal(updatedAccount.reference, referenceDefault);
-        assert.equal(updatedAccount.scoreHome, 1);
-        assert.equal(updatedAccount.scoreAway, 2);
-        assert.deepStrictEqual(updatedAccount.lifecycleStatus, EventLifeCycleStatus.Started);
-        assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
-    });
+    const updatedAccount = await eventProgram.account.externalEvent.fetch(
+      eventAccount.publicKey,
+    );
 
-    it("Update Event Status - Reference not valid", async () => {
+    // Check account hasn't been modified by rpc with invalid reference
+    assert.equal(updatedAccount.scoreHome, 1);
+    assert.equal(updatedAccount.scoreAway, 2);
+    assert.deepStrictEqual(
+      updatedAccount.lifecycleStatus,
+      EventLifeCycleStatus.Started,
+    );
+    assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
+  });
 
-        // keypair for new Events` state account
-        const eventAccount = anchor.web3.Keypair.generate();
-        await createEventAccount(nameDefault, referenceDefault, eventAccount, eventProgram, provider);
+  it("Update Event Status - Event Completed", async () => {
+    // keypair for new Events` state account
+    const eventAccount = anchor.web3.Keypair.generate();
+    await createEventAccount(
+      nameDefault,
+      referenceDefault,
+      eventAccount,
+      eventProgram,
+      provider,
+    );
 
-        await eventProgram.rpc.processUpdate(
-            referenceDefault,
-            participantsDefault,
-            scoresDefault,
-            periodFirstHalf,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )
+    await eventProgram.rpc.processUpdate(
+      referenceDefault,
+      participantsDefault,
+      scoresDefault,
+      periodFullTime,
+      {
+        accounts: {
+          externalEvent: eventAccount.publicKey,
+          authority: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      },
+    );
 
-        await (eventProgram.rpc.processUpdate(
-            referenceInvalid,
-            "[99, 100]",
-            scoresDefault,
-            periodFullTime,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )).then(
-             function (_) {
-                 assert.ok(false, "This test should have thrown an error");
-             },
-             function (err: AnchorError) {
-                 assert.equal(err.error.errorCode.number,6000);
-                 assert.equal(err.error.errorMessage, "Invalid event reference");
-             });
+    const updatedAccount = await eventProgram.account.externalEvent.fetch(
+      eventAccount.publicKey,
+    );
 
-        let updatedAccount = await eventProgram.account.externalEvent.fetch(
-          eventAccount.publicKey
-        );
-
-        // Check account hasn't been modified by rpc with invalid reference
-        assert.equal(updatedAccount.scoreHome, 1);
-        assert.equal(updatedAccount.scoreAway, 2);
-        assert.deepStrictEqual(updatedAccount.lifecycleStatus, EventLifeCycleStatus.Started);
-        assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FirstHalf);
-    });
-
-    it("Update Event Status - Event Completed", async () => {
-
-        // keypair for new Events` state account
-        const eventAccount = anchor.web3.Keypair.generate();
-        await createEventAccount(nameDefault, referenceDefault, eventAccount, eventProgram, provider);
-
-        await eventProgram.rpc.processUpdate(
-            referenceDefault,
-            participantsDefault,
-            scoresDefault,
-            periodFullTime,
-            {
-                accounts: {
-                    externalEvent: eventAccount.publicKey,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-                }
-            }
-        )
-
-        let updatedAccount = await eventProgram.account.externalEvent.fetch(
-          eventAccount.publicKey
-        );
-
-        assert.equal(updatedAccount.scoreHome, 1);
-        assert.equal(updatedAccount.scoreAway, 2);
-        assert.deepStrictEqual(updatedAccount.lifecycleStatus, EventLifeCycleStatus.Completed);
-        assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FullTime);
-    });
-
+    assert.equal(updatedAccount.scoreHome, 1);
+    assert.equal(updatedAccount.scoreAway, 2);
+    assert.deepStrictEqual(
+      updatedAccount.lifecycleStatus,
+      EventLifeCycleStatus.Completed,
+    );
+    assert.deepStrictEqual(updatedAccount.currentPeriod, EventPeriod.FullTime);
+  });
 });
