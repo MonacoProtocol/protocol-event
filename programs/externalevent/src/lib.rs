@@ -10,11 +10,11 @@ use crate::event_account::ExternalEvent;
 pub mod instructions;
 
 #[cfg(feature = "stable")]
-declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
+declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 #[cfg(feature = "dev")]
-declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
+declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 #[cfg(not(any(feature = "stable", feature = "dev")))]
-declare_id!("9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1");
+declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 
 #[program]
 pub mod externalevent {
