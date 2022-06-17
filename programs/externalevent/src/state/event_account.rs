@@ -9,8 +9,8 @@ pub struct Event {
     pub start_expected_timestamp: i64,
     pub end_actual_timestamp: Option<i64>,
 
+    pub active: bool,
     pub status: EventStatus,
-    pub lifecycle_status: EventLifeCycle,
 
     pub current_score: Option<String>,
     pub current_period: Option<u16>,
@@ -29,6 +29,7 @@ impl Event {
     const STATUS_ENUM_SIZE: usize = 1;
     const CURRENT_PERIOD_SIZE: usize = 2;
     const MAX_STRING_SIZE: usize = Event::VEC_PREFIX_SIZE + Event::MAX_STRING_LENGTH * Event::CHAR_SIZE;
+    const FLAG_BOOL_SIZE: usize = 1;
 
     pub const SIZE: usize = Event::DISCRIMINATOR_SIZE +
         Event::PUB_KEY_SIZE + // Authority
@@ -36,9 +37,10 @@ impl Event {
         Event::MAX_STRING_SIZE + // Name
         Event::VEC_PREFIX_SIZE + Event::MAX_PARTICIPANTS * Event::MAX_STRING_SIZE + // Participants
         Event::TIMESTAMP_SIZE + Event::OPTION_SIZE + Event::TIMESTAMP_SIZE + // Timestamps
-        Event::STATUS_ENUM_SIZE * 2 + // Statuses
+        Event::STATUS_ENUM_SIZE + // Lifecycle Status
         Event::OPTION_SIZE + Event::MAX_STRING_SIZE + // Score
-        Event::OPTION_SIZE + Event::CURRENT_PERIOD_SIZE; // Period
+        Event::OPTION_SIZE + Event::CURRENT_PERIOD_SIZE + // Period
+        Event::FLAG_BOOL_SIZE; // Active flag
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
@@ -60,12 +62,6 @@ impl OracleReference {
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
 pub enum EventStatus {
-    Active,
-    InActive,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
-pub enum EventLifeCycle {
     Unknown,
     Upcoming,
     Started,

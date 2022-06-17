@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use crate::CreateEvent;
-use crate::state::event_account::{EventLifeCycle, EventStatus, OracleReference};
+use crate::state::event_account::{EventStatus, OracleReference};
 
 pub fn create(
     ctx: Context<CreateEvent>,
@@ -19,8 +19,8 @@ pub fn create(
         oracle,
         reference: oracle_reference
     };
-    ctx.accounts.event.status = EventStatus::InActive;
-    ctx.accounts.event.lifecycle_status = EventLifeCycle::Upcoming;
+    ctx.accounts.event.active = false;
+    ctx.accounts.event.status = EventStatus::Upcoming;
     ctx.accounts.event.current_score = None;
     ctx.accounts.event.current_period = None;
 
