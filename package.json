@@ -9,13 +9,24 @@
         "@babel/preset-typescript": "^7.16.7",
         "@types/jest": "^28.1.1",
         "@types/node": "^18.0.0",
+        "@typescript-eslint/eslint-plugin": "^5.28.0",
+        "@typescript-eslint/parser": "^5.28.0",
         "babel-jest": "^28.1.1",
         "chai": "^4.3.6",
+        "eslint": "^8.17.0",
+        "husky": "^8.0.1",
         "jest": "^28.1.1",
+        "prettier": "^2.7.1",
         "ts-node": "^10.8.1",
-        "typescript": "^4.7.2"
+        "typescript": "^4.7.3"
     },
     "scripts": {
         "test": "jest --silent --forceExit"
+    },
+    "lint-staged": {
+        "*.{js,ts}": [
+            "eslint --cache --fix",
+            "prettier --write"
+        ]
     }
 }
