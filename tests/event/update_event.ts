@@ -216,4 +216,52 @@ describe("Update Event", () => {
     const updateAccount = await eventProgram.account.event.fetch(eventPk);
     assert.deepEqual(updateAccount.participants, updatedParticipants);
   });
+
+  it("Update Event - Update start timestamp", async () => {
+    const eventProgram = anchor.workspace
+      .Externalevent as Program<Externalevent>;
+
+    const name = "EVENT TO UPDATE 6";
+    const startTime = 1924200000;
+
+    // pda for new Event state account
+    const eventPk = await findEventPda(
+      name,
+      startTime,
+      eventProgram as Program,
+    );
+    await createEventAccount(
+      name,
+      startTime,
+      ["A", "B", "C"],
+      "TEST ORACLE",
+      "TEST REFERENCE",
+      eventPk,
+      eventProgram,
+      provider,
+    );
+
+    const createdAccount = await eventProgram.account.event.fetch(eventPk);
+    assert.equal(createdAccount.startExpectedTimestamp.toNumber(), 1924200000);
+
+    const updatedStartTime = 1925200000;
+
+    await eventProgram.methods
+      .setStartTimestamp(
+        name,
+        new anchor.BN(startTime),
+        new anchor.BN(updatedStartTime),
+      )
+      .accounts({
+        event: eventPk,
+        authority: provider.wallet.publicKey,
+      })
+      .rpc();
+
+    const updateAccount = await eventProgram.account.event.fetch(eventPk);
+    assert.equal(
+      updateAccount.startExpectedTimestamp.toNumber(),
+      updatedStartTime,
+    );
+  });
 });

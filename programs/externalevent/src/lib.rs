@@ -88,4 +88,14 @@ pub mod externalevent {
     ) -> Result<()> {
         instructions::update::update_participants(ctx, participants)
     }
+
+    pub fn set_start_timestamp(
+        ctx: Context<UpdateEvent>,
+        _name: String,
+        _start_expected_timestamp: i64,
+        updated_timestamp: i64,
+    ) -> Result<()> {
+        instructions::update::update_start_timestamp(ctx, updated_timestamp)
+    }
+
 }

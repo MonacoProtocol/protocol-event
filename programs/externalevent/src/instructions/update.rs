@@ -31,3 +31,9 @@ pub fn update_participants(ctx: Context<UpdateEvent>, participants: Vec<String>)
     event.participants = participants;
     Ok(())
 }
+
+pub fn update_start_timestamp(ctx: Context<UpdateEvent>, timestamp: i64) -> Result<()> {
+    let event = &mut ctx.accounts.event;
+    event.start_expected_timestamp = timestamp;
+    Ok(())
+}
