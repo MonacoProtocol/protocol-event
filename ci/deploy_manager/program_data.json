@@ -1,6 +1,10 @@
 {
     "externalevent": {
         "devnet": {
+            "dev": {
+                "program_id": "9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1",
+                "idl_account": "84iHo7RsB1ws79zu8mjNGipWZms7pGtY7PPrgyEMQTvZ"
+            },
             "stable": {
                 "program_id": "9JLmsTwUk1LTB2MaxouABY5hrSLdFEuZBxZ5oUXCnVH1",
                 "idl_account": "84iHo7RsB1ws79zu8mjNGipWZms7pGtY7PPrgyEMQTvZ"
