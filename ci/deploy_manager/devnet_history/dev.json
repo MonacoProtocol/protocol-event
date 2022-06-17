@@ -1,0 +1,16 @@
+{
+  "deploys": [
+    {
+      "deployment_id": 1,
+      "new_version": {
+        "build": "0.1.0.dev.f129f02a"
+      },
+      "previous_version": {
+        "build": null
+      },
+      "time": "23-06-17-10:55:00",
+      "actioned_by": "eoin-betdex",
+      "notes": "First deploy"
+    }
+  ]
+}
