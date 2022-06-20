@@ -47,6 +47,18 @@
       "time": "17-06-22-15:32:12",
       "actioned_by": "obi-ewan",
       "notes": "Auto-Deploy to Devnet"
+    },
+    {
+      "deployment_id": 5,
+      "new_version": {
+        "build": "0.1.0.dev.df96ad09"
+      },
+      "previous_version": {
+        "build": "0.1.0.dev.293c5616"
+      },
+      "time": "20-06-22-10:53:48",
+      "actioned_by": "eoin-betdex",
+      "notes": "Auto-Deploy to Devnet"
     }
   ]
 }
