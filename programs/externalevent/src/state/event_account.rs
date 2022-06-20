@@ -5,6 +5,7 @@ pub struct Event {
     pub authority: Pubkey,
     pub reference: OracleReference,
     pub name: String,
+    pub slug: String,
     pub participants: Vec<String>,
     pub start_expected_timestamp: i64,
     pub end_actual_timestamp: Option<i64>,
@@ -35,6 +36,7 @@ impl Event {
         Event::PUB_KEY_SIZE + // Authority
         OracleReference::SIZE + // Reference
         Event::MAX_STRING_SIZE + // Name
+        Event::MAX_STRING_SIZE + // Slug
         Event::VEC_PREFIX_SIZE + Event::MAX_PARTICIPANTS * Event::MAX_STRING_SIZE + // Participants
         Event::TIMESTAMP_SIZE + Event::OPTION_SIZE + Event::TIMESTAMP_SIZE + // Timestamps
         Event::STATUS_ENUM_SIZE + // Lifecycle Status
