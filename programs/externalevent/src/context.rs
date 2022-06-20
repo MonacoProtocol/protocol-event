@@ -3,15 +3,12 @@ use anchor_lang::solana_program::system_program;
 use crate::Event;
 
 #[derive(Accounts)]
-#[instruction(name: String, start_expected_timestamp: i64)]
+#[instruction(slug: String)]
 pub struct CreateEvent<'info> {
     #[account(
         init,
         payer = authority,
-        seeds = [
-            name.as_ref(),
-            format!("{}", start_expected_timestamp).as_ref()
-        ],
+        seeds = [slug.as_ref()],
         bump,
         space = Event::SIZE
     )]
@@ -23,13 +20,12 @@ pub struct CreateEvent<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(_name: String, _start_expected_timestamp: i64)]
+#[instruction(_slug: String)]
 pub struct UpdateEvent<'info> {
     #[account(
         mut,
         seeds = [
-            _name.as_ref(),
-            format!("{}", _start_expected_timestamp).as_ref()
+            _slug.as_ref()
         ],
         bump,
         has_one = authority,

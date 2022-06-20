@@ -4,6 +4,7 @@ use crate::state::event_account::{EventStatus, OracleReference};
 
 pub fn create(
     ctx: Context<CreateEvent>,
+    slug: String,
     name: String,
     start_expected_timestamp: i64,
     participants: Vec<String>,
@@ -11,6 +12,7 @@ pub fn create(
     oracle_reference: String,
 ) -> Result<()> {
     ctx.accounts.event.authority = ctx.accounts.authority.key();
+    ctx.accounts.event.slug = slug;
     ctx.accounts.event.name = name;
     ctx.accounts.event.start_expected_timestamp = start_expected_timestamp;
     ctx.accounts.event.end_actual_timestamp = None;

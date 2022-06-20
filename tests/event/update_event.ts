@@ -12,18 +12,14 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE",
+      1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -36,7 +32,7 @@ describe("Update Event", () => {
     assert.equal(createdAccount.currentScore, null);
 
     await eventProgram.methods
-      .updateScore(name, new anchor.BN(startTime), "an score")
+      .updateScore(slug, "an score")
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -51,18 +47,14 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE 2";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE-2";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE 2",
+      1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -75,7 +67,7 @@ describe("Update Event", () => {
     assert.equal(createdAccount.currentPeriod, null);
 
     await eventProgram.methods
-      .updatePeriod(name, new anchor.BN(startTime), new anchor.BN(1))
+      .updatePeriod(slug, new anchor.BN(1))
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -90,18 +82,14 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE 3";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE-3";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE 3",
+      1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -114,7 +102,7 @@ describe("Update Event", () => {
     assert.equal(createdAccount.active, false);
 
     await eventProgram.methods
-      .activateEvent(name, new anchor.BN(startTime))
+      .activateEvent(slug)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -125,7 +113,7 @@ describe("Update Event", () => {
     assert.equal(activatedEvent.active, true);
 
     await eventProgram.methods
-      .deactivateEvent(name, new anchor.BN(startTime))
+      .deactivateEvent(slug)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -140,18 +128,14 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE 4";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE-4";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE 4",
+      1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -164,7 +148,7 @@ describe("Update Event", () => {
     assert.deepEqual(createdAccount.status, { upcoming: {} });
 
     await eventProgram.methods
-      .startEvent(name, new anchor.BN(startTime))
+      .startEvent(slug)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -179,19 +163,15 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE 5";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE-5";
     const participants = ["A", "B", "C"];
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE 5",
+      1924200000,
       participants,
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -206,7 +186,7 @@ describe("Update Event", () => {
     const updatedParticipants = ["X", "Y", "Z"];
 
     await eventProgram.methods
-      .updateParticipants(name, new anchor.BN(startTime), updatedParticipants)
+      .updateParticipants(slug, updatedParticipants)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -221,18 +201,14 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .Externalevent as Program<Externalevent>;
 
-    const name = "EVENT TO UPDATE 6";
-    const startTime = 1924200000;
+    const slug = "EVENT-TO-UPDATE-6";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(
-      name,
-      startTime,
-      eventProgram as Program,
-    );
+    const eventPk = await findEventPda(slug, eventProgram as Program);
     await createEventAccount(
-      name,
-      startTime,
+      slug,
+      "EVENT TO UPDATE 6",
+      1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
       "TEST REFERENCE",
@@ -247,11 +223,7 @@ describe("Update Event", () => {
     const updatedStartTime = 1925200000;
 
     await eventProgram.methods
-      .setStartTimestamp(
-        name,
-        new anchor.BN(startTime),
-        new anchor.BN(updatedStartTime),
-      )
+      .setStartTimestamp(slug, new anchor.BN(updatedStartTime))
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
