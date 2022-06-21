@@ -3,3 +3,7 @@ export const EventLifeCycleStatus = {
   Started: { started: {} },
   Completed: { completed: {} },
 };
+
+export const EventType = {
+  AVB: { avb: {} },
+};

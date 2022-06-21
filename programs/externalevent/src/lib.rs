@@ -5,7 +5,7 @@ pub mod state;
 use anchor_lang::prelude::*;
 
 use crate::context::*;
-use crate::state::event_account::{Event, EventStatus};
+use crate::state::event_account::{Event, EventStatus, EventType};
 
 #[cfg(feature = "stable")]
 declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
@@ -22,12 +22,13 @@ pub mod externalevent {
         ctx: Context<CreateEvent>,
         slug: String,
         name: String,
+        event_type: EventType,
         start_expected_timestamp: i64,
         participants: Vec<String>,
         oracle: String,
         oracle_reference: String,
     ) -> Result<()> {
-        instructions::create(ctx, slug, name, start_expected_timestamp, participants, oracle, oracle_reference)?;
+        instructions::create(ctx, slug, name, event_type, start_expected_timestamp, participants, oracle, oracle_reference)?;
         Ok(())
     }
 

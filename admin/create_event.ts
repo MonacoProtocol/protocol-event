@@ -11,6 +11,7 @@ if (process.argv.length < 6) {
 
 const slug = process.argv[2];
 const name = process.argv[3];
+const eventType = { avb: {} };
 const startTime = Number.parseInt(process.argv[4]);
 const participants = JSON.parse(process.argv[5]) as string[];
 const oracle = process.argv.length >= 7 ? process.argv[6] : "BetDEX";
@@ -24,6 +25,7 @@ getProgram().then(async (program) => {
     .createEvent(
       slug,
       name,
+      eventType,
       new anchor.BN(startTime),
       participants,
       oracle,

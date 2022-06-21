@@ -2,6 +2,7 @@ import * as anchor from "@project-serum/anchor";
 import assert from "assert";
 import { Program } from "@project-serum/anchor";
 import { createEventAccount, findEventPda } from "../util/test_util";
+import { EventType } from "../util/constants";
 
 describe("Create Event", () => {
   const provider = anchor.AnchorProvider.local();
@@ -12,6 +13,7 @@ describe("Create Event", () => {
 
     const name = "TEST NAME";
     const slug = "test-name";
+    const eventType = EventType.AVB;
     const startTime = 1924200000;
 
     const oracle = "TEST ORACLE";
@@ -24,6 +26,7 @@ describe("Create Event", () => {
     await createEventAccount(
       slug,
       name,
+      eventType,
       startTime,
       participants,
       oracle,

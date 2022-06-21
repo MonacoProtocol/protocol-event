@@ -3,6 +3,7 @@ import assert from "assert";
 import { Program } from "@project-serum/anchor";
 import { createEventAccount, findEventPda } from "../util/test_util";
 import { Externalevent } from "../../target/types/externalevent";
+import { EventType } from "../util/constants";
 
 describe("Update Event", () => {
   const provider = anchor.AnchorProvider.local();
@@ -19,6 +20,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE",
+      EventType.AVB,
       1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
@@ -54,6 +56,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE 2",
+      EventType.AVB,
       1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
@@ -89,6 +92,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE 3",
+      EventType.AVB,
       1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
@@ -135,6 +139,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE 4",
+      EventType.AVB,
       1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",
@@ -171,6 +176,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE 5",
+      EventType.AVB,
       1924200000,
       participants,
       "TEST ORACLE",
@@ -208,6 +214,7 @@ describe("Update Event", () => {
     await createEventAccount(
       slug,
       "EVENT TO UPDATE 6",
+      EventType.AVB,
       1924200000,
       ["A", "B", "C"],
       "TEST ORACLE",

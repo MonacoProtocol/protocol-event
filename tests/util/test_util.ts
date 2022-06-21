@@ -19,6 +19,7 @@ export async function findEventPda(
 export async function createEventAccount(
   slug: string,
   name: string,
+  eventType: object,
   startTime: number,
   participants: string[],
   oracle: string,
@@ -31,6 +32,7 @@ export async function createEventAccount(
     .createEvent(
       slug,
       name,
+      eventType,
       new anchor.BN(startTime),
       participants,
       oracle,
