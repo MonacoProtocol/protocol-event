@@ -6,7 +6,6 @@ on:
     paths:
       - 'programs/externalevent/**'
       - 'tests/**'
-    branches: [ main ]
 
 jobs:
   ci_build:
