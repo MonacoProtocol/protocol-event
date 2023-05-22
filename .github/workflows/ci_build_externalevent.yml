@@ -9,7 +9,7 @@ on:
 
 jobs:
   ci_build:
-    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@chore/bump-dependencies
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@develop
     if: github.event.pull_request.draft == false
     with:
       build_type: dev

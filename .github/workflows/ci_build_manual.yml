@@ -13,7 +13,7 @@ on:
 
 jobs:
   ci_build:
-    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@chore/bump-dependencies
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@develop
     with:
       build_type: ${{ github.event.inputs.build_type }}
       solana_version: ${{ vars.ORG_SOLANA_VERSION }}

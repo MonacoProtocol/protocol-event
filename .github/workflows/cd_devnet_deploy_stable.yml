@@ -5,7 +5,7 @@ on:
 
 jobs:
   ci_build:
-    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@chore/bump-dependencies
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@develop
     with:
       build_type: stable
       solana_version: ${{ vars.ORG_SOLANA_VERSION }}
@@ -16,7 +16,7 @@ jobs:
 
   cd_deploy:
     needs: ci_build
-    uses: BetDexLabs/external-events/.github/workflows/cd_deploy_.yml@chore/bump-dependencies
+    uses: BetDexLabs/external-events/.github/workflows/cd_deploy_.yml@develop
     with:
       deploy_type: stable
       build: ${{ needs.ci_build.outputs.build_version }}

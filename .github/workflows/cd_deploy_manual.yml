@@ -28,7 +28,7 @@ on:
 
 jobs:
   ci_deploy:
-    uses: BetDexLabs/external-events/.github/workflows/cd_deploy_.yml@chore/bump-dependencies
+    uses: BetDexLabs/external-events/.github/workflows/cd_deploy_.yml@develop
     with:
       deploy_type: ${{ github.event.inputs.deploy_type }}
       build: ${{ github.event.inputs.build }}
