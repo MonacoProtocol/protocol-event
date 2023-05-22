@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SOLANA_VERSION: ${{ secrets.ORG_SOLANA_VERSION }}
+      SOLANA_VERSION: ${{ vars.ORG_SOLANA_VERSION }}
       SOLANA_PATH: /home/runner/.local/share/solana/install/active_release/bin:$PATH
 
     steps:
@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.local/share/solana/
-          key: ${{ runner.os }}-solana-${{ secrets.ORG_SOLANA_VERSION }}
+          key: ${{ runner.os }}-solana-${{ vars.ORG_SOLANA_VERSION }}
 
       - name: Install Solana
         if: steps.cache-solana.outputs.cache-hit != 'true'

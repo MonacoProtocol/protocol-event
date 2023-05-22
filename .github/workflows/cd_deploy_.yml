@@ -14,6 +14,9 @@ on:
       note:
         type: string
         required: false
+      solana_version:
+        type: string
+        required: true
     secrets:
       access_key_id:
         required: true
@@ -31,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      SOLANA_VERSION: ${{ inputs.solana_version }}
       SOLANA_PATH: /home/runner/.local/share/solana/install/active_release/bin
       DEVNET_URL: https://api.devnet.solana.com
       TESTNET_URL: https://api.testnet.solana.com
@@ -56,11 +60,52 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.local/share/solana/
-          key: ${{ runner.os }}-solana-v1.8.14
+          key: ${{ runner.os }}-solana-${{ env.SOLANA_VERSION }}
+
+      - name: Cargo Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/runner/.cargo/bin/
+            /home/runner/.cargo/registry/index/
+            /home/runner/.cargo/registry/cache/
+            /home/runner/.cargo/git/db/
+            /home/runner/.cargo/.crates.toml
+            /home/runner/.cargo/.crates2.json
+            target/bpfel-unknown-unknown/
+            target/debug/
+            target/release/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install Solana
+        if: steps.cache-solana.outputs.cache-hit != 'true'
+        run: |
+          rustup default stable
+          SOLANA_INSTALLER_URL=https://release.solana.com/${{ env.SOLANA_VERSION }}/install
+          echo $SOLANA_INSTALLER_URL
+          sh -c "$(curl -sSfL $SOLANA_INSTALLER_URL)"
 
       - name: Set Solana Path
         run: |
           echo "${{ env.SOLANA_PATH }}" >> $GITHUB_PATH
+
+      - name: Check Solana Version
+        run: |
+          solana --version
+
+      - name: Install anchor
+        run: |
+          sudo apt update
+          sudo apt install -y libudev-dev
+          sudo apt install -y pkg-config
+          ANCHOR_VERSION=`grep -A1 'name = "anchor-lang"' Cargo.lock | tail -n 1 | cut -d = -f 2 | xargs`
+          echo "Installing anchor-cli version ${ANCHOR_VERSION}"
+          cargo install --git https://github.com/coral-xyz/anchor --tag v${ANCHOR_VERSION} anchor-cli --locked
+          anchor --version
+
+      - name: Other dependencies
+        run: |
+          sudo apt-get install -y jq
 
       - name: Download Program Artifacts
         run: |
@@ -72,15 +117,10 @@ jobs:
           bash ${{ env.WALLET_MANAGER }}/decrypt_wallet.sh
           bash ${{ env.WALLET_MANAGER }}/set_keypair.sh
 
-      - name: Deploy Program
+      - name: Deploy Program & Update IDL
         run: |
-          npm i -g @project-serum/anchor-cli
-          bash ${{ env.DEPLOY_MANAGER }}/deploy_program.sh -t ${{ env.DEPLOY_TYPE }} -e ${{ env.ENVIRONMENT }} -f target/deploy/${{ env.BUILD }}.so
-
-      - name: Update IDL
-        run: |
-          npm i -g @project-serum/anchor-cli
-          bash ${{ env.DEPLOY_MANAGER }}/update_idl.sh -t ${{ env.DEPLOY_TYPE }} -e ${{ env.ENVIRONMENT }} -f target/idl/${{ env.BUILD }}.json
+          bash ${{ env.DEPLOY_MANAGER }}/deploy_program.sh -e ${{ env.ENVIRONMENT }} -f target/deploy/${{ env.BUILD }}.so
+          bash ${{ env.DEPLOY_MANAGER }}/update_idl.sh -e ${{ env.ENVIRONMENT }} -f target/idl/${{ env.BUILD }}.json
 
       - name: Remove Wallet Secret
         run: |

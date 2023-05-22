@@ -18,5 +18,5 @@ stable = []
 dev = []
 
 [dependencies]
-solana-program = "1.9.4"
-anchor-lang = "0.24.2"
+solana-program = "1.14.16"
+anchor-lang = "0.27.0"

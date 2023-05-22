@@ -1,6 +1,6 @@
-import * as anchor from "@project-serum/anchor";
+import * as anchor from "@coral-xyz/anchor";
 import assert from "assert";
-import { Program } from "@project-serum/anchor";
+import { Program } from "@coral-xyz/anchor";
 import { createEventAccount, findEventPda } from "../util/test_util";
 import { Externalevent } from "../../target/types/externalevent";
 import { EventType } from "../util/constants";

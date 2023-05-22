@@ -1,6 +1,6 @@
-import * as anchor from "@project-serum/anchor";
+import * as anchor from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-import { AnchorProvider, Program } from "@project-serum/anchor";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { Externalevent } from "../../target/types/externalevent";
 
 const { SystemProgram } = anchor.web3;

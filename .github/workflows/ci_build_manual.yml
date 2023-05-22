@@ -13,9 +13,10 @@ on:
 
 jobs:
   ci_build:
-    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@main
+    uses: BetDexLabs/external-events/.github/workflows/ci_build_.yml@chore/bump-dependencies
     with:
       build_type: ${{ github.event.inputs.build_type }}
+      solana_version: ${{ vars.ORG_SOLANA_VERSION }}
     secrets:
       access_key_id: ${{ secrets.ORG_AWS_ACCESS_KEY_ID }}
       access_key: ${{ secrets.ORG_AWS_SECRET_KEY }}

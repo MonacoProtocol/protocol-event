@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import process from "process";
-import { AnchorProvider, Program } from "@project-serum/anchor";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
 
 const PROGRAM_TYPE = {
   stable: new PublicKey("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf"),

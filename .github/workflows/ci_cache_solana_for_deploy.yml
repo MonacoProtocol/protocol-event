@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SOLANA_VERSION: v1.8.14
+      SOLANA_VERSION: ${{ inputs.solana_version }}
       SOLANA_PATH: /home/runner/.local/share/solana/install/active_release/bin:$PATH
 
     steps:

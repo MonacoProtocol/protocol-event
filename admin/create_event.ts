@@ -1,4 +1,4 @@
-import * as anchor from "@project-serum/anchor";
+import * as anchor from "@coral-xyz/anchor";
 import { SystemProgram } from "@solana/web3.js";
 import { findEventPda, getProgram, getAnchorProvider } from "./util";
 
