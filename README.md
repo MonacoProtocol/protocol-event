@@ -1,2 +1,2 @@
-# external-events
-Handle events from external sources.
+# protocol-event
+
