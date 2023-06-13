@@ -15,7 +15,7 @@ declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 
 #[program]
-pub mod externalevent {
+pub mod protocol_event {
     use super::*;
 
     pub fn create_event(

@@ -1,12 +1,12 @@
 [package]
-name = "externalevent"
+name = "protocol_event"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2018"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "externalevent"
+name = "protocol_event"
 doctest = false
 
 [features]

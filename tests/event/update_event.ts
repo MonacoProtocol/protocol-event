@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import assert from "assert";
 import { Program } from "@coral-xyz/anchor";
 import { createEventAccount, findEventPda } from "../util/test_util";
-import { Externalevent } from "../../target/types/externalevent";
+import { ProtocolEvent } from "../../target/types/protocol_event";
 import { EventType } from "../util/constants";
 
 describe("Update Event", () => {
@@ -11,7 +11,7 @@ describe("Update Event", () => {
 
   it("Update Event - Score updated", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE";
 
@@ -47,7 +47,7 @@ describe("Update Event", () => {
 
   it("Update Event - Period updated", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE-2";
 
@@ -83,7 +83,7 @@ describe("Update Event", () => {
 
   it("Update Event - Mark active & inactive", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE-3";
 
@@ -130,7 +130,7 @@ describe("Update Event", () => {
 
   it("Update Event - Status updated", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE-4";
 
@@ -166,7 +166,7 @@ describe("Update Event", () => {
 
   it("Update Event - Participants updated", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE-5";
     const participants = ["A", "B", "C"];
@@ -205,7 +205,7 @@ describe("Update Event", () => {
 
   it("Update Event - Update start timestamp", async () => {
     const eventProgram = anchor.workspace
-      .Externalevent as Program<Externalevent>;
+      .ProtocolEvent as Program<ProtocolEvent>;
 
     const slug = "EVENT-TO-UPDATE-6";
 

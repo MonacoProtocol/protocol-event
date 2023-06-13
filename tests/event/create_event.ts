@@ -9,7 +9,7 @@ describe("Create Event", () => {
   anchor.setProvider(provider);
 
   it("Create Event - Success", async () => {
-    const eventProgram = anchor.workspace.Externalevent;
+    const eventProgram = anchor.workspace.ProtocolEvent;
 
     const name = "TEST NAME";
     const slug = "test-name";

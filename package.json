@@ -27,7 +27,10 @@
         "createEvent": "ts-node admin/create_event.ts",
         "updateEvent": "ts-node admin/update_event.ts",
         "runJestTests": "jest --silent --forceExit",
-        "test": "anchor test"
+        "test": "anchor test",
+        "prepare": "husky install",
+        "format": "prettier --write \"**/*.{ts,js}\"",
+        "lint": "eslint --fix ."
     },
     "lint-staged": {
         "*.{js,ts}": [

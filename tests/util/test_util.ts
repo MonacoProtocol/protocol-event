@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
-import { Externalevent } from "../../target/types/externalevent";
+import { ProtocolEvent } from "../../target/types/protocol_event";
 
 const { SystemProgram } = anchor.web3;
 
@@ -25,7 +25,7 @@ export async function createEventAccount(
   oracle: string,
   reference: string,
   eventPk: PublicKey,
-  program: Program<Externalevent>,
+  program: Program<ProtocolEvent>,
   provider: AnchorProvider,
 ) {
   await program.methods
