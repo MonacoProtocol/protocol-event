@@ -1,0 +1,22 @@
+[package]
+name = "protocol_event"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "protocol_event"
+doctest = false
+
+[features]
+no-entrypoint = []
+no-idl = []
+cpi = ["no-entrypoint"]
+default = []
+stable = []
+dev = []
+
+[dependencies]
+solana-program = "1.14.16"
+anchor-lang = "0.27.0"

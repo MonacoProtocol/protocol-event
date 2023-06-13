@@ -1,0 +1,12 @@
+[programs.localnet]
+protocol_event = "5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn runJestTests"
