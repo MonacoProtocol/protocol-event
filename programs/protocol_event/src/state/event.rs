@@ -5,7 +5,9 @@ pub struct Event {
     pub authority: Pubkey,
     pub payer: Pubkey,
 
+    pub slug: String, // event identifier e.g. LAFCvLAG@2021-08-28
     pub name: String, // for display purposes e.g. Los Angeles Football Club vs. LA Galaxy
+
     pub active: bool,
 
     pub category: Category,
@@ -14,7 +16,8 @@ pub struct Event {
     pub participants: Vec<Participant>,
 
     pub expected_start_timestamp: i64,
-    pub expected_end_timestamp: i64,
+    pub actual_start_timestamp: Option<i64>,
+    pub actual_end_timestamp: Option<i64>,
 }
 
 pub struct Category {
