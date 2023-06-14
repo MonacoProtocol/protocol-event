@@ -5,14 +5,14 @@ pub struct Event {
     pub authority: Pubkey,
     pub payer: Pubkey,
 
-    pub slug: String, // event identifier e.g. LAFCvLAG@2021-08-28
-    pub name: String, // for display purposes e.g. Los Angeles Football Club vs. LA Galaxy
-
-    pub active: bool,
-
     pub event_type: EventType,
     pub category: Category,
     pub event_group: EventGroup,
+
+    pub active: bool,
+
+    pub slug: String, // event identifier e.g. LAFCvLAG@2021-08-28
+    pub name: String, // for display purposes e.g. Los Angeles Football Club vs. LA Galaxy
 
     pub participants: Vec<Participant>,
 
