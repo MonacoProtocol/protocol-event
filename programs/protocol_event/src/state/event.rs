@@ -30,5 +30,4 @@ pub struct EventGroup {
 pub struct Participant {
     pub id: String, // participant identifier e.g. LAFC
     pub name: String, // for display purposes e.g. Los Angeles Football Club
-    pub participant_members: Vec<String>, // list of participant members e.g. LAFC players; [Carlos Vela, Diego Rossi]
 }
