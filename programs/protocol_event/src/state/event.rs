@@ -5,7 +5,6 @@ pub struct Event {
     pub authority: Pubkey,
     pub payer: Pubkey,
 
-    pub event_type: EventType,
     pub category: Category,
     pub event_group: EventGroup,
 
@@ -19,10 +18,6 @@ pub struct Event {
     pub expected_start_timestamp: i64,
     pub actual_start_timestamp: Option<i64>,
     pub actual_end_timestamp: Option<i64>,
-}
-
-pub enum EventType {
-    AVB, // TODO placeholder value, EventTypes will be added/updated in future
 }
 
 pub struct Category {
