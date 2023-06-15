@@ -1,15 +1,13 @@
 import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { ProtocolEvent } from "../../target/types/protocol_event";
+import { CreateEventInfo } from "./constants";
 
 const { SystemProgram } = anchor.web3;
 
-export async function findEventPda(
-  slug: string,
-  program: Program,
-): Promise<PublicKey> {
-  const [pda] = await PublicKey.findProgramAddress(
+export function findEventPda(slug: string, program: Program): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from(slug)],
     program.programId,
   );
@@ -17,30 +15,15 @@ export async function findEventPda(
 }
 
 export async function createEventAccount(
-  slug: string,
-  name: string,
-  eventType: object,
-  startTime: number,
-  participants: string[],
-  oracle: string,
-  reference: string,
-  eventPk: PublicKey,
+  createEventInfo: CreateEventInfo,
   program: Program<ProtocolEvent>,
-  provider: AnchorProvider,
 ) {
+  const eventPk = findEventPda(createEventInfo.slug, program as Program);
   await program.methods
-    .createEvent(
-      slug,
-      name,
-      eventType,
-      new anchor.BN(startTime),
-      participants,
-      oracle,
-      reference,
-    )
+    .createEvent(createEventInfo)
     .accounts({
       event: eventPk,
-      authority: provider.wallet.publicKey,
+      authority: program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
     .rpc()

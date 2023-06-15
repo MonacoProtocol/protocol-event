@@ -1,32 +1,41 @@
 use anchor_lang::prelude::*;
 use crate::CreateEvent;
-use crate::state::event_account::{EventStatus, EventType, OracleReference};
+use crate::state::event::{Category, EventGroup};
+
+#[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
+pub struct CreateEventInfo {
+    pub category: Category,
+    pub event_group: EventGroup,
+    pub slug: String,
+    pub name: String,
+    pub participants: Vec<u16>,
+    pub expected_start_timestamp: i64,
+    pub actual_start_timestamp: Option<i64>,
+    pub actual_end_timestamp: Option<i64>,
+}
 
 pub fn create(
     ctx: Context<CreateEvent>,
-    slug: String,
-    name: String,
-    event_type: EventType,
-    start_expected_timestamp: i64,
-    participants: Vec<String>,
-    oracle: String,
-    oracle_reference: String,
+    event_info: CreateEventInfo,
 ) -> Result<()> {
-    ctx.accounts.event.authority = ctx.accounts.authority.key();
-    ctx.accounts.event.slug = slug;
-    ctx.accounts.event.name = name;
-    ctx.accounts.event.event_type = event_type;
-    ctx.accounts.event.start_expected_timestamp = start_expected_timestamp;
-    ctx.accounts.event.end_actual_timestamp = None;
-    ctx.accounts.event.participants = participants;
-    ctx.accounts.event.reference = OracleReference {
-        oracle,
-        reference: oracle_reference
-    };
-    ctx.accounts.event.active = false;
-    ctx.accounts.event.status = EventStatus::Upcoming;
-    ctx.accounts.event.current_score = None;
-    ctx.accounts.event.current_period = None;
+    let event = &mut ctx.accounts.event;
+
+    event.authority = ctx.accounts.authority.key();
+    event.payer = ctx.accounts.authority.key();
+
+    event.category = event_info.category;
+    event.event_group = event_info.event_group;
+
+    event.active = false;
+
+    event.slug = event_info.slug;
+    event.name = event_info.name;
+
+    event.participants = event_info.participants;
+
+    event.expected_start_timestamp = event_info.expected_start_timestamp;
+    event.actual_start_timestamp = event_info.actual_start_timestamp;
+    event.actual_end_timestamp = event_info.actual_end_timestamp;
 
     Ok(())
 }

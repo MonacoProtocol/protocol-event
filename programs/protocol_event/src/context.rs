@@ -1,14 +1,15 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
 use crate::Event;
+use crate::instructions::CreateEventInfo;
 
 #[derive(Accounts)]
-#[instruction(slug: String)]
+#[instruction(event_info: CreateEventInfo)]
 pub struct CreateEvent<'info> {
     #[account(
         init,
         payer = authority,
-        seeds = [slug.as_ref()],
+        seeds = [event_info.slug.as_ref()],
         bump,
         space = Event::SIZE
     )]
