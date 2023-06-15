@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::state::type_size::{BOOL_SIZE, CHAR_SIZE, DISCRIMINATOR_SIZE, I64_SIZE, option_size, PUB_KEY_SIZE, vec_size};
+use crate::state::type_size::{BOOL_SIZE, CHAR_SIZE, DISCRIMINATOR_SIZE, I64_SIZE, option_size, PUB_KEY_SIZE, U64_SIZE, vec_size};
 
 #[account]
 pub struct Event {
@@ -14,7 +14,7 @@ pub struct Event {
     pub slug: String, // event identifier e.g. LAFCvLAG@2021-08-28
     pub name: String, // for display purposes e.g. Los Angeles Football Club vs. LA Galaxy
 
-    pub participants: Vec<Participant>,
+    pub participants: Vec<u16>,
 
     pub expected_start_timestamp: i64,
     pub actual_start_timestamp: Option<i64>,
@@ -24,7 +24,7 @@ pub struct Event {
 impl Event {
     const MAX_EVENT_SLUG_LENGTH: usize = 25;
     const MAX_EVENT_NAME_LENGTH: usize = 50;
-    const MAX_PARTICIPANTS: usize = 64;
+    const MAX_PARTICIPANTS: usize = 300;
 
     pub const SIZE: usize =
         DISCRIMINATOR_SIZE
@@ -34,8 +34,8 @@ impl Event {
             + BOOL_SIZE
             + vec_size(CHAR_SIZE, Event::MAX_EVENT_SLUG_LENGTH)
             + vec_size(CHAR_SIZE, Event::MAX_EVENT_NAME_LENGTH)
-            + vec_size(Participant::SIZE, Event::MAX_PARTICIPANTS)
-            + I64_SIZE
+            + U64_SIZE
+            + vec_size(U64_SIZE, Event::MAX_PARTICIPANTS)
             + option_size(I64_SIZE) * 2;
 }
 
@@ -67,19 +67,4 @@ impl EventGroup {
     const SIZE: usize =
         vec_size(CHAR_SIZE, EventGroup::MAX_ID_LENGTH)
             + vec_size(CHAR_SIZE, EventGroup::MAX_EVENT_GROUP_NAME_LENGTH);
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
-pub struct Participant {
-    pub id: String, // participant identifier e.g. LAFC
-    pub name: String, // for display purposes e.g. Los Angeles Football Club
-}
-
-impl Participant {
-    const MAX_ID_LENGTH: usize = 10;
-    const MAX_PARTICIPANT_NAME_LENGTH: usize = 25;
-
-    const SIZE: usize =
-        vec_size(CHAR_SIZE, Participant::MAX_ID_LENGTH)
-            + vec_size(CHAR_SIZE, Participant::MAX_PARTICIPANT_NAME_LENGTH);
 }

@@ -6,7 +6,7 @@ export type CreateEventInfo = {
   eventGroup: EventGroup;
   slug: string;
   name: string;
-  participants: Participant[];
+  participants: number[];
   expectedStartTimestamp: BN;
   actualStartTimestamp: BN | null;
   actualEndTimestamp: BN | null;

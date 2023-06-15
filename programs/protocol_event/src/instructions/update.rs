@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use crate::state::event::Participant;
 use crate::UpdateEvent;
 
 pub fn update_active_flag(ctx: Context<UpdateEvent>, active: bool) -> Result<()> {
@@ -8,7 +7,7 @@ pub fn update_active_flag(ctx: Context<UpdateEvent>, active: bool) -> Result<()>
     Ok(())
 }
 
-pub fn update_participants(ctx: Context<UpdateEvent>, participants: Vec<Participant>) -> Result<()> {
+pub fn update_participants(ctx: Context<UpdateEvent>, participants: Vec<u16>) -> Result<()> {
     let event = &mut ctx.accounts.event;
     event.participants = participants;
     Ok(())

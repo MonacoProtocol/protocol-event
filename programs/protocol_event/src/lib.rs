@@ -39,7 +39,7 @@ pub mod protocol_event {
     pub fn update_participants(
         ctx: Context<UpdateEvent>,
         _slug: String,
-        participants: Vec<Participant>,
+        participants: Vec<u16>,
     ) -> Result<()> {
         instructions::update::update_participants(ctx, participants)
     }

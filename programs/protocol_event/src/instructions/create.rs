@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use crate::CreateEvent;
-use crate::state::event::{Category, EventGroup, Participant};
+use crate::state::event::{Category, EventGroup};
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
 pub struct CreateEventInfo {
@@ -8,7 +8,7 @@ pub struct CreateEventInfo {
     pub event_group: EventGroup,
     pub slug: String,
     pub name: String,
-    pub participants: Vec<Participant>,
+    pub participants: Vec<u16>,
     pub expected_start_timestamp: i64,
     pub actual_start_timestamp: Option<i64>,
     pub actual_end_timestamp: Option<i64>,
