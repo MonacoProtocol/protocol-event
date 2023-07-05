@@ -1,14 +1,17 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import assert from "assert";
-import { createEventAccount, findEventPda } from "../util/test_util";
+import { createEventAccount } from "../util/test_util";
 import { ProtocolEvent } from "../../target/types/protocol_event";
-import { Category, CreateEventInfo, EventGroup } from "../util/constants";
+import { CreateEventInfo } from "../util/constants";
+import {
+  eplEventGroupPda,
+  findEventPda,
+  footballCategoryPda,
+} from "../util/pda";
+import { getAnchorProvider } from "../../admin/util";
 
 describe("Update Event", () => {
-  const provider = anchor.AnchorProvider.local();
-  anchor.setProvider(provider);
-
   it("Update Event - Mark active & inactive", async () => {
     const eventProgram = anchor.workspace
       .ProtocolEvent as Program<ProtocolEvent>;
@@ -18,14 +21,6 @@ describe("Update Event", () => {
     // pda for new Event state account
     const eventPk = await findEventPda(slug, eventProgram as Program);
     const createEventInfo = {
-      category: {
-        id: "TEST CATEGORY ID",
-        name: "TEST CATEGORY NAME",
-      } as Category,
-      eventGroup: {
-        id: "TEST EVENT GROUP ID",
-        name: "TEST EVENT GROUP NAME",
-      } as EventGroup,
       slug: slug,
       name: "TEST NAME",
       participants: [],
@@ -33,7 +28,12 @@ describe("Update Event", () => {
       actualStartTimestamp: null,
       actualEndTimestamp: null,
     } as CreateEventInfo;
-    await createEventAccount(createEventInfo, eventProgram);
+    await createEventAccount(
+      createEventInfo,
+      footballCategoryPda(),
+      eplEventGroupPda(),
+      eventProgram,
+    );
 
     const createdAccount = await eventProgram.account.event.fetch(eventPk);
     assert.equal(createdAccount.active, false);
@@ -42,7 +42,7 @@ describe("Update Event", () => {
       .activateEvent(slug)
       .accounts({
         event: eventPk,
-        authority: provider.wallet.publicKey,
+        authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();
 
@@ -53,7 +53,7 @@ describe("Update Event", () => {
       .deactivateEvent(slug)
       .accounts({
         event: eventPk,
-        authority: provider.wallet.publicKey,
+        authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();
 

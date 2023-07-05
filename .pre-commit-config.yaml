@@ -11,3 +11,4 @@ repos:
     -   id: fmt
     -   id: cargo-check
     -   id: clippy
+        args: [ "--", "-D", "warnings", "-A", "clippy::result_large_err" ]
