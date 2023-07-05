@@ -1,11 +1,8 @@
-use anchor_lang::prelude::*;
 use crate::CreateEvent;
-use crate::state::event::{Category, EventGroup};
+use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
 pub struct CreateEventInfo {
-    pub category: Category,
-    pub event_group: EventGroup,
     pub slug: String,
     pub name: String,
     pub participants: Vec<u16>,
@@ -14,17 +11,14 @@ pub struct CreateEventInfo {
     pub actual_end_timestamp: Option<i64>,
 }
 
-pub fn create(
-    ctx: Context<CreateEvent>,
-    event_info: CreateEventInfo,
-) -> Result<()> {
+pub fn create(ctx: Context<CreateEvent>, event_info: CreateEventInfo) -> Result<()> {
     let event = &mut ctx.accounts.event;
 
     event.authority = ctx.accounts.authority.key();
     event.payer = ctx.accounts.authority.key();
 
-    event.category = event_info.category;
-    event.event_group = event_info.event_group;
+    event.category = ctx.accounts.category.key();
+    event.event_group = ctx.accounts.event_group.key();
 
     event.active = false;
 

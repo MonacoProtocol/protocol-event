@@ -1,5 +1,5 @@
-use anchor_lang::prelude::*;
 use crate::UpdateEvent;
+use anchor_lang::prelude::*;
 
 pub fn update_active_flag(ctx: Context<UpdateEvent>, active: bool) -> Result<()> {
     let event = &mut ctx.accounts.event;

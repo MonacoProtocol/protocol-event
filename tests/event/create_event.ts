@@ -1,30 +1,22 @@
 import * as anchor from "@coral-xyz/anchor";
-import assert from "assert";
 import { Program } from "@coral-xyz/anchor";
-import { createEventAccount, findEventPda } from "../util/test_util";
-import { Category, CreateEventInfo, EventGroup } from "../util/constants";
+import assert from "assert";
+import { createEventAccount } from "../util/test_util";
+import { CreateEventInfo } from "../util/constants";
+import {
+  eplEventGroupPda,
+  findEventPda,
+  footballCategoryPda,
+} from "../util/pda";
 
 describe("Create Event", () => {
-  const provider = anchor.AnchorProvider.local();
-  anchor.setProvider(provider);
-
   it("Create Event - Success", async () => {
     const eventProgram = anchor.workspace.ProtocolEvent;
     const name = "TEST NAME";
     const slug = "test-name";
     const startTime = 1924200000;
-    const category = {
-      id: "TEST CATEGORY ID",
-      name: "TEST CATEGORY NAME",
-    } as Category;
-    const eventGroup = {
-      id: "TEST EVENT GROUP ID",
-      name: "TEST EVENT GROUP NAME",
-    } as EventGroup;
 
     const createEventInfo = {
-      category: category,
-      eventGroup: eventGroup,
       slug: slug,
       name: name,
       participants: [],
@@ -33,7 +25,12 @@ describe("Create Event", () => {
       actualEndTimestamp: null,
     } as CreateEventInfo;
 
-    await createEventAccount(createEventInfo, eventProgram);
+    await createEventAccount(
+      createEventInfo,
+      footballCategoryPda(),
+      eplEventGroupPda(),
+      eventProgram,
+    );
 
     const eventPk = await findEventPda(slug, eventProgram as Program);
     const createdAccount = await eventProgram.account.event.fetch(eventPk);
