@@ -60,7 +60,7 @@ fn validate_event(event_info: &CreateEventInfo, category_participant_count: u16)
         event_info
             .participants
             .iter()
-            .all(|&participant| (1..=category_participant_count).contains(&participant)),
+            .all(|&participant| participant > 0 && participant < category_participant_count),
         EventError::InvalidEventParticipants,
     );
     Ok(())

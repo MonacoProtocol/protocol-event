@@ -1,6 +1,7 @@
 use crate::instructions::CreateEventInfo;
 use crate::state::category::Category;
 use crate::state::event_group::EventGroup;
+use crate::state::participant::Participant;
 use crate::Event;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
@@ -83,6 +84,29 @@ pub struct CreateEventGroup<'info> {
         space = EventGroup::SIZE
     )]
     pub event_group: Account<'info, EventGroup>,
+    pub category: Account<'info, Category>,
+
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    #[account(address = system_program::ID)]
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct CreateParticipant<'info> {
+    #[account(
+        init,
+        payer = payer,
+        seeds = [
+            b"participant".as_ref(),
+            category.key().as_ref(),
+            category.participant_count.to_string().as_ref()
+        ],
+        bump,
+        space = Participant::SIZE
+    )]
+    pub participant: Account<'info, Participant>,
+    #[account(mut)]
     pub category: Account<'info, Category>,
 
     #[account(mut)]

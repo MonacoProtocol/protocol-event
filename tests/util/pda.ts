@@ -39,3 +39,19 @@ export function eplEventGroupPda(): PublicKey {
   const program: anchor.Program = anchor.workspace.ProtocolEvent;
   return findEventGroupPda(footballCategoryPda(), "EPL", program);
 }
+
+export function findParticipantPda(
+  category: PublicKey,
+  id: number,
+  program: Program,
+): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("participant"),
+      category.toBuffer(),
+      Buffer.from(id.toString()),
+    ],
+    program.programId,
+  );
+  return pda;
+}

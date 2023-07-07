@@ -15,6 +15,8 @@ declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 pub mod protocol_event {
     use super::*;
 
+    // Event management instructions
+
     pub fn create_event(ctx: Context<CreateEvent>, event_info: CreateEventInfo) -> Result<()> {
         instructions::create(
             &mut ctx.accounts.event,
@@ -36,7 +38,7 @@ pub mod protocol_event {
         instructions::update_event::update_active_flag(&mut ctx.accounts.event, false)
     }
 
-    pub fn update_participants(
+    pub fn update_event_participants(
         ctx: Context<UpdateEvent>,
         _slug: String,
         participants: Vec<u16>,
@@ -77,6 +79,44 @@ pub mod protocol_event {
             ctx.accounts.payer.key(),
             code,
             name,
+        )
+    }
+
+    // Participant management instructions
+
+    pub fn create_individual_participant(
+        ctx: Context<CreateParticipant>,
+        code: String,
+        name: String,
+    ) -> Result<()> {
+        instructions::update_grouping::increment_category_participant_count(
+            &mut ctx.accounts.category,
+        )?;
+        instructions::create_participant::create_individual_participant(
+            &mut ctx.accounts.participant,
+            &ctx.accounts.category.key(),
+            &ctx.accounts.payer.key(),
+            code,
+            name,
+            ctx.accounts.category.participant_count,
+        )
+    }
+
+    pub fn create_team_participant(
+        ctx: Context<CreateParticipant>,
+        code: String,
+        name: String,
+    ) -> Result<()> {
+        instructions::update_grouping::increment_category_participant_count(
+            &mut ctx.accounts.category,
+        )?;
+        instructions::create_participant::create_team_participant(
+            &mut ctx.accounts.participant,
+            &ctx.accounts.category.key(),
+            &ctx.accounts.payer.key(),
+            code,
+            name,
+            ctx.accounts.category.participant_count,
         )
     }
 }

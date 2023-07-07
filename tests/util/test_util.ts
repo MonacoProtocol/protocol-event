@@ -2,7 +2,12 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { ProtocolEvent } from "../../target/types/protocol_event";
 import { CreateEventInfo } from "./constants";
-import { findCategoryPda, findEventGroupPda, findEventPda } from "./pda";
+import {
+  findCategoryPda,
+  findEventGroupPda,
+  findEventPda,
+  findParticipantPda,
+} from "./pda";
 import { PublicKey } from "@solana/web3.js";
 
 const { SystemProgram } = anchor.web3;
@@ -73,4 +78,61 @@ export async function createEventGroup(
       throw e;
     });
   return eventGroupPk;
+}
+
+export async function createIndividualParticipant(
+  program: Program<ProtocolEvent>,
+  categoryPk: PublicKey,
+  code: string,
+  name: string,
+) {
+  const category = await program.account.category.fetch(categoryPk);
+
+  const participantPk = findParticipantPda(
+    categoryPk,
+    category.participantCount,
+    program as Program,
+  );
+  await program.methods
+    .createIndividualParticipant(code, name)
+    .accounts({
+      participant: participantPk,
+      category: categoryPk,
+      payer: program.provider.publicKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc()
+    .catch((e) => {
+      console.error(e);
+      throw e;
+    });
+  return participantPk;
+}
+
+export async function createTeamParticipant(
+  program: Program<ProtocolEvent>,
+  categoryPk: PublicKey,
+  code: string,
+  name: string,
+) {
+  const category = await program.account.category.fetch(categoryPk);
+  const participantPk = findParticipantPda(
+    categoryPk,
+    category.participantCount,
+    program as Program,
+  );
+  await program.methods
+    .createTeamParticipant(code, name)
+    .accounts({
+      participant: participantPk,
+      category: categoryPk,
+      payer: program.provider.publicKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc()
+    .catch((e) => {
+      console.error(e);
+      throw e;
+    });
+  return participantPk;
 }

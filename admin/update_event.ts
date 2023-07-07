@@ -121,7 +121,7 @@ function updateParticipants() {
     const provider = getAnchorProvider();
     const eventPk = await findEventPda(slug, program);
     await program.methods
-      .updateParticipants(slug, participants)
+      .updateEventParticipants(slug, participants)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
