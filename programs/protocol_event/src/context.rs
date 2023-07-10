@@ -42,8 +42,11 @@ pub struct UpdateEvent<'info> {
         ],
         bump,
         has_one = authority,
+        has_one = category,
     )]
     pub event: Account<'info, Event>,
+    pub category: Account<'info, Category>,
+
     #[account(mut)]
     pub authority: Signer<'info>,
 }

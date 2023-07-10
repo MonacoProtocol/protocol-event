@@ -1,13 +1,13 @@
-pub mod context;
-pub mod error;
-pub mod instructions;
-pub mod state;
-
 use anchor_lang::prelude::*;
 
 use crate::context::*;
 use crate::instructions::CreateEventInfo;
 use crate::state::event::*;
+
+pub mod context;
+pub mod error;
+pub mod instructions;
+pub mod state;
 
 declare_id!("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf");
 
@@ -38,12 +38,27 @@ pub mod protocol_event {
         instructions::update_event::update_active_flag(&mut ctx.accounts.event, false)
     }
 
-    pub fn update_event_participants(
+    pub fn add_event_participants(
         ctx: Context<UpdateEvent>,
         _slug: String,
-        participants: Vec<u16>,
+        participants_to_add: Vec<u16>,
     ) -> Result<()> {
-        instructions::update_event::update_participants(&mut ctx.accounts.event, participants)
+        instructions::update_event::add_participants(
+            &mut ctx.accounts.event.participants,
+            participants_to_add,
+            ctx.accounts.category.participant_count,
+        )
+    }
+
+    pub fn remove_event_participants(
+        ctx: Context<UpdateEvent>,
+        _slug: String,
+        participants_to_remove: Vec<u16>,
+    ) -> Result<()> {
+        instructions::update_event::remove_participants(
+            &mut ctx.accounts.event.participants,
+            participants_to_remove,
+        )
     }
 
     pub fn update_event_expected_start_timestamp(

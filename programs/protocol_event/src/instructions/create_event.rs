@@ -60,7 +60,7 @@ fn validate_event(event_info: &CreateEventInfo, category_participant_count: u16)
         event_info
             .participants
             .iter()
-            .all(|&participant| participant > 0 && participant < category_participant_count),
+            .all(|&participant| participant > 0 && participant <= category_participant_count),
         EventError::InvalidEventParticipants,
     );
     Ok(())
@@ -182,7 +182,7 @@ mod tests {
 
     #[test]
     fn test_validate_event_participants_not_in_category() {
-        let participants: Vec<u16> = (1..=20).map(|num| num as u16).collect();
+        let participants: Vec<u16> = (1..=11).map(|num| num as u16).collect();
         let event_info = CreateEventInfo {
             slug: "LAFCvLAG@2021-08-28".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),

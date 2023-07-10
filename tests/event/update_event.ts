@@ -32,7 +32,6 @@ describe("Update Event", () => {
       createEventInfo,
       footballCategoryPda(),
       eplEventGroupPda(),
-      eventProgram,
     );
 
     const createdAccount = await eventProgram.account.event.fetch(eventPk);
@@ -42,6 +41,7 @@ describe("Update Event", () => {
       .activateEvent(slug)
       .accounts({
         event: eventPk,
+        category: footballCategoryPda(),
         authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();
@@ -53,6 +53,7 @@ describe("Update Event", () => {
       .deactivateEvent(slug)
       .accounts({
         event: eventPk,
+        category: footballCategoryPda(),
         authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();
