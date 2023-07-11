@@ -47,7 +47,6 @@ pub struct UpdateEvent<'info> {
     pub event: Account<'info, Event>,
     pub category: Account<'info, Category>,
 
-    #[account(mut)]
     pub authority: Signer<'info>,
 }
 
@@ -116,4 +115,11 @@ pub struct CreateParticipant<'info> {
     pub payer: Signer<'info>,
     #[account(address = system_program::ID)]
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateParticipant<'info> {
+    #[account(mut, has_one = authority)]
+    pub participant: Account<'info, Participant>,
+    pub authority: Signer<'info>,
 }

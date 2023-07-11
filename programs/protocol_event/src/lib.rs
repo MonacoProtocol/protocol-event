@@ -164,4 +164,18 @@ pub mod protocol_event {
             ctx.accounts.category.participant_count,
         )
     }
+
+    pub fn update_participant_name(
+        ctx: Context<UpdateParticipant>,
+        updated_name: String,
+    ) -> Result<()> {
+        instructions::update_participant::update_name(&mut ctx.accounts.participant, updated_name)
+    }
+
+    pub fn update_participant_code(
+        ctx: Context<UpdateParticipant>,
+        updated_code: String,
+    ) -> Result<()> {
+        instructions::update_participant::update_code(&mut ctx.accounts.participant, updated_code)
+    }
 }

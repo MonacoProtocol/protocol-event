@@ -53,6 +53,7 @@ fn initialize_participant(
 
     participant.category = *category;
     participant.payer = *payer;
+    participant.authority = *payer;
 
     participant.participant_type = participant_type;
     participant.code = code;
