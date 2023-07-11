@@ -72,6 +72,13 @@ pub struct CreateCategory<'info> {
 }
 
 #[derive(Accounts)]
+pub struct UpdateCategory<'info> {
+    #[account(mut, has_one = authority)]
+    pub category: Account<'info, Category>,
+    pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
 #[instruction(code: String)]
 pub struct CreateEventGroup<'info> {
     #[account(
@@ -92,6 +99,13 @@ pub struct CreateEventGroup<'info> {
     pub payer: Signer<'info>,
     #[account(address = system_program::ID)]
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateEventGroup<'info> {
+    #[account(mut, has_one = authority)]
+    pub event_group: Account<'info, EventGroup>,
+    pub authority: Signer<'info>,
 }
 
 #[derive(Accounts)]

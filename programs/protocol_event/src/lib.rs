@@ -113,6 +113,13 @@ pub mod protocol_event {
         )
     }
 
+    pub fn update_category_name(ctx: Context<UpdateCategory>, updated_name: String) -> Result<()> {
+        instructions::update_grouping::update_category_name(
+            &mut ctx.accounts.category,
+            updated_name,
+        )
+    }
+
     pub fn create_event_group(
         ctx: Context<CreateEventGroup>,
         code: String,
@@ -124,6 +131,16 @@ pub mod protocol_event {
             ctx.accounts.payer.key(),
             code,
             name,
+        )
+    }
+
+    pub fn update_event_group_name(
+        ctx: Context<UpdateEventGroup>,
+        updated_name: String,
+    ) -> Result<()> {
+        instructions::update_grouping::update_event_group_name(
+            &mut ctx.accounts.event_group,
+            updated_name,
         )
     }
 
