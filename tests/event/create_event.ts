@@ -1,31 +1,27 @@
 import * as anchor from "@coral-xyz/anchor";
-import assert from "assert";
 import { Program } from "@coral-xyz/anchor";
-import { createEventAccount, findEventPda } from "../util/test_util";
-import { Category, CreateEventInfo, EventGroup } from "../util/constants";
+import assert from "assert";
+import {
+  addEventParticipants,
+  createEvent,
+  removeEventParticipants,
+} from "../util/test_util";
+import { CreateEventInfo } from "../util/constants";
+import {
+  eplEventGroupPda,
+  findEventPda,
+  footballCategoryPda,
+} from "../util/pda";
 
 describe("Create Event", () => {
-  const provider = anchor.AnchorProvider.local();
-  anchor.setProvider(provider);
-
-  it("Create Event - Success", async () => {
+  it("Create Event with Participants", async () => {
     const eventProgram = anchor.workspace.ProtocolEvent;
     const name = "TEST NAME";
-    const slug = "test-name";
+    const code = "test-name";
     const startTime = 1924200000;
-    const category = {
-      id: "TEST CATEGORY ID",
-      name: "TEST CATEGORY NAME",
-    } as Category;
-    const eventGroup = {
-      id: "TEST EVENT GROUP ID",
-      name: "TEST EVENT GROUP NAME",
-    } as EventGroup;
 
     const createEventInfo = {
-      category: category,
-      eventGroup: eventGroup,
-      slug: slug,
+      code: code,
       name: name,
       participants: [],
       expectedStartTimestamp: new anchor.BN(startTime),
@@ -33,13 +29,41 @@ describe("Create Event", () => {
       actualEndTimestamp: null,
     } as CreateEventInfo;
 
-    await createEventAccount(createEventInfo, eventProgram);
+    await createEvent(
+      createEventInfo,
+      footballCategoryPda(),
+      eplEventGroupPda(),
+    );
 
-    const eventPk = await findEventPda(slug, eventProgram as Program);
+    const eventPk = await findEventPda(code, eventProgram as Program);
     const createdAccount = await eventProgram.account.event.fetch(eventPk);
 
     assert.equal(createdAccount.name, name);
-    assert.equal(createdAccount.slug, slug);
+    assert.equal(createdAccount.code, code);
     assert.equal(createdAccount.expectedStartTimestamp.toNumber(), startTime);
+
+    // add participants
+
+    const participants = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    await addEventParticipants(code, participants);
+
+    const eventWithParticipants = await eventProgram.account.event.fetch(
+      eventPk,
+    );
+    assert.deepEqual(eventWithParticipants.participants, participants);
+
+    // remove participants
+
+    const toRemove = participants[0];
+    await removeEventParticipants(code, [toRemove]);
+
+    const eventWithParticipantsRemoved = await eventProgram.account.event.fetch(
+      eventPk,
+    );
+    assert.ok(!eventWithParticipantsRemoved.participants.includes(toRemove));
+    assert.deepEqual(
+      eventWithParticipantsRemoved.participants,
+      participants.slice(1),
+    );
   });
 });

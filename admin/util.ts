@@ -32,11 +32,11 @@ export function getAnchorProvider(): AnchorProvider {
 }
 
 export async function findEventPda(
-  slug: string,
+  code: string,
   program: Program,
 ): Promise<PublicKey> {
   const [pda] = await PublicKey.findProgramAddress(
-    [Buffer.from(slug)],
+    [Buffer.from(code)],
     program.programId,
   );
   return pda;
