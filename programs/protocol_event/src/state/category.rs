@@ -3,10 +3,10 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct Category {
+    pub authority: Pubkey,
     pub code: String,
     pub name: String,
-    pub participant_count: u16,
-    pub authority: Pubkey,
+    pub participant_count: u16, // current number of Participant accounts created for Category
     pub payer: Pubkey,
 }
 

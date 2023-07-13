@@ -9,7 +9,6 @@ pub fn update_code(participant: &mut Participant, code: String) -> Result<()> {
     );
 
     participant.code = code;
-
     Ok(())
 }
 
@@ -20,7 +19,16 @@ pub fn update_name(participant: &mut Participant, name: String) -> Result<()> {
     );
 
     participant.name = name;
+    Ok(())
+}
 
+pub fn activate_participant(participant: &mut Participant) -> Result<()> {
+    participant.active = true;
+    Ok(())
+}
+
+pub fn deactivate_participant(participant: &mut Participant) -> Result<()> {
+    participant.active = false;
     Ok(())
 }
 
@@ -60,6 +68,20 @@ mod tests {
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
     }
 
+    #[test]
+    fn test_deactivate_activate_participant() {
+        let mut participant = &mut participant();
+        assert_eq!(participant.active, true);
+
+        let result = deactivate_participant(&mut participant);
+        assert!(result.is_ok());
+        assert_eq!(participant.active, false);
+
+        let result = activate_participant(&mut participant);
+        assert!(result.is_ok());
+        assert_eq!(participant.active, true);
+    }
+
     fn participant() -> Participant {
         Participant {
             code: "code".to_string(),
@@ -69,6 +91,7 @@ mod tests {
             category: Pubkey::new_from_array([0; 32]),
             payer: Pubkey::new_from_array([0; 32]),
             authority: Default::default(),
+            active: true,
         }
     }
 }

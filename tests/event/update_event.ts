@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import assert from "assert";
-import { createEventAccount } from "../util/test_util";
+import { createEvent } from "../util/test_util";
 import { ProtocolEvent } from "../../target/types/protocol_event";
 import { CreateEventInfo } from "../util/constants";
 import {
@@ -16,19 +16,19 @@ describe("Update Event", () => {
     const eventProgram = anchor.workspace
       .ProtocolEvent as Program<ProtocolEvent>;
 
-    const slug = "EVENT-TO-UPDATE-3";
+    const code = "EVENT-TO-UPDATE-3";
 
     // pda for new Event state account
-    const eventPk = await findEventPda(slug, eventProgram as Program);
+    const eventPk = await findEventPda(code, eventProgram as Program);
     const createEventInfo = {
-      slug: slug,
+      code: code,
       name: "TEST NAME",
       participants: [],
       expectedStartTimestamp: new anchor.BN(1924200000),
       actualStartTimestamp: null,
       actualEndTimestamp: null,
     } as CreateEventInfo;
-    await createEventAccount(
+    await createEvent(
       createEventInfo,
       footballCategoryPda(),
       eplEventGroupPda(),
@@ -38,7 +38,7 @@ describe("Update Event", () => {
     assert.equal(createdAccount.active, false);
 
     await eventProgram.methods
-      .activateEvent(slug)
+      .activateEvent(code)
       .accounts({
         event: eventPk,
         category: footballCategoryPda(),
@@ -50,7 +50,7 @@ describe("Update Event", () => {
     assert.equal(activatedEvent.active, true);
 
     await eventProgram.methods
-      .deactivateEvent(slug)
+      .deactivateEvent(code)
       .accounts({
         event: eventPk,
         category: footballCategoryPda(),

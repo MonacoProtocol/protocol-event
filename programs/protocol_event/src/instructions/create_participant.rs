@@ -56,6 +56,7 @@ fn initialize_participant(
     participant.authority = *payer;
 
     participant.participant_type = participant_type;
+    participant.active = true;
     participant.code = code;
     participant.name = name;
     participant.id = participant_id;

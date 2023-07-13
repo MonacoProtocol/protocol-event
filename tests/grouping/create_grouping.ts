@@ -8,7 +8,7 @@ describe("Create Grouping Accounts", () => {
     const program = anchor.workspace.ProtocolEvent;
 
     const code = "SC";
-    const name = "Slug Collecting";
+    const name = "Code Collecting";
     const categoryPk = await createCategory(program, code, name);
 
     const category = await program.account.category.fetch(categoryPk);

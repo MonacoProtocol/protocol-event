@@ -2,9 +2,9 @@ import { Program } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
 
-export function findEventPda(slug: string, program: Program): PublicKey {
+export function findEventPda(code: string, program: Program): PublicKey {
   const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("event"), Buffer.from(slug)],
+    [Buffer.from("event"), Buffer.from(code)],
     program.programId,
   );
   return pda;

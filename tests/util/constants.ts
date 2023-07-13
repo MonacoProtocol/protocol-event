@@ -1,7 +1,7 @@
 import { BN } from "@coral-xyz/anchor";
 
 export type CreateEventInfo = {
-  slug: string;
+  code: string;
   name: string;
   participants: number[];
   expectedStartTimestamp: BN;

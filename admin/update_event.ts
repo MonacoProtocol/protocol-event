@@ -3,12 +3,12 @@ import { findEventPda, getProgram, getAnchorProvider } from "./util";
 
 if (process.argv.length < 4) {
   console.log(
-    "Usage: yarn run updateEvent <SLUG> <FIELD|COMMAND> [<PARAM>, ...]",
+    "Usage: yarn run updateEvent <CODE> <FIELD|COMMAND> [<PARAM>, ...]",
   );
   process.exit(1);
 }
 
-const slug = process.argv[2];
+const code = process.argv[2];
 const updateTask = process.argv[3];
 
 switch (updateTask) {
@@ -50,9 +50,9 @@ function updateScore() {
   const score = process.argv[4];
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .updateScore(slug, score)
+      .updateScore(code, score)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -73,9 +73,9 @@ function updateStartTime() {
   const startTime = new anchor.BN(Number.parseInt(process.argv[4]));
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .setStartTimestamp(slug, startTime)
+      .setStartTimestamp(code, startTime)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -96,9 +96,9 @@ function updatePeriod() {
   const period = Number.parseInt(process.argv[4]);
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .updatePeriod(slug, period)
+      .updatePeriod(code, period)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -119,9 +119,9 @@ function updateParticipants() {
   const participants = JSON.parse(process.argv[4]);
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .updateEventParticipants(slug, participants)
+      .updateEventParticipants(code, participants)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -137,9 +137,9 @@ function updateParticipants() {
 function activate() {
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .activateEvent(slug)
+      .activateEvent(code)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -155,9 +155,9 @@ function activate() {
 function deactivate() {
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .deactivateEvent(slug)
+      .deactivateEvent(code)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -173,9 +173,9 @@ function deactivate() {
 function start() {
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .startEvent(slug)
+      .startEvent(code)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,
@@ -191,9 +191,9 @@ function start() {
 function complete() {
   getProgram().then(async (program) => {
     const provider = getAnchorProvider();
-    const eventPk = await findEventPda(slug, program);
+    const eventPk = await findEventPda(code, program);
     await program.methods
-      .completeEvent(slug)
+      .completeEvent(code)
       .accounts({
         event: eventPk,
         authority: provider.wallet.publicKey,

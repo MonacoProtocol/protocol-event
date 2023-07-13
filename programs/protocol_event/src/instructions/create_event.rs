@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone, PartialEq)]
 pub struct CreateEventInfo {
-    pub slug: String,
+    pub code: String,
     pub name: String,
     pub participants: Vec<u16>,
     pub expected_start_timestamp: i64,
@@ -31,7 +31,7 @@ pub fn create(
 
     event.active = false;
 
-    event.slug = event_info.slug;
+    event.code = event_info.code;
     event.name = event_info.name;
 
     event.participants = event_info.participants;
@@ -49,7 +49,7 @@ fn validate_event(event_info: &CreateEventInfo, category_participant_count: u16)
         EventError::MaxStringLengthExceeded,
     );
     require!(
-        event_info.slug.len() <= Event::MAX_SLUG_LENGTH,
+        event_info.code.len() <= Event::MAX_CODE_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
     require!(
@@ -83,7 +83,7 @@ mod tests {
             active: false,
             authority: Default::default(),
             payer: Default::default(),
-            slug: "".to_string(),
+            code: "".to_string(),
             name: "".to_string(),
             participants: vec![],
             expected_start_timestamp: 0,
@@ -92,7 +92,7 @@ mod tests {
         };
 
         let event_info = CreateEventInfo {
-            slug: "LAFCvLAG@2021-08-28".to_string(),
+            code: "LAFCvLAG@2021-08-28".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
             participants: vec![1, 2, 3, 4, 5],
             expected_start_timestamp: 1630156800,
@@ -120,7 +120,7 @@ mod tests {
         assert_eq!(new_event.active, false);
         assert_eq!(new_event.authority, authority);
         assert_eq!(new_event.payer, authority);
-        assert_eq!(new_event.slug, "LAFCvLAG@2021-08-28".to_string());
+        assert_eq!(new_event.code, "LAFCvLAG@2021-08-28".to_string());
         assert_eq!(
             new_event.name,
             "Los Angeles Football Club vs. LA Galaxy".to_string()
@@ -134,7 +134,7 @@ mod tests {
     #[test]
     fn test_validate_event_name_length_exceeds_limit() {
         let event_info = CreateEventInfo {
-            slug: "LAFCvLAG@2021-08-28".to_string(),
+            code: "LAFCvLAG@2021-08-28".to_string(),
             name: "012345678901234567890123456789012345678901234567890".to_string(),
             participants: vec![],
             expected_start_timestamp: 1630156800,
@@ -148,9 +148,9 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_event_slug_length_exceeds_limit() {
+    fn test_validate_event_code_length_exceeds_limit() {
         let event_info = CreateEventInfo {
-            slug: "012345678901234567890123456789".to_string(),
+            code: "012345678901234567890123456789".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
             participants: vec![],
             expected_start_timestamp: 1630156800,
@@ -167,7 +167,7 @@ mod tests {
     fn test_validate_event_participants_exceeds_limit() {
         let participants: Vec<u16> = (1..=301).map(|num| num as u16).collect();
         let event_info = CreateEventInfo {
-            slug: "LAFCvLAG@2021-08-28".to_string(),
+            code: "LAFCvLAG@2021-08-28".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
             participants,
             expected_start_timestamp: 1630156800,
@@ -184,7 +184,7 @@ mod tests {
     fn test_validate_event_participants_not_in_category() {
         let participants: Vec<u16> = (1..=11).map(|num| num as u16).collect();
         let event_info = CreateEventInfo {
-            slug: "LAFCvLAG@2021-08-28".to_string(),
+            code: "LAFCvLAG@2021-08-28".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
             participants,
             expected_start_timestamp: 1630156800,

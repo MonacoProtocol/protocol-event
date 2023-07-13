@@ -217,7 +217,7 @@ mod tests {
             active: false,
             authority: Default::default(),
             payer: Default::default(),
-            slug: "".to_string(),
+            code: "".to_string(),
             name: "".to_string(),
             participants: vec![],
             expected_start_timestamp: 0,

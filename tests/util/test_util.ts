@@ -9,26 +9,29 @@ import {
   findParticipantPda,
   footballCategoryPda,
 } from "./pda";
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
+import { getAnchorProvider } from "../../admin/util";
 
 const { SystemProgram } = anchor.web3;
 
-export async function createEventAccount(
+export async function createEvent(
   createEventInfo: CreateEventInfo,
   categoryPk: PublicKey,
   eventGroupPk: PublicKey,
+  signer?: Keypair,
 ) {
   const program = anchor.workspace.ProtocolEvent;
-  const eventPk = findEventPda(createEventInfo.slug, program as Program);
+  const eventPk = findEventPda(createEventInfo.code, program as Program);
   await program.methods
     .createEvent(createEventInfo)
     .accounts({
       event: eventPk,
       category: categoryPk,
       eventGroup: eventGroupPk,
-      authority: program.provider.publicKey,
+      authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers(signer ? [signer] : [])
     .rpc()
     .catch((e) => {
       console.error(e);
@@ -38,14 +41,14 @@ export async function createEventAccount(
 }
 
 export async function addEventParticipants(
-  eventSlug: string,
+  eventCode: string,
   participants: number[],
 ) {
   const program = anchor.workspace.ProtocolEvent;
-  const eventPk = findEventPda(eventSlug, program as Program);
+  const eventPk = findEventPda(eventCode, program as Program);
 
   await program.methods
-    .addEventParticipants(eventSlug, participants)
+    .addEventParticipants(eventCode, participants)
     .accounts({
       event: eventPk,
       category: footballCategoryPda(),
@@ -59,14 +62,14 @@ export async function addEventParticipants(
 }
 
 export async function removeEventParticipants(
-  eventSlug: string,
+  eventCode: string,
   participants: number[],
 ) {
   const program = anchor.workspace.ProtocolEvent;
-  const eventPk = findEventPda(eventSlug, program as Program);
+  const eventPk = findEventPda(eventCode, program as Program);
 
   await program.methods
-    .removeEventParticipants(eventSlug, participants)
+    .removeEventParticipants(eventCode, participants)
     .accounts({
       event: eventPk,
       category: footballCategoryPda(),
@@ -83,15 +86,17 @@ export async function createCategory(
   program: Program<ProtocolEvent>,
   code: string,
   name: string,
+  signer?: Keypair,
 ) {
   const categoryPk = findCategoryPda(code, program as Program);
   await program.methods
     .createCategory(code, name)
     .accounts({
       category: categoryPk,
-      payer: program.provider.publicKey,
+      payer: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers(signer ? [signer] : [])
     .rpc()
     .catch((e) => {
       console.error(e);
@@ -105,6 +110,7 @@ export async function createEventGroup(
   categoryPk: PublicKey,
   code: string,
   name: string,
+  signer?: Keypair,
 ) {
   const eventGroupPk = findEventGroupPda(categoryPk, code, program as Program);
   await program.methods
@@ -112,9 +118,10 @@ export async function createEventGroup(
     .accounts({
       eventGroup: eventGroupPk,
       category: categoryPk,
-      payer: program.provider.publicKey,
+      payer: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers(signer ? [signer] : [])
     .rpc()
     .catch((e) => {
       console.error(e);
@@ -128,6 +135,7 @@ export async function createIndividualParticipant(
   categoryPk: PublicKey,
   code: string,
   name: string,
+  signer?: Keypair,
 ) {
   const category = await program.account.category.fetch(categoryPk);
 
@@ -141,9 +149,10 @@ export async function createIndividualParticipant(
     .accounts({
       participant: participantPk,
       category: categoryPk,
-      payer: program.provider.publicKey,
+      authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers(signer ? [signer] : [])
     .rpc()
     .catch((e) => {
       console.error(e);
@@ -157,6 +166,7 @@ export async function createTeamParticipant(
   categoryPk: PublicKey,
   code: string,
   name: string,
+  signer?: Keypair,
 ) {
   const category = await program.account.category.fetch(categoryPk);
   const participantPk = findParticipantPda(
@@ -169,13 +179,23 @@ export async function createTeamParticipant(
     .accounts({
       participant: participantPk,
       category: categoryPk,
-      payer: program.provider.publicKey,
+      authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers(signer ? [signer] : [])
     .rpc()
     .catch((e) => {
       console.error(e);
       throw e;
     });
   return participantPk;
+}
+
+export async function createWalletWithBalance(lamportBalance = 1000000000) {
+  const payer = Keypair.generate();
+  const provider = getAnchorProvider();
+  await provider.connection.confirmTransaction(
+    await provider.connection.requestAirdrop(payer.publicKey, lamportBalance),
+  );
+  return payer;
 }
