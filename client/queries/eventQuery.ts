@@ -8,7 +8,6 @@ export class Events extends AccountQuery<Event> {
   }
 
   constructor(connection: Connection) {
-
     super(connection, Event, new Map<string, Criterion<unknown>>([
         ["authority", new PublicKeyCriterion(8)],
         ["category", new PublicKeyCriterion(8 + 32)],

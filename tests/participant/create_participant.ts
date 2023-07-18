@@ -115,7 +115,11 @@ describe("Create Participants", () => {
   it("Create Participant - Category authority does not match", async () => {
     const program = anchor.workspace.ProtocolEvent;
 
-    const categoryPk = footballCategoryPda();
+    const categoryPk = await createCategory(
+      program,
+      "CAUTH",
+      "CategoryDefaultAuth",
+    );
     const category = await program.account.category.fetch(categoryPk);
     const participantPk = findParticipantPda(
       categoryPk,
@@ -126,7 +130,7 @@ describe("Create Participants", () => {
     const incorrectAuthority = await createWalletWithBalance();
 
     await program.methods
-      .createIndividualParticipant("Test", "Tester")
+      .createIndividualParticipant(Date.now().toString(), "Tester")
       .accounts({
         participant: participantPk,
         category: categoryPk,
