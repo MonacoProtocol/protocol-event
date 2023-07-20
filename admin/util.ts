@@ -1,43 +1,29 @@
-import { PublicKey } from "@solana/web3.js";
-import process from "process";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
-
-const PROGRAM_TYPE = {
-  stable: new PublicKey("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf"),
-  dev: new PublicKey("5qCutonYoeg1aRK31mv4oQYoKdNFMpPaEtDe9nnNQXXf"),
-};
+import { PROGRAM_ID } from "../client/programId";
+import {
+  Keypair,
+  sendAndConfirmTransaction,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 export async function getProgram() {
   const provider = getAnchorProvider();
-  const program = process.env.PROGRAM_TYPE;
-
-  if (program == undefined) {
-    console.log("Please ensure PROGRAM_TYPE variable is set <stable|dev>");
-    process.exit(1);
-    return;
-  }
-
-  const programId = PROGRAM_TYPE[program.toLowerCase()];
-  if (programId == undefined) {
-    console.log(`Program id not found for PROGRAM_TYPE ${program}`);
-    process.exit(1);
-    return;
-  }
-
-  return Program.at(programId, provider);
+  return Program.at(PROGRAM_ID, provider);
 }
 
 export function getAnchorProvider(): AnchorProvider {
   return AnchorProvider.env();
 }
 
-export async function findEventPda(
-  code: string,
-  program: Program,
-): Promise<PublicKey> {
-  const [pda] = await PublicKey.findProgramAddress(
-    [Buffer.from(code)],
-    program.programId,
-  );
-  return pda;
+export async function sendTransaction(
+  instructions: TransactionInstruction[],
+  payer?: Keypair,
+) {
+  const tx = new Transaction();
+  instructions.forEach((instruction) => tx.add(instruction));
+  const provider = getAnchorProvider();
+  const signer = payer ? payer : (provider.wallet as NodeWallet).payer;
+  await sendAndConfirmTransaction(provider.connection, tx, [signer]);
 }
