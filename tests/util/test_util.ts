@@ -9,8 +9,15 @@ import {
   findParticipantPda,
   footballCategoryPda,
 } from "./pda";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { getAnchorProvider } from "../../admin/util";
+import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 const { SystemProgram } = anchor.web3;
 
@@ -198,4 +205,15 @@ export async function createWalletWithBalance(lamportBalance = 1000000000) {
     await provider.connection.requestAirdrop(payer.publicKey, lamportBalance),
   );
   return payer;
+}
+
+export async function sendTransaction(
+  instructions: TransactionInstruction[],
+  payer?: Keypair,
+) {
+  const tx = new Transaction();
+  instructions.forEach((instruction) => tx.add(instruction));
+  const provider = getAnchorProvider();
+  const signer = payer ? payer : (provider.wallet as NodeWallet).payer;
+  await sendAndConfirmTransaction(provider.connection, tx, [signer]);
 }
