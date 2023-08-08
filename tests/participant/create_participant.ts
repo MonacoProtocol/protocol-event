@@ -6,7 +6,11 @@ import {
 } from "../util/test_util";
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { findParticipantPda, footballCategoryPda } from "../util/pda";
+import {
+  findParticipantPda,
+  footballCategoryPda,
+  sportClassificationPda,
+} from "../util/pda";
 import assert from "assert";
 import { getAnchorProvider } from "../../admin/util";
 import { SystemProgram } from "@solana/web3.js";
@@ -66,7 +70,12 @@ describe("Create Participants", () => {
   it("Create Multiple Participants - Category participant count and id increments", async () => {
     const program = anchor.workspace.ProtocolEvent;
 
-    const categoryPk = await createCategory(program, "SPORT", "Sportsball 99");
+    const categoryPk = await createCategory(
+      program,
+      sportClassificationPda(),
+      "SPORT",
+      "Sportsball 99",
+    );
 
     const code = "EWANM";
     const participant1Pk = await createIndividualParticipant(
@@ -117,6 +126,7 @@ describe("Create Participants", () => {
 
     const categoryPk = await createCategory(
       program,
+      sportClassificationPda(),
       "CAUTH",
       "CategoryDefaultAuth",
     );

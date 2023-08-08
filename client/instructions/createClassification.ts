@@ -4,13 +4,12 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CreateCategoryArgs {
+export interface CreateClassificationArgs {
   code: string
   name: string
 }
 
-export interface CreateCategoryAccounts {
-  category: PublicKey
+export interface CreateClassificationAccounts {
   classification: PublicKey
   payer: PublicKey
   systemProgram: PublicKey
@@ -18,18 +17,17 @@ export interface CreateCategoryAccounts {
 
 export const layout = borsh.struct([borsh.str("code"), borsh.str("name")])
 
-export function createCategory(
-  args: CreateCategoryArgs,
-  accounts: CreateCategoryAccounts,
+export function createClassification(
+  args: CreateClassificationArgs,
+  accounts: CreateClassificationAccounts,
   programId: PublicKey = PROGRAM_ID
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.category, isSigner: false, isWritable: true },
-    { pubkey: accounts.classification, isSigner: false, isWritable: false },
+    { pubkey: accounts.classification, isSigner: false, isWritable: true },
     { pubkey: accounts.payer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]
-  const identifier = Buffer.from([220, 242, 238, 47, 228, 219, 223, 230])
+  const identifier = Buffer.from([195, 104, 62, 103, 225, 157, 209, 47])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {

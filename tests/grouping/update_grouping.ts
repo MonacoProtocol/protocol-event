@@ -1,14 +1,51 @@
 import * as anchor from "@coral-xyz/anchor";
-import { createCategory, createEventGroup } from "../util/test_util";
+import {
+  createCategory,
+  createClassification,
+  createEventGroup,
+} from "../util/test_util";
 import assert from "assert";
+import { sportClassificationPda } from "../util/pda";
 
 describe("Update Grouping Accounts", () => {
+  it("Update classification", async () => {
+    const program = anchor.workspace.ProtocolEvent;
+
+    const code = "ESPORTS";
+    const name = "Excellent Sports";
+    const classificationPk = await createClassification(program, code, name);
+
+    const classification = await program.account.classification.fetch(
+      classificationPk,
+    );
+    assert.equal(code, classification.code);
+    assert.equal(name, classification.name);
+
+    const updatedName = "Exceptional Sports";
+    await program.methods
+      .updateClassificationName(updatedName)
+      .accounts({
+        classification: classificationPk,
+        authority: program.provider.publicKey,
+      })
+      .rpc();
+
+    const classificiationAfterUpdate =
+      await program.account.classification.fetch(classificationPk);
+    assert.equal(updatedName, classificiationAfterUpdate.name);
+  });
+
   it("Update category", async () => {
     const program = anchor.workspace.ProtocolEvent;
 
     const code = "BT";
     const name = "Bean Throwing";
-    const categoryPk = await createCategory(program, code, name);
+    const categoryPk = await createCategory(
+      program,
+      sportClassificationPda(),
+      code,
+      name,
+    );
 
     const category = await program.account.category.fetch(categoryPk);
     assert.equal(code, category.code);
@@ -34,6 +71,7 @@ describe("Update Grouping Accounts", () => {
 
     const categoryPk = await createCategory(
       program,
+      sportClassificationPda(),
       "FLCC",
       "Four-Leaf Clover Collecting",
     );

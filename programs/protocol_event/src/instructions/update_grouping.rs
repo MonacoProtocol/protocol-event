@@ -2,10 +2,25 @@ use anchor_lang::prelude::*;
 
 use crate::error::EventError;
 use crate::state::category::Category;
+use crate::state::classification::Classification;
 use crate::state::event_group::EventGroup;
 
 pub fn increment_category_participant_count(category: &mut Category) -> Result<()> {
     category.participant_count = category.participant_count.checked_add(1).unwrap();
+
+    Ok(())
+}
+
+pub fn update_classification_name(
+    classification: &mut Classification,
+    updated_name: String,
+) -> Result<()> {
+    require!(
+        updated_name.len() <= EventGroup::MAX_NAME_LENGTH,
+        EventError::MaxStringLengthExceeded,
+    );
+
+    classification.name = updated_name;
 
     Ok(())
 }
@@ -60,6 +75,7 @@ mod tests {
             participant_count: 0,
             authority: Pubkey::new_unique(),
             payer: Pubkey::new_unique(),
+            classification: Default::default(),
         }
     }
 

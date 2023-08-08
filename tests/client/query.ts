@@ -10,7 +10,11 @@ import {
   sendTransaction,
 } from "../util/test_util";
 import { CreateEventInfo } from "../util/constants";
-import { eplEventGroupPda, footballCategoryPda } from "../util/pda";
+import {
+  eplEventGroupPda,
+  footballCategoryPda,
+  sportClassificationPda,
+} from "../util/pda";
 import { Events } from "../../client/queries";
 import assert from "assert";
 import {
@@ -165,7 +169,12 @@ describe("Test Client Queries", () => {
     const program = anchor.workspace.ProtocolEvent as Program<ProtocolEvent>;
     const connection = program.provider.connection;
 
-    const categoryPk = await createCategory(program, "C1", "Test Category 1");
+    const categoryPk = await createCategory(
+      program,
+      sportClassificationPda(),
+      "C1",
+      "Test Category 1",
+    );
 
     const allCategories = await Categories.categoryQuery(connection).fetch();
 

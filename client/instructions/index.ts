@@ -37,6 +37,16 @@ export type {
   UpdateEventNameArgs,
   UpdateEventNameAccounts,
 } from "./updateEventName"
+export { createClassification } from "./createClassification"
+export type {
+  CreateClassificationArgs,
+  CreateClassificationAccounts,
+} from "./createClassification"
+export { updateClassificationName } from "./updateClassificationName"
+export type {
+  UpdateClassificationNameArgs,
+  UpdateClassificationNameAccounts,
+} from "./updateClassificationName"
 export { createCategory } from "./createCategory"
 export type {
   CreateCategoryArgs,
@@ -83,6 +93,8 @@ export { deactivateParticipant } from "./deactivateParticipant"
 export type { DeactivateParticipantAccounts } from "./deactivateParticipant"
 export { closeEvent } from "./closeEvent"
 export type { CloseEventAccounts } from "./closeEvent"
+export { closeClassification } from "./closeClassification"
+export type { CloseClassificationAccounts } from "./closeClassification"
 export { closeEventGroup } from "./closeEventGroup"
 export type { CloseEventGroupAccounts } from "./closeEventGroup"
 export { closeCategory } from "./closeCategory"

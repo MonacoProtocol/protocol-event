@@ -4,37 +4,31 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CreateCategoryArgs {
-  code: string
-  name: string
+export interface UpdateClassificationNameArgs {
+  updatedName: string
 }
 
-export interface CreateCategoryAccounts {
-  category: PublicKey
+export interface UpdateClassificationNameAccounts {
   classification: PublicKey
-  payer: PublicKey
-  systemProgram: PublicKey
+  authority: PublicKey
 }
 
-export const layout = borsh.struct([borsh.str("code"), borsh.str("name")])
+export const layout = borsh.struct([borsh.str("updatedName")])
 
-export function createCategory(
-  args: CreateCategoryArgs,
-  accounts: CreateCategoryAccounts,
+export function updateClassificationName(
+  args: UpdateClassificationNameArgs,
+  accounts: UpdateClassificationNameAccounts,
   programId: PublicKey = PROGRAM_ID
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.category, isSigner: false, isWritable: true },
-    { pubkey: accounts.classification, isSigner: false, isWritable: false },
-    { pubkey: accounts.payer, isSigner: true, isWritable: true },
-    { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
+    { pubkey: accounts.classification, isSigner: false, isWritable: true },
+    { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
-  const identifier = Buffer.from([220, 242, 238, 47, 228, 219, 223, 230])
+  const identifier = Buffer.from([78, 156, 88, 38, 217, 65, 218, 15])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      code: args.code,
-      name: args.name,
+      updatedName: args.updatedName,
     },
     buffer
   )

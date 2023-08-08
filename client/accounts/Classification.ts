@@ -4,51 +4,41 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CategoryFields {
+export interface ClassificationFields {
   authority: PublicKey
-  classification: PublicKey
   code: string
   name: string
-  participantCount: number
   payer: PublicKey
 }
 
-export interface CategoryJSON {
+export interface ClassificationJSON {
   authority: string
-  classification: string
   code: string
   name: string
-  participantCount: number
   payer: string
 }
 
-export class Category {
+export class Classification {
   readonly authority: PublicKey
-  readonly classification: PublicKey
   readonly code: string
   readonly name: string
-  readonly participantCount: number
   readonly payer: PublicKey
 
   static readonly discriminator = Buffer.from([
-    242, 35, 245, 232, 221, 227, 98, 52,
+    229, 1, 103, 182, 216, 191, 58, 250,
   ])
 
   static readonly layout = borsh.struct([
     borsh.publicKey("authority"),
-    borsh.publicKey("classification"),
     borsh.str("code"),
     borsh.str("name"),
-    borsh.u16("participantCount"),
     borsh.publicKey("payer"),
   ])
 
-  constructor(fields: CategoryFields) {
+  constructor(fields: ClassificationFields) {
     this.authority = fields.authority
-    this.classification = fields.classification
     this.code = fields.code
     this.name = fields.name
-    this.participantCount = fields.participantCount
     this.payer = fields.payer
   }
 
@@ -56,7 +46,7 @@ export class Category {
     c: Connection,
     address: PublicKey,
     programId: PublicKey = PROGRAM_ID
-  ): Promise<Category | null> {
+  ): Promise<Classification | null> {
     const info = await c.getAccountInfo(address)
 
     if (info === null) {
@@ -73,7 +63,7 @@ export class Category {
     c: Connection,
     addresses: PublicKey[],
     programId: PublicKey = PROGRAM_ID
-  ): Promise<Array<Category | null>> {
+  ): Promise<Array<Classification | null>> {
     const infos = await c.getMultipleAccountsInfo(addresses)
 
     return infos.map((info) => {
@@ -88,41 +78,35 @@ export class Category {
     })
   }
 
-  static decode(data: Buffer): Category {
-    if (!data.slice(0, 8).equals(Category.discriminator)) {
+  static decode(data: Buffer): Classification {
+    if (!data.slice(0, 8).equals(Classification.discriminator)) {
       throw new Error("invalid account discriminator")
     }
 
-    const dec = Category.layout.decode(data.slice(8))
+    const dec = Classification.layout.decode(data.slice(8))
 
-    return new Category({
+    return new Classification({
       authority: dec.authority,
-      classification: dec.classification,
       code: dec.code,
       name: dec.name,
-      participantCount: dec.participantCount,
       payer: dec.payer,
     })
   }
 
-  toJSON(): CategoryJSON {
+  toJSON(): ClassificationJSON {
     return {
       authority: this.authority.toString(),
-      classification: this.classification.toString(),
       code: this.code,
       name: this.name,
-      participantCount: this.participantCount,
       payer: this.payer.toString(),
     }
   }
 
-  static fromJSON(obj: CategoryJSON): Category {
-    return new Category({
+  static fromJSON(obj: ClassificationJSON): Classification {
+    return new Classification({
       authority: new PublicKey(obj.authority),
-      classification: new PublicKey(obj.classification),
       code: obj.code,
       name: obj.name,
-      participantCount: obj.participantCount,
       payer: new PublicKey(obj.payer),
     })
   }

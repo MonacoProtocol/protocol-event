@@ -1,16 +1,47 @@
 use crate::error::EventError;
 use crate::state::category::Category;
+use crate::state::classification::Classification;
 use crate::state::event_group::EventGroup;
 use anchor_lang::prelude::*;
 
+pub fn create_classification(
+    classification: &mut Classification,
+    payer: Pubkey,
+    code: String,
+    name: String,
+) -> Result<()> {
+    validate_classification(&code, &name)?;
+
+    classification.payer = payer;
+    classification.authority = payer;
+    classification.code = code;
+    classification.name = name;
+
+    Ok(())
+}
+
+fn validate_classification(code: &String, name: &String) -> Result<()> {
+    require!(
+        code.len() <= Category::MAX_CODE_LENGTH,
+        EventError::MaxStringLengthExceeded,
+    );
+    require!(
+        name.len() <= Category::MAX_NAME_LENGTH,
+        EventError::MaxStringLengthExceeded,
+    );
+    Ok(())
+}
+
 pub fn create_category(
     category: &mut Category,
+    classification: Pubkey,
     payer: Pubkey,
     code: String,
     name: String,
 ) -> Result<()> {
     validate_category(&code, &name)?;
 
+    category.classification = classification;
     category.payer = payer;
     category.authority = payer;
     category.code = code;
@@ -80,15 +111,24 @@ mod tests {
             participant_count: 0,
             authority: Default::default(),
             payer: Default::default(),
+            classification: Default::default(),
         };
 
+        let classification = Pubkey::new_unique();
         let code = "FOOTBALL".to_string();
         let name = "Football".to_string();
         let payer = Pubkey::new_unique();
 
-        let result = create_category(&mut new_category, payer, code.clone(), name.clone());
+        let result = create_category(
+            &mut new_category,
+            classification,
+            payer,
+            code.clone(),
+            name.clone(),
+        );
 
         assert!(result.is_ok());
+        assert_eq!(new_category.classification, classification);
         assert_eq!(new_category.payer, payer);
         assert_eq!(new_category.authority, payer);
         assert_eq!(new_category.code, code);

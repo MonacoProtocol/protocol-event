@@ -1,6 +1,7 @@
 use crate::error::EventError;
 use crate::instructions::CreateEventInfo;
 use crate::state::category::Category;
+use crate::state::classification::Classification;
 use crate::state::event_group::EventGroup;
 use crate::state::participant::Participant;
 use crate::Event;
@@ -53,18 +54,48 @@ pub struct UpdateEvent<'info> {
 
 #[derive(Accounts)]
 #[instruction(code: String)]
+pub struct CreateClassification<'info> {
+    #[account(
+        init,
+        payer = payer,
+        seeds = [
+        b"classification".as_ref(),
+        code.as_ref(),
+        ],
+        bump,
+        space = Classification::SIZE
+    )]
+    pub classification: Account<'info, Classification>,
+
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    #[account(address = system_program::ID)]
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateClassification<'info> {
+    #[account(mut, has_one = authority)]
+    pub classification: Account<'info, Classification>,
+    pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(code: String)]
 pub struct CreateCategory<'info> {
     #[account(
         init,
         payer = payer,
         seeds = [
             b"category".as_ref(),
+            classification.key().as_ref(),
             code.as_ref(),
         ],
         bump,
         space = Category::SIZE
     )]
     pub category: Account<'info, Category>,
+    pub classification: Account<'info, Classification>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -195,6 +226,20 @@ pub struct CloseParticipant<'info> {
         close = payer,
     )]
     pub participant: Account<'info, Participant>,
+    pub authority: Signer<'info>,
+    #[account(mut)]
+    pub payer: SystemAccount<'info>,
+}
+
+#[derive(Accounts)]
+pub struct CloseClassification<'info> {
+    #[account(
+        mut,
+        has_one = authority,
+        has_one = payer,
+        close = payer,
+    )]
+    pub classification: Account<'info, Classification>,
     pub authority: Signer<'info>,
     #[account(mut)]
     pub payer: SystemAccount<'info>,

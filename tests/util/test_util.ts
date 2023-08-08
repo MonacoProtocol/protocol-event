@@ -4,6 +4,7 @@ import { ProtocolEvent } from "../../target/types/protocol_event";
 import { CreateEventInfo } from "./constants";
 import {
   findCategoryPda,
+  findClassificationPda,
   findEventGroupPda,
   findEventPda,
   findParticipantPda,
@@ -89,17 +90,46 @@ export async function removeEventParticipants(
     });
 }
 
-export async function createCategory(
+export async function createClassification(
   program: Program<ProtocolEvent>,
   code: string,
   name: string,
   signer?: Keypair,
 ) {
-  const categoryPk = findCategoryPda(code, program as Program);
+  const classificationPk = findClassificationPda(code, program as Program);
+  await program.methods
+    .createClassification(code, name)
+    .accounts({
+      classification: classificationPk,
+      payer: signer ? signer.publicKey : program.provider.publicKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .signers(signer ? [signer] : [])
+    .rpc()
+    .catch((e) => {
+      console.error(e);
+      throw e;
+    });
+  return classificationPk;
+}
+
+export async function createCategory(
+  program: Program<ProtocolEvent>,
+  classificationPk: PublicKey,
+  code: string,
+  name: string,
+  signer?: Keypair,
+) {
+  const categoryPk = findCategoryPda(
+    classificationPk,
+    code,
+    program as Program,
+  );
   await program.methods
     .createCategory(code, name)
     .accounts({
       category: categoryPk,
+      classification: classificationPk,
       payer: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
