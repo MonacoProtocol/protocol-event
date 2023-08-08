@@ -6,28 +6,22 @@ import { PROGRAM_ID } from "../programId"
 
 export interface CategoryFields {
   authority: PublicKey
-  classification: PublicKey
   code: string
   name: string
-  participantCount: number
   payer: PublicKey
 }
 
 export interface CategoryJSON {
   authority: string
-  classification: string
   code: string
   name: string
-  participantCount: number
   payer: string
 }
 
 export class Category {
   readonly authority: PublicKey
-  readonly classification: PublicKey
   readonly code: string
   readonly name: string
-  readonly participantCount: number
   readonly payer: PublicKey
 
   static readonly discriminator = Buffer.from([
@@ -36,19 +30,15 @@ export class Category {
 
   static readonly layout = borsh.struct([
     borsh.publicKey("authority"),
-    borsh.publicKey("classification"),
     borsh.str("code"),
     borsh.str("name"),
-    borsh.u16("participantCount"),
     borsh.publicKey("payer"),
   ])
 
   constructor(fields: CategoryFields) {
     this.authority = fields.authority
-    this.classification = fields.classification
     this.code = fields.code
     this.name = fields.name
-    this.participantCount = fields.participantCount
     this.payer = fields.payer
   }
 
@@ -97,10 +87,8 @@ export class Category {
 
     return new Category({
       authority: dec.authority,
-      classification: dec.classification,
       code: dec.code,
       name: dec.name,
-      participantCount: dec.participantCount,
       payer: dec.payer,
     })
   }
@@ -108,10 +96,8 @@ export class Category {
   toJSON(): CategoryJSON {
     return {
       authority: this.authority.toString(),
-      classification: this.classification.toString(),
       code: this.code,
       name: this.name,
-      participantCount: this.participantCount,
       payer: this.payer.toString(),
     }
   }
@@ -119,10 +105,8 @@ export class Category {
   static fromJSON(obj: CategoryJSON): Category {
     return new Category({
       authority: new PublicKey(obj.authority),
-      classification: new PublicKey(obj.classification),
       code: obj.code,
       name: obj.name,
-      participantCount: obj.participantCount,
       payer: new PublicKey(obj.payer),
     })
   }

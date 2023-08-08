@@ -13,13 +13,13 @@ export async function createEventGroup() {
     process.exit(1);
   }
 
-  const categoryPk = new PublicKey(process.argv[3]);
+  const subcategoryPk = new PublicKey(process.argv[3]);
   const code = process.argv[4];
   const name = process.argv[5];
 
   const program = await getProgram();
 
-  const eventGroupPk = await findEventGroupPda(categoryPk, code, program);
+  const eventGroupPk = await findEventGroupPda(subcategoryPk, code, program);
 
   const createEventGroupArgs = {
     code: code,
@@ -28,7 +28,7 @@ export async function createEventGroup() {
 
   const createEventGroupAccs = {
     eventGroup: eventGroupPk,
-    category: categoryPk,
+    category: subcategoryPk,
     payer: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateEventGroupAccounts;

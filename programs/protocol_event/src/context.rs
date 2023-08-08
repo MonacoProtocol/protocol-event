@@ -1,9 +1,9 @@
 use crate::error::EventError;
 use crate::instructions::CreateEventInfo;
 use crate::state::category::Category;
-use crate::state::classification::Classification;
 use crate::state::event_group::EventGroup;
 use crate::state::participant::Participant;
+use crate::state::subcategory::Subcategory;
 use crate::Event;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
@@ -23,9 +23,9 @@ pub struct CreateEvent<'info> {
     )]
     pub event: Account<'info, Event>,
 
-    #[account(has_one = category)]
+    #[account(has_one = subcategory)]
     pub event_group: Account<'info, EventGroup>,
-    pub category: Account<'info, Category>,
+    pub subcategory: Account<'info, Subcategory>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -44,39 +44,11 @@ pub struct UpdateEvent<'info> {
         ],
         bump,
         has_one = authority,
-        has_one = category,
+        has_one = subcategory,
     )]
     pub event: Account<'info, Event>,
-    pub category: Account<'info, Category>,
+    pub subcategory: Account<'info, Subcategory>,
 
-    pub authority: Signer<'info>,
-}
-
-#[derive(Accounts)]
-#[instruction(code: String)]
-pub struct CreateClassification<'info> {
-    #[account(
-        init,
-        payer = payer,
-        seeds = [
-        b"classification".as_ref(),
-        code.as_ref(),
-        ],
-        bump,
-        space = Classification::SIZE
-    )]
-    pub classification: Account<'info, Classification>,
-
-    #[account(mut)]
-    pub payer: Signer<'info>,
-    #[account(address = system_program::ID)]
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct UpdateClassification<'info> {
-    #[account(mut, has_one = authority)]
-    pub classification: Account<'info, Classification>,
     pub authority: Signer<'info>,
 }
 
@@ -88,14 +60,12 @@ pub struct CreateCategory<'info> {
         payer = payer,
         seeds = [
             b"category".as_ref(),
-            classification.key().as_ref(),
             code.as_ref(),
         ],
         bump,
         space = Category::SIZE
     )]
     pub category: Account<'info, Category>,
-    pub classification: Account<'info, Classification>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -112,20 +82,50 @@ pub struct UpdateCategory<'info> {
 
 #[derive(Accounts)]
 #[instruction(code: String)]
+pub struct CreateSubcategory<'info> {
+    #[account(
+        init,
+        payer = payer,
+        seeds = [
+            b"subcategory".as_ref(),
+            category.key().as_ref(),
+            code.as_ref(),
+        ],
+        bump,
+        space = Subcategory::SIZE
+    )]
+    pub subcategory: Account<'info, Subcategory>,
+    pub category: Account<'info, Category>,
+
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    #[account(address = system_program::ID)]
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateSubcategory<'info> {
+    #[account(mut, has_one = authority)]
+    pub subcategory: Account<'info, Subcategory>,
+    pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(code: String)]
 pub struct CreateEventGroup<'info> {
     #[account(
         init,
         payer = payer,
         seeds = [
             b"event_group".as_ref(),
-            category.key().as_ref(),
+            subcategory.key().as_ref(),
             code.as_ref(),
         ],
         bump,
         space = EventGroup::SIZE
     )]
     pub event_group: Account<'info, EventGroup>,
-    pub category: Account<'info, Category>,
+    pub subcategory: Account<'info, Subcategory>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -147,8 +147,8 @@ pub struct CreateParticipant<'info> {
         payer = authority,
         seeds = [
             b"participant".as_ref(),
-            category.key().as_ref(),
-            category.participant_count.to_string().as_ref()
+            subcategory.key().as_ref(),
+            subcategory.participant_count.to_string().as_ref()
         ],
         bump,
         space = Participant::SIZE
@@ -158,7 +158,7 @@ pub struct CreateParticipant<'info> {
         mut,
         has_one = authority @ EventError::AuthorityMismatch,
     )]
-    pub category: Account<'info, Category>,
+    pub subcategory: Account<'info, Subcategory>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -190,14 +190,14 @@ pub struct CloseEvent<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CloseCategory<'info> {
+pub struct CloseSubcategory<'info> {
     #[account(
         mut,
         has_one = authority,
         has_one = payer,
         close = payer,
     )]
-    pub category: Account<'info, Category>,
+    pub subcategory: Account<'info, Subcategory>,
     pub authority: Signer<'info>,
     #[account(mut)]
     pub payer: SystemAccount<'info>,
@@ -232,14 +232,14 @@ pub struct CloseParticipant<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CloseClassification<'info> {
+pub struct CloseCategory<'info> {
     #[account(
         mut,
         has_one = authority,
         has_one = payer,
         close = payer,
     )]
-    pub classification: Account<'info, Classification>,
+    pub category: Account<'info, Category>,
     pub authority: Signer<'info>,
     #[account(mut)]
     pub payer: SystemAccount<'info>,

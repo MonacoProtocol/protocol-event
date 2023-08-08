@@ -11,7 +11,7 @@ export interface CreateEventGroupArgs {
 
 export interface CreateEventGroupAccounts {
   eventGroup: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   payer: PublicKey
   systemProgram: PublicKey
 }
@@ -25,7 +25,7 @@ export function createEventGroup(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.eventGroup, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.payer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]

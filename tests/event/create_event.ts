@@ -10,7 +10,7 @@ import { CreateEventInfo } from "../util/constants";
 import {
   eplEventGroupPda,
   findEventPda,
-  footballCategoryPda,
+  footballSubcategoryPda,
 } from "../util/pda";
 
 describe("Create Event", () => {
@@ -31,7 +31,7 @@ describe("Create Event", () => {
 
     await createEvent(
       createEventInfo,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       eplEventGroupPda(),
     );
 

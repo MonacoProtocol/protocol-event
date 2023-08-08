@@ -4,23 +4,35 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CloseClassificationAccounts {
-  category: PublicKey
-  authority: PublicKey
-  payer: PublicKey
+export interface UpdateSubcategoryNameArgs {
+  updatedName: string
 }
 
-export function closeClassification(
-  accounts: CloseClassificationAccounts,
+export interface UpdateSubcategoryNameAccounts {
+  subcategory: PublicKey
+  authority: PublicKey
+}
+
+export const layout = borsh.struct([borsh.str("updatedName")])
+
+export function updateSubcategoryName(
+  args: UpdateSubcategoryNameArgs,
+  accounts: UpdateSubcategoryNameAccounts,
   programId: PublicKey = PROGRAM_ID
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.category, isSigner: false, isWritable: true },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: true },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
-    { pubkey: accounts.payer, isSigner: false, isWritable: true },
   ]
-  const identifier = Buffer.from([3, 93, 204, 31, 46, 199, 87, 46])
-  const data = identifier
+  const identifier = Buffer.from([118, 77, 49, 244, 130, 210, 87, 73])
+  const buffer = Buffer.alloc(1000)
+  const len = layout.encode(
+    {
+      updatedName: args.updatedName,
+    },
+    buffer
+  )
+  const data = Buffer.concat([identifier, buffer]).slice(0, 8 + len)
   const ix = new TransactionInstruction({ keys, programId, data })
   return ix
 }

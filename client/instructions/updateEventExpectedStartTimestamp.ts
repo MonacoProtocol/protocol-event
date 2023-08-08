@@ -11,7 +11,7 @@ export interface UpdateEventExpectedStartTimestampArgs {
 
 export interface UpdateEventExpectedStartTimestampAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -27,7 +27,7 @@ export function updateEventExpectedStartTimestamp(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([210, 34, 208, 138, 1, 181, 150, 71])

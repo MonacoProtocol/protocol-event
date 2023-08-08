@@ -17,16 +17,16 @@ pub fn create(
     event_info: CreateEventInfo,
     authority: Pubkey,
     payer: Pubkey,
-    category: Pubkey,
-    category_participant_count: u16,
+    subcategory: Pubkey,
+    subcategory_participant_count: u16,
     event_group: Pubkey,
 ) -> Result<()> {
-    validate_event(&event_info, category_participant_count)?;
+    validate_event(&event_info, subcategory_participant_count)?;
 
     event.authority = authority;
     event.payer = payer;
 
-    event.category = category;
+    event.subcategory = subcategory;
     event.event_group = event_group;
 
     event.active = false;
@@ -43,7 +43,7 @@ pub fn create(
     Ok(())
 }
 
-fn validate_event(event_info: &CreateEventInfo, category_participant_count: u16) -> Result<()> {
+fn validate_event(event_info: &CreateEventInfo, subcategory_participant_count: u16) -> Result<()> {
     require!(
         event_info.name.len() <= Event::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
@@ -60,7 +60,7 @@ fn validate_event(event_info: &CreateEventInfo, category_participant_count: u16)
         event_info
             .participants
             .iter()
-            .all(|&participant| participant > 0 && participant <= category_participant_count),
+            .all(|&participant| participant > 0 && participant <= subcategory_participant_count),
         EventError::InvalidEventParticipants,
     );
     Ok(())
@@ -78,7 +78,7 @@ mod tests {
     #[test]
     fn test_create_event() {
         let mut new_event = Event {
-            category: Default::default(),
+            subcategory: Default::default(),
             event_group: Default::default(),
             active: false,
             authority: Default::default(),
@@ -101,7 +101,7 @@ mod tests {
         };
 
         let authority = Pubkey::new_unique();
-        let category = Pubkey::new_unique();
+        let subcategory = Pubkey::new_unique();
         let event_group = Pubkey::new_unique();
 
         let result = create(
@@ -109,13 +109,13 @@ mod tests {
             event_info,
             authority,
             authority,
-            category,
+            subcategory,
             10,
             event_group,
         );
 
         assert!(result.is_ok());
-        assert_eq!(new_event.category, category);
+        assert_eq!(new_event.subcategory, subcategory);
         assert_eq!(new_event.event_group, event_group);
         assert_eq!(new_event.active, false);
         assert_eq!(new_event.authority, authority);

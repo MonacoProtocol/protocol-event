@@ -6,7 +6,7 @@ import { PROGRAM_ID } from "../programId"
 
 export interface ParticipantFields {
   authority: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   participantType: types.ParticipantTypeKind
   active: boolean
   name: string
@@ -17,7 +17,7 @@ export interface ParticipantFields {
 
 export interface ParticipantJSON {
   authority: string
-  category: string
+  subcategory: string
   participantType: types.ParticipantTypeJSON
   active: boolean
   name: string
@@ -28,7 +28,7 @@ export interface ParticipantJSON {
 
 export class Participant {
   readonly authority: PublicKey
-  readonly category: PublicKey
+  readonly subcategory: PublicKey
   readonly participantType: types.ParticipantTypeKind
   readonly active: boolean
   readonly name: string
@@ -42,7 +42,7 @@ export class Participant {
 
   static readonly layout = borsh.struct([
     borsh.publicKey("authority"),
-    borsh.publicKey("category"),
+    borsh.publicKey("subcategory"),
     types.ParticipantType.layout("participantType"),
     borsh.bool("active"),
     borsh.str("name"),
@@ -53,7 +53,7 @@ export class Participant {
 
   constructor(fields: ParticipantFields) {
     this.authority = fields.authority
-    this.category = fields.category
+    this.subcategory = fields.subcategory
     this.participantType = fields.participantType
     this.active = fields.active
     this.name = fields.name
@@ -107,7 +107,7 @@ export class Participant {
 
     return new Participant({
       authority: dec.authority,
-      category: dec.category,
+      subcategory: dec.subcategory,
       participantType: types.ParticipantType.fromDecoded(dec.participantType),
       active: dec.active,
       name: dec.name,
@@ -120,7 +120,7 @@ export class Participant {
   toJSON(): ParticipantJSON {
     return {
       authority: this.authority.toString(),
-      category: this.category.toString(),
+      subcategory: this.subcategory.toString(),
       participantType: this.participantType.toJSON(),
       active: this.active,
       name: this.name,
@@ -133,7 +133,7 @@ export class Participant {
   static fromJSON(obj: ParticipantJSON): Participant {
     return new Participant({
       authority: new PublicKey(obj.authority),
-      category: new PublicKey(obj.category),
+      subcategory: new PublicKey(obj.subcategory),
       participantType: types.ParticipantType.fromJSON(obj.participantType),
       active: obj.active,
       name: obj.name,

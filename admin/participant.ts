@@ -24,19 +24,19 @@ export async function createParticipant() {
   }
 
   const participantType = process.argv[3];
-  const categoryPk = new PublicKey(process.argv[4]);
+  const subcategoryPk = new PublicKey(process.argv[4]);
   const code = process.argv[5];
   const name = process.argv[6];
 
   const program = await getProgram();
 
-  const participantPk = await findParticipantPda(categoryPk, program);
+  const participantPk = await findParticipantPda(subcategoryPk, program);
 
   let ix;
   switch (participantType) {
     case "TEAM":
       ix = await createTeamParticipantInstruction(
-        categoryPk,
+        subcategoryPk,
         code,
         name,
         participantPk,
@@ -45,7 +45,7 @@ export async function createParticipant() {
       break;
     case "INDIVIDUAL":
       ix = await createIndividualParticipantInstruction(
-        categoryPk,
+        subcategoryPk,
         code,
         name,
         participantPk,
@@ -64,7 +64,7 @@ export async function createParticipant() {
 }
 
 function createTeamParticipantInstruction(
-  categoryPk: PublicKey,
+  subcategoryPk: PublicKey,
   code: string,
   name: string,
   participantPk: PublicKey,
@@ -76,7 +76,7 @@ function createTeamParticipantInstruction(
   } as CreateTeamParticipantArgs;
   const createParticipantAccounts = {
     participant: participantPk,
-    category: categoryPk,
+    category: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateTeamParticipantAccounts;
@@ -87,7 +87,7 @@ function createTeamParticipantInstruction(
 }
 
 function createIndividualParticipantInstruction(
-  categoryPk: PublicKey,
+  subcategoryPk: PublicKey,
   code: string,
   name: string,
   participantPk: PublicKey,
@@ -99,7 +99,7 @@ function createIndividualParticipantInstruction(
   } as CreateIndividualParticipantArgs;
   const createParticipantAccounts = {
     participant: participantPk,
-    category: categoryPk,
+    category: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateIndividualParticipantAccounts;

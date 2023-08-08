@@ -11,7 +11,6 @@ export interface CreateCategoryArgs {
 
 export interface CreateCategoryAccounts {
   category: PublicKey
-  classification: PublicKey
   payer: PublicKey
   systemProgram: PublicKey
 }
@@ -25,7 +24,6 @@ export function createCategory(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.category, isSigner: false, isWritable: true },
-    { pubkey: accounts.classification, isSigner: false, isWritable: false },
     { pubkey: accounts.payer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]

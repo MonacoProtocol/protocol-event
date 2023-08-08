@@ -31,7 +31,7 @@ export async function createEvent() {
 
   const code = process.argv[3];
   const name = process.argv[4];
-  const categoryPk = new PublicKey(process.argv[5]);
+  const subcategoryPk = new PublicKey(process.argv[5]);
   const eventGroupPk = new PublicKey(process.argv[6]);
   const startTime = Number.parseInt(process.argv[7]);
 
@@ -53,7 +53,7 @@ export async function createEvent() {
   const createEventAccs = {
     event: eventPk,
     eventGroup: eventGroupPk,
-    category: categoryPk,
+    category: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateEventAccounts;

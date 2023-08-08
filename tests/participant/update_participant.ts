@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { createIndividualParticipant } from "../util/test_util";
-import { footballCategoryPda } from "../util/pda";
+import { footballSubcategoryPda } from "../util/pda";
 import assert from "assert";
 
 describe("Update Participants", () => {
@@ -11,7 +11,7 @@ describe("Update Participants", () => {
     const name = "Ewan Mcgregor";
     const participantPk = await createIndividualParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       code,
       name,
     );

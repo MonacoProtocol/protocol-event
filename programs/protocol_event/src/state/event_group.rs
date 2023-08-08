@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct EventGroup {
     pub authority: Pubkey,
-    pub category: Pubkey,
+    pub subcategory: Pubkey,
     pub code: String,
     pub name: String,
     pub payer: Pubkey,

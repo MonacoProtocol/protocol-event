@@ -6,7 +6,7 @@ import { PROGRAM_ID } from "../programId"
 
 export interface EventGroupFields {
   authority: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   code: string
   name: string
   payer: PublicKey
@@ -14,7 +14,7 @@ export interface EventGroupFields {
 
 export interface EventGroupJSON {
   authority: string
-  category: string
+  subcategory: string
   code: string
   name: string
   payer: string
@@ -22,7 +22,7 @@ export interface EventGroupJSON {
 
 export class EventGroup {
   readonly authority: PublicKey
-  readonly category: PublicKey
+  readonly subcategory: PublicKey
   readonly code: string
   readonly name: string
   readonly payer: PublicKey
@@ -33,7 +33,7 @@ export class EventGroup {
 
   static readonly layout = borsh.struct([
     borsh.publicKey("authority"),
-    borsh.publicKey("category"),
+    borsh.publicKey("subcategory"),
     borsh.str("code"),
     borsh.str("name"),
     borsh.publicKey("payer"),
@@ -41,7 +41,7 @@ export class EventGroup {
 
   constructor(fields: EventGroupFields) {
     this.authority = fields.authority
-    this.category = fields.category
+    this.subcategory = fields.subcategory
     this.code = fields.code
     this.name = fields.name
     this.payer = fields.payer
@@ -92,7 +92,7 @@ export class EventGroup {
 
     return new EventGroup({
       authority: dec.authority,
-      category: dec.category,
+      subcategory: dec.subcategory,
       code: dec.code,
       name: dec.name,
       payer: dec.payer,
@@ -102,7 +102,7 @@ export class EventGroup {
   toJSON(): EventGroupJSON {
     return {
       authority: this.authority.toString(),
-      category: this.category.toString(),
+      subcategory: this.subcategory.toString(),
       code: this.code,
       name: this.name,
       payer: this.payer.toString(),
@@ -112,7 +112,7 @@ export class EventGroup {
   static fromJSON(obj: EventGroupJSON): EventGroup {
     return new EventGroup({
       authority: new PublicKey(obj.authority),
-      category: new PublicKey(obj.category),
+      subcategory: new PublicKey(obj.subcategory),
       code: obj.code,
       name: obj.name,
       payer: new PublicKey(obj.payer),

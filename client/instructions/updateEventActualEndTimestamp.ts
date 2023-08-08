@@ -11,7 +11,7 @@ export interface UpdateEventActualEndTimestampArgs {
 
 export interface UpdateEventActualEndTimestampAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -27,7 +27,7 @@ export function updateEventActualEndTimestamp(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([77, 79, 242, 81, 191, 96, 170, 107])

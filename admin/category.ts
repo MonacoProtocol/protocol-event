@@ -18,7 +18,7 @@ export async function createCategory() {
 
   const program = await getProgram();
 
-  const categoryPk = await findCategoryPda(code, program);
+  const subcategoryPk = await findCategoryPda(code, program);
 
   const createCategoryArgs = {
     code: code,
@@ -26,7 +26,7 @@ export async function createCategory() {
   } as CreateCategoryArgs;
 
   const createCategoryAccounts = {
-    category: categoryPk,
+    category: subcategoryPk,
     payer: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateCategoryAccounts;
@@ -38,5 +38,5 @@ export async function createCategory() {
 
   await sendTransaction([ix]);
 
-  console.log(`{"categoryPk": "${categoryPk.toBase58()}"}`);
+  console.log(`{"subcategoryPk": "${subcategoryPk.toBase58()}"}`);
 }

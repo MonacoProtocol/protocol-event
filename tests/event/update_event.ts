@@ -7,7 +7,7 @@ import { CreateEventInfo } from "../util/constants";
 import {
   eplEventGroupPda,
   findEventPda,
-  footballCategoryPda,
+  footballSubcategoryPda,
 } from "../util/pda";
 import { getAnchorProvider } from "../../admin/util";
 
@@ -30,7 +30,7 @@ describe("Update Event", () => {
     } as CreateEventInfo;
     await createEvent(
       createEventInfo,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       eplEventGroupPda(),
     );
 
@@ -41,7 +41,7 @@ describe("Update Event", () => {
       .activateEvent(code)
       .accounts({
         event: eventPk,
-        category: footballCategoryPda(),
+        subcategory: footballSubcategoryPda(),
         authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();
@@ -53,7 +53,7 @@ describe("Update Event", () => {
       .deactivateEvent(code)
       .accounts({
         event: eventPk,
-        category: footballCategoryPda(),
+        subcategory: footballSubcategoryPda(),
         authority: getAnchorProvider().wallet.publicKey,
       })
       .rpc();

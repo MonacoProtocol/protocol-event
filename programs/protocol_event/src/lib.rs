@@ -23,8 +23,8 @@ pub mod protocol_event {
             event_info,
             ctx.accounts.authority.key(),
             ctx.accounts.authority.key(),
-            ctx.accounts.category.key(),
-            ctx.accounts.category.participant_count,
+            ctx.accounts.subcategory.key(),
+            ctx.accounts.subcategory.participant_count,
             ctx.accounts.event_group.key(),
         )?;
         Ok(())
@@ -46,7 +46,7 @@ pub mod protocol_event {
         instructions::update_event::add_participants(
             &mut ctx.accounts.event.participants,
             participants_to_add,
-            ctx.accounts.category.participant_count,
+            ctx.accounts.subcategory.participant_count,
         )
     }
 
@@ -104,33 +104,9 @@ pub mod protocol_event {
 
     // Grouping management instructions
 
-    pub fn create_classification(
-        ctx: Context<CreateClassification>,
-        code: String,
-        name: String,
-    ) -> Result<()> {
-        instructions::create_grouping::create_classification(
-            &mut ctx.accounts.classification,
-            ctx.accounts.payer.key(),
-            code,
-            name,
-        )
-    }
-
-    pub fn update_classification_name(
-        ctx: Context<UpdateClassification>,
-        updated_name: String,
-    ) -> Result<()> {
-        instructions::update_grouping::update_classification_name(
-            &mut ctx.accounts.classification,
-            updated_name,
-        )
-    }
-
     pub fn create_category(ctx: Context<CreateCategory>, code: String, name: String) -> Result<()> {
         instructions::create_grouping::create_category(
             &mut ctx.accounts.category,
-            ctx.accounts.classification.key(),
             ctx.accounts.payer.key(),
             code,
             name,
@@ -144,6 +120,30 @@ pub mod protocol_event {
         )
     }
 
+    pub fn create_subcategory(
+        ctx: Context<CreateSubcategory>,
+        code: String,
+        name: String,
+    ) -> Result<()> {
+        instructions::create_grouping::create_subcategory(
+            &mut ctx.accounts.subcategory,
+            ctx.accounts.category.key(),
+            ctx.accounts.payer.key(),
+            code,
+            name,
+        )
+    }
+
+    pub fn update_subcategory_name(
+        ctx: Context<UpdateSubcategory>,
+        updated_name: String,
+    ) -> Result<()> {
+        instructions::update_grouping::update_subcategory_name(
+            &mut ctx.accounts.subcategory,
+            updated_name,
+        )
+    }
+
     pub fn create_event_group(
         ctx: Context<CreateEventGroup>,
         code: String,
@@ -151,7 +151,7 @@ pub mod protocol_event {
     ) -> Result<()> {
         instructions::create_grouping::create_event_group(
             &mut ctx.accounts.event_group,
-            ctx.accounts.category.key(),
+            ctx.accounts.subcategory.key(),
             ctx.accounts.payer.key(),
             code,
             name,
@@ -176,15 +176,15 @@ pub mod protocol_event {
         name: String,
     ) -> Result<()> {
         instructions::update_grouping::increment_category_participant_count(
-            &mut ctx.accounts.category,
+            &mut ctx.accounts.subcategory,
         )?;
         instructions::create_participant::create_individual_participant(
             &mut ctx.accounts.participant,
-            &ctx.accounts.category.key(),
+            &ctx.accounts.subcategory.key(),
             &ctx.accounts.authority.key(),
             code,
             name,
-            ctx.accounts.category.participant_count,
+            ctx.accounts.subcategory.participant_count,
         )
     }
 
@@ -194,15 +194,15 @@ pub mod protocol_event {
         name: String,
     ) -> Result<()> {
         instructions::update_grouping::increment_category_participant_count(
-            &mut ctx.accounts.category,
+            &mut ctx.accounts.subcategory,
         )?;
         instructions::create_participant::create_team_participant(
             &mut ctx.accounts.participant,
-            &ctx.accounts.category.key(),
+            &ctx.accounts.subcategory.key(),
             &ctx.accounts.authority.key(),
             code,
             name,
-            ctx.accounts.category.participant_count,
+            ctx.accounts.subcategory.participant_count,
         )
     }
 
@@ -234,7 +234,7 @@ pub mod protocol_event {
         Ok(())
     }
 
-    pub fn close_classification(_ctx: Context<CloseCategory>) -> Result<()> {
+    pub fn close_category(_ctx: Context<CloseCategory>) -> Result<()> {
         Ok(())
     }
 
@@ -242,7 +242,7 @@ pub mod protocol_event {
         Ok(())
     }
 
-    pub fn close_category(_ctx: Context<CloseCategory>) -> Result<()> {
+    pub fn close_subcategory(_ctx: Context<CloseSubcategory>) -> Result<()> {
         Ok(())
     }
 

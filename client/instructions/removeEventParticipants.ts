@@ -11,7 +11,7 @@ export interface RemoveEventParticipantsArgs {
 
 export interface RemoveEventParticipantsAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -27,7 +27,7 @@ export function removeEventParticipants(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([99, 117, 159, 182, 180, 152, 35, 157])

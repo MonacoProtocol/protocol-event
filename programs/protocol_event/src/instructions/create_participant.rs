@@ -51,7 +51,7 @@ fn initialize_participant(
 ) -> Result<()> {
     validate_participant(&code, &name)?;
 
-    participant.category = *category;
+    participant.subcategory = *category;
     participant.payer = *payer;
     participant.authority = *payer;
 

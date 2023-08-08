@@ -7,7 +7,7 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct Event {
     pub authority: Pubkey,
-    pub category: Pubkey,
+    pub subcategory: Pubkey,
     pub event_group: Pubkey,
     pub active: bool,
 

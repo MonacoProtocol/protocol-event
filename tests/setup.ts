@@ -1,8 +1,8 @@
 import * as anchor from "@coral-xyz/anchor";
 import { ProtocolEvent } from "../target/types/protocol_event";
 import {
+  createSubcategory,
   createCategory,
-  createClassification,
   createEventGroup,
   createIndividualParticipant,
 } from "./util/test_util";
@@ -13,24 +13,25 @@ module.exports = async function (_globalConfig, _projectConfig) {
   anchor.setProvider(provider);
 
   // create some default grouping accounts
-  const classificationPk = await createClassification(
+  const categoryPk = await createCategory(program, "SPORT", "Sport");
+  const subcategoryPk = await createSubcategory(
     program,
-    "SPORT",
-    "Sport",
-  );
-  const categoryPk = await createCategory(
-    program,
-    classificationPk,
+    categoryPk,
     "FOOTBALL",
     "Soccer",
   );
-  await createEventGroup(program, categoryPk, "EPL", "English Premier League");
+  await createEventGroup(
+    program,
+    subcategoryPk,
+    "EPL",
+    "English Premier League",
+  );
 
-  // initialize some participants for category
+  // initialize some participants for subcategory
   for (let i = 0; i < 10; i++) {
     await createIndividualParticipant(
       program,
-      categoryPk,
+      subcategoryPk,
       `P${i}`,
       `Player ${i}`,
     );
