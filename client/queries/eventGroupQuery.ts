@@ -10,7 +10,7 @@ export class EventGroups extends AccountQuery<EventGroup> {
   constructor(connection: Connection) {
     super(connection, EventGroup, new Map<string, Criterion<unknown>>([
         ["authority", new PublicKeyCriterion(8)],
-        ["category", new PublicKeyCriterion(8 + 32)],
+        ["subcategory", new PublicKeyCriterion(8 + 32)],
       ])
     );
   }
@@ -20,8 +20,8 @@ export class EventGroups extends AccountQuery<EventGroup> {
     return this;
   }
 
-  filterByCategory(category: PublicKey): EventGroups {
-    this.filters.get("category").setValue(category);
+  filterBySubcategory(subcategory: PublicKey): EventGroups {
+    this.filters.get("subcategory").setValue(subcategory);
     return this;
   }
 }

@@ -96,12 +96,54 @@ fn validate_event_group(code: &String, name: &String) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use crate::error::EventError;
-    use crate::instructions::create_grouping::{validate_event_group, validate_subcategory};
-    use crate::instructions::{create_event_group, create_subcategory};
+    use crate::instructions::create_grouping::{
+        validate_category, validate_event_group, validate_subcategory,
+    };
+    use crate::instructions::{create_category, create_event_group, create_subcategory};
+    use crate::state::category::Category;
     use crate::state::event_group::EventGroup;
     use crate::state::subcategory::Subcategory;
     use anchor_lang::error;
     use solana_program::pubkey::Pubkey;
+
+    #[test]
+    fn test_create_category() {
+        let mut new_category = Category {
+            code: "".to_string(),
+            name: "".to_string(),
+            authority: Default::default(),
+            payer: Default::default(),
+        };
+
+        let code = "FOOTBALL".to_string();
+        let name = "Football".to_string();
+        let payer = Pubkey::new_unique();
+
+        let result = create_category(&mut new_category, payer, code.clone(), name.clone());
+
+        assert!(result.is_ok());
+        assert_eq!(new_category.payer, payer);
+        assert_eq!(new_category.authority, payer);
+        assert_eq!(new_category.code, code);
+        assert_eq!(new_category.name, name);
+    }
+
+    #[test]
+    fn test_validate_category_code_exceeds_limit() {
+        let result = validate_category(&"SPORTSPORTSPORT".to_string(), &"Sport".to_string());
+
+        assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
+    }
+
+    #[test]
+    fn test_validate_category_name_exceeds_limit() {
+        let result = validate_category(
+            &"Sport".to_string(),
+            &"012345678901234567890123456789012345678901234567890".to_string(),
+        );
+
+        assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
+    }
 
     #[test]
     fn test_create_subcategory() {

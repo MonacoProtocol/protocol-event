@@ -4,6 +4,7 @@ import {
   closeEvent,
   closeEventGroup,
   closeParticipant,
+  closeSubcategory,
 } from "../client";
 import { getAnchorProvider, sendTransaction } from "./util";
 
@@ -34,6 +35,13 @@ export async function close() {
         payer: getAnchorProvider().publicKey,
       });
       break;
+    case "subcategory":
+      ix = closeSubcategory({
+        subcategory: accountPk,
+        authority: getAnchorProvider().publicKey,
+        payer: getAnchorProvider().publicKey,
+      });
+      break;
     case "event_group":
       ix = closeEventGroup({
         eventGroup: accountPk,
@@ -50,7 +58,7 @@ export async function close() {
       break;
     default:
       console.error(
-        "Unknown discriminator, must be one of: event, category, event_group, participant",
+        "Unknown discriminator, must be one of: event, category, subcategory, event_group, participant",
       );
   }
 

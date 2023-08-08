@@ -175,7 +175,7 @@ pub mod protocol_event {
         code: String,
         name: String,
     ) -> Result<()> {
-        instructions::update_grouping::increment_category_participant_count(
+        instructions::update_grouping::increment_subcategory_participant_count(
             &mut ctx.accounts.subcategory,
         )?;
         instructions::create_participant::create_individual_participant(
@@ -193,7 +193,7 @@ pub mod protocol_event {
         code: String,
         name: String,
     ) -> Result<()> {
-        instructions::update_grouping::increment_category_participant_count(
+        instructions::update_grouping::increment_subcategory_participant_count(
             &mut ctx.accounts.subcategory,
         )?;
         instructions::create_participant::create_team_participant(

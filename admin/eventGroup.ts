@@ -19,7 +19,7 @@ export async function createEventGroup() {
 
   const program = await getProgram();
 
-  const eventGroupPk = await findEventGroupPda(subcategoryPk, code, program);
+  const eventGroupPk = findEventGroupPda(subcategoryPk, code, program);
 
   const createEventGroupArgs = {
     code: code,
@@ -28,15 +28,12 @@ export async function createEventGroup() {
 
   const createEventGroupAccs = {
     eventGroup: eventGroupPk,
-    category: subcategoryPk,
+    subcategory: subcategoryPk,
     payer: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateEventGroupAccounts;
 
-  const ix = await clientCreateEventGroup(
-    createEventGroupArgs,
-    createEventGroupAccs,
-  );
+  const ix = clientCreateEventGroup(createEventGroupArgs, createEventGroupAccs);
 
   await sendTransaction([ix]);
 

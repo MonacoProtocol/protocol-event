@@ -5,8 +5,8 @@ use crate::state::category::Category;
 use crate::state::event_group::EventGroup;
 use crate::state::subcategory::Subcategory;
 
-pub fn increment_category_participant_count(category: &mut Subcategory) -> Result<()> {
-    category.participant_count = category.participant_count.checked_add(1).unwrap();
+pub fn increment_subcategory_participant_count(subcategory: &mut Subcategory) -> Result<()> {
+    subcategory.participant_count = subcategory.participant_count.checked_add(1).unwrap();
 
     Ok(())
 }
@@ -51,21 +51,60 @@ mod tests {
     #[test]
     fn test_update_category_name() {
         let mut category = &mut category();
-        let result = update_subcategory_name(&mut category, "new name".to_string());
+        let result = update_category_name(&mut category, "new name".to_string());
         assert!(result.is_ok());
         assert_eq!(category.name, "new name".to_string());
     }
 
     #[test]
     fn test_update_category_name_name_exceeds_limit() {
-        let result = update_subcategory_name(
+        let result = update_category_name(
             &mut category(),
             "012345678901234567890123456789012345678901234567890".to_string(),
         );
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
     }
 
-    fn category() -> Subcategory {
+    fn category() -> Category {
+        Category {
+            code: "code".to_string(),
+            name: "name".to_string(),
+            authority: Pubkey::new_unique(),
+            payer: Pubkey::new_unique(),
+        }
+    }
+
+    #[test]
+    fn test_update_subcategory_name() {
+        let mut category = &mut subcategory();
+        let result = update_subcategory_name(&mut category, "new name".to_string());
+        assert!(result.is_ok());
+        assert_eq!(category.name, "new name".to_string());
+    }
+
+    #[test]
+    fn test_update_subcategory_name_name_exceeds_limit() {
+        let result = update_subcategory_name(
+            &mut subcategory(),
+            "012345678901234567890123456789012345678901234567890".to_string(),
+        );
+        assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
+    }
+
+    #[test]
+    fn test_update_subcategory_participant_count() {
+        let mut subcategory = &mut subcategory();
+
+        let result = increment_subcategory_participant_count(&mut subcategory);
+        assert!(result.is_ok());
+        assert_eq!(subcategory.participant_count, 1);
+
+        let result = increment_subcategory_participant_count(&mut subcategory);
+        assert!(result.is_ok());
+        assert_eq!(subcategory.participant_count, 2);
+    }
+
+    fn subcategory() -> Subcategory {
         Subcategory {
             code: "code".to_string(),
             name: "name".to_string(),

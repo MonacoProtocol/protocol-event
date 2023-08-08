@@ -10,12 +10,18 @@ export class Subcategories extends AccountQuery<Subcategory> {
   constructor(connection: Connection) {
     super(connection, Subcategory, new Map<string, Criterion<unknown>>([
         ["authority", new PublicKeyCriterion(8)],
+        ["category", new PublicKeyCriterion(8 + 32)],
       ])
     );
   }
 
   filterByAuthority(authority: PublicKey): Subcategories {
     this.filters.get("authority").setValue(authority);
+    return this;
+  }
+
+  filterByCategory(category: PublicKey): Subcategories {
+    this.filters.get("category").setValue(category);
     return this;
   }
 }

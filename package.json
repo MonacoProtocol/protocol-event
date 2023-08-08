@@ -27,6 +27,7 @@
     "scripts": {
         "createEvent": "ts-node admin/client.ts createEvent",
         "createCategory": "ts-node admin/client.ts createCategory",
+        "createSubcategory": "ts-node admin/client.ts createSubcategory",
         "createEventGroup": "ts-node admin/client.ts createEventGroup",
         "createParticipant": "ts-node admin/client.ts createParticipant",
         "addEventParticipants": "ts-node admin/client.ts addEventParticipants",

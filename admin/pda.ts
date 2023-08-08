@@ -17,6 +17,18 @@ export function findCategoryPda(code: string, program: Program): PublicKey {
   return pda;
 }
 
+export function findSubcategoryPda(
+  category: PublicKey,
+  code: string,
+  program: Program,
+): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("subcategory"), category.toBuffer(), Buffer.from(code)],
+    program.programId,
+  );
+  return pda;
+}
+
 export function findEventGroupPda(
   category: PublicKey,
   code: string,

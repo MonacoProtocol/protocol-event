@@ -76,7 +76,7 @@ function createTeamParticipantInstruction(
   } as CreateTeamParticipantArgs;
   const createParticipantAccounts = {
     participant: participantPk,
-    category: subcategoryPk,
+    subcategory: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateTeamParticipantAccounts;
@@ -99,7 +99,7 @@ function createIndividualParticipantInstruction(
   } as CreateIndividualParticipantArgs;
   const createParticipantAccounts = {
     participant: participantPk,
-    category: subcategoryPk,
+    subcategory: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateIndividualParticipantAccounts;

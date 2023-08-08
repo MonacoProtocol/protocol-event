@@ -8,6 +8,7 @@ import {
   createTeamParticipant,
   createWalletWithBalance,
   sendTransaction,
+  createCategory,
 } from "../util/test_util";
 import { CreateEventInfo } from "../util/constants";
 import {
@@ -28,6 +29,7 @@ import { Participants } from "../../client/queries/participantQuery";
 import { Individual, Team } from "../../client/types/ParticipantType";
 import { Subcategories } from "../../client/queries/subcategoryQuery";
 import { EventGroups } from "../../client/queries/eventGroupQuery";
+import { Categories } from "../../client/queries/categoryQuery";
 
 describe("Test Client Queries", () => {
   it("Fetch event using query", async () => {
@@ -165,6 +167,24 @@ describe("Test Client Queries", () => {
     assert.ok(teamParticipantPks.includes(team1.toBase58()));
   });
 
+  it("Fetch categories using query", async () => {
+    const program = anchor.workspace.ProtocolEvent as Program<ProtocolEvent>;
+    const connection = program.provider.connection;
+
+    const subcategoryPk = await createCategory(
+      program,
+      "C0",
+      "Test Category 0",
+    );
+
+    const allCategories = await Categories.categoryQuery(connection).fetch();
+
+    const unfilteredPks = allCategories.map((category) =>
+      category.publicKey.toBase58(),
+    );
+    assert.ok(unfilteredPks.includes(subcategoryPk.toBase58()));
+  });
+
   it("Fetch subcategories using query", async () => {
     const program = anchor.workspace.ProtocolEvent as Program<ProtocolEvent>;
     const connection = program.provider.connection;
@@ -176,12 +196,12 @@ describe("Test Client Queries", () => {
       "Test Category 1",
     );
 
-    const allCategories = await Subcategories.subcategoryQuery(
+    const allSubcategories = await Subcategories.subcategoryQuery(
       connection,
     ).fetch();
 
-    const unfilteredPks = allCategories.map((category) =>
-      category.publicKey.toBase58(),
+    const unfilteredPks = allSubcategories.map((subcategory) =>
+      subcategory.publicKey.toBase58(),
     );
     assert.ok(unfilteredPks.includes(subcategoryPk.toBase58()));
   });
