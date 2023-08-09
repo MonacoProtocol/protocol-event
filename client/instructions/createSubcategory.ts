@@ -4,33 +4,37 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface DeactivateEventArgs {
+export interface CreateSubcategoryArgs {
   code: string
+  name: string
 }
 
-export interface DeactivateEventAccounts {
-  event: PublicKey
+export interface CreateSubcategoryAccounts {
   subcategory: PublicKey
-  authority: PublicKey
+  category: PublicKey
+  payer: PublicKey
+  systemProgram: PublicKey
 }
 
-export const layout = borsh.struct([borsh.str("code")])
+export const layout = borsh.struct([borsh.str("code"), borsh.str("name")])
 
-export function deactivateEvent(
-  args: DeactivateEventArgs,
-  accounts: DeactivateEventAccounts,
+export function createSubcategory(
+  args: CreateSubcategoryArgs,
+  accounts: CreateSubcategoryAccounts,
   programId: PublicKey = PROGRAM_ID
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
-    { pubkey: accounts.authority, isSigner: true, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: true },
+    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.payer, isSigner: true, isWritable: true },
+    { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]
-  const identifier = Buffer.from([222, 84, 182, 86, 46, 110, 215, 19])
+  const identifier = Buffer.from([56, 193, 240, 16, 153, 105, 213, 110])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
       code: args.code,
+      name: args.name,
     },
     buffer
   )

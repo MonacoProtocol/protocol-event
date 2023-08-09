@@ -11,7 +11,7 @@ export interface UpdateEventNameArgs {
 
 export interface UpdateEventNameAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -27,7 +27,7 @@ export function updateEventName(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([145, 242, 210, 78, 232, 148, 63, 216])

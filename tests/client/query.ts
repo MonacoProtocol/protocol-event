@@ -1,16 +1,21 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import {
-  createCategory,
+  createSubcategory,
   createEvent,
   createEventGroup,
   createIndividualParticipant,
   createTeamParticipant,
   createWalletWithBalance,
   sendTransaction,
+  createCategory,
 } from "../util/test_util";
 import { CreateEventInfo } from "../util/constants";
-import { eplEventGroupPda, footballCategoryPda } from "../util/pda";
+import {
+  eplEventGroupPda,
+  footballSubcategoryPda,
+  sportCategoryPda,
+} from "../util/pda";
 import { Events } from "../../client/queries";
 import assert from "assert";
 import {
@@ -22,8 +27,9 @@ import { ProtocolEvent } from "../../target/types/protocol_event";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { Participants } from "../../client/queries/participantQuery";
 import { Individual, Team } from "../../client/types/ParticipantType";
-import { Categories } from "../../client/queries/categoryQuery";
+import { Subcategories } from "../../client/queries/subcategoryQuery";
 import { EventGroups } from "../../client/queries/eventGroupQuery";
+import { Categories } from "../../client/queries/categoryQuery";
 
 describe("Test Client Queries", () => {
   it("Fetch event using query", async () => {
@@ -69,7 +75,7 @@ describe("Test Client Queries", () => {
       { code: code1 } as ActivateEventArgs,
       {
         event: event1Pk,
-        category: footballCategoryPda(),
+        subcategory: footballSubcategoryPda(),
         authority: authority1.publicKey,
       } as ActivateEventAccounts,
     );
@@ -100,19 +106,19 @@ describe("Test Client Queries", () => {
 
     const individual1 = await createIndividualParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       "P1",
       "Participant 1",
     );
     const individual2 = await createIndividualParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       "P2",
       "Participant 2",
     );
     const team1 = await createTeamParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       "P3",
       "Participant 3",
     );
@@ -165,14 +171,39 @@ describe("Test Client Queries", () => {
     const program = anchor.workspace.ProtocolEvent as Program<ProtocolEvent>;
     const connection = program.provider.connection;
 
-    const categoryPk = await createCategory(program, "C1", "Test Category 1");
+    const subcategoryPk = await createCategory(
+      program,
+      "C0",
+      "Test Category 0",
+    );
 
     const allCategories = await Categories.categoryQuery(connection).fetch();
 
     const unfilteredPks = allCategories.map((category) =>
       category.publicKey.toBase58(),
     );
-    assert.ok(unfilteredPks.includes(categoryPk.toBase58()));
+    assert.ok(unfilteredPks.includes(subcategoryPk.toBase58()));
+  });
+
+  it("Fetch subcategories using query", async () => {
+    const program = anchor.workspace.ProtocolEvent as Program<ProtocolEvent>;
+    const connection = program.provider.connection;
+
+    const subcategoryPk = await createSubcategory(
+      program,
+      sportCategoryPda(),
+      "C1",
+      "Test Category 1",
+    );
+
+    const allSubcategories = await Subcategories.subcategoryQuery(
+      connection,
+    ).fetch();
+
+    const unfilteredPks = allSubcategories.map((subcategory) =>
+      subcategory.publicKey.toBase58(),
+    );
+    assert.ok(unfilteredPks.includes(subcategoryPk.toBase58()));
   });
 
   it("Fetch event groups using query", async () => {
@@ -181,7 +212,7 @@ describe("Test Client Queries", () => {
 
     const eventGroupPk = await createEventGroup(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       "EG1",
       "Test Event Group 1",
     );
@@ -210,7 +241,7 @@ async function testEvent(
       actualStartTimestamp: null,
       actualEndTimestamp: null,
     } as CreateEventInfo,
-    footballCategoryPda(),
+    footballSubcategoryPda(),
     eplEventGroupPda(),
     authority,
   );

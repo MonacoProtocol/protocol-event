@@ -4,46 +4,51 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface EventGroupFields {
+export interface SubcategoryFields {
   authority: PublicKey
-  subcategory: PublicKey
+  category: PublicKey
   code: string
   name: string
+  participantCount: number
   payer: PublicKey
 }
 
-export interface EventGroupJSON {
+export interface SubcategoryJSON {
   authority: string
-  subcategory: string
+  category: string
   code: string
   name: string
+  participantCount: number
   payer: string
 }
 
-export class EventGroup {
+export class Subcategory {
   readonly authority: PublicKey
-  readonly subcategory: PublicKey
+  readonly category: PublicKey
   readonly code: string
   readonly name: string
+  readonly participantCount: number
   readonly payer: PublicKey
 
   static readonly discriminator = Buffer.from([
-    106, 141, 50, 250, 195, 28, 208, 131,
+    78, 24, 222, 4, 37, 250, 237, 162,
   ])
 
   static readonly layout = borsh.struct([
     borsh.publicKey("authority"),
-    borsh.publicKey("subcategory"),
+    borsh.publicKey("category"),
     borsh.str("code"),
     borsh.str("name"),
+    borsh.u16("participantCount"),
     borsh.publicKey("payer"),
   ])
 
-  constructor(fields: EventGroupFields) {
+  constructor(fields: SubcategoryFields) {
     this.authority = fields.authority
-    this.subcategory = fields.subcategory
+    this.category = fields.category
     this.code = fields.code
     this.name = fields.name
+    this.participantCount = fields.participantCount
     this.payer = fields.payer
   }
 
@@ -51,7 +56,7 @@ export class EventGroup {
     c: Connection,
     address: PublicKey,
     programId: PublicKey = PROGRAM_ID
-  ): Promise<EventGroup | null> {
+  ): Promise<Subcategory | null> {
     const info = await c.getAccountInfo(address)
 
     if (info === null) {
@@ -68,7 +73,7 @@ export class EventGroup {
     c: Connection,
     addresses: PublicKey[],
     programId: PublicKey = PROGRAM_ID
-  ): Promise<Array<EventGroup | null>> {
+  ): Promise<Array<Subcategory | null>> {
     const infos = await c.getMultipleAccountsInfo(addresses)
 
     return infos.map((info) => {
@@ -83,38 +88,41 @@ export class EventGroup {
     })
   }
 
-  static decode(data: Buffer): EventGroup {
-    if (!data.slice(0, 8).equals(EventGroup.discriminator)) {
+  static decode(data: Buffer): Subcategory {
+    if (!data.slice(0, 8).equals(Subcategory.discriminator)) {
       throw new Error("invalid account discriminator")
     }
 
-    const dec = EventGroup.layout.decode(data.slice(8))
+    const dec = Subcategory.layout.decode(data.slice(8))
 
-    return new EventGroup({
+    return new Subcategory({
       authority: dec.authority,
-      subcategory: dec.subcategory,
+      category: dec.category,
       code: dec.code,
       name: dec.name,
+      participantCount: dec.participantCount,
       payer: dec.payer,
     })
   }
 
-  toJSON(): EventGroupJSON {
+  toJSON(): SubcategoryJSON {
     return {
       authority: this.authority.toString(),
-      subcategory: this.subcategory.toString(),
+      category: this.category.toString(),
       code: this.code,
       name: this.name,
+      participantCount: this.participantCount,
       payer: this.payer.toString(),
     }
   }
 
-  static fromJSON(obj: EventGroupJSON): EventGroup {
-    return new EventGroup({
+  static fromJSON(obj: SubcategoryJSON): Subcategory {
+    return new Subcategory({
       authority: new PublicKey(obj.authority),
-      subcategory: new PublicKey(obj.subcategory),
+      category: new PublicKey(obj.category),
       code: obj.code,
       name: obj.name,
+      participantCount: obj.participantCount,
       payer: new PublicKey(obj.payer),
     })
   }

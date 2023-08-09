@@ -1,12 +1,16 @@
 import {
-  createCategory,
+  createSubcategory,
   createIndividualParticipant,
   createTeamParticipant,
   createWalletWithBalance,
 } from "../util/test_util";
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { findParticipantPda, footballCategoryPda } from "../util/pda";
+import {
+  findParticipantPda,
+  footballSubcategoryPda,
+  sportCategoryPda,
+} from "../util/pda";
 import assert from "assert";
 import { getAnchorProvider } from "../../admin/util";
 import { SystemProgram } from "@solana/web3.js";
@@ -19,15 +23,15 @@ describe("Create Participants", () => {
     const name = "Ewan Mcgregor";
     const individualPk = await createIndividualParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       code,
       name,
     );
 
     const individual = await program.account.participant.fetch(individualPk);
     assert.equal(
-      footballCategoryPda().toBase58(),
-      individual.category.toBase58(),
+      footballSubcategoryPda().toBase58(),
+      individual.subcategory.toBase58(),
     );
     assert.deepEqual({ individual: {} }, individual.participantType);
     assert.equal(
@@ -46,13 +50,16 @@ describe("Create Participants", () => {
     const name = "Ewan United";
     const teamPk = await createTeamParticipant(
       program,
-      footballCategoryPda(),
+      footballSubcategoryPda(),
       code,
       name,
     );
 
     const team = await program.account.participant.fetch(teamPk);
-    assert.equal(footballCategoryPda().toBase58(), team.category.toBase58());
+    assert.equal(
+      footballSubcategoryPda().toBase58(),
+      team.subcategory.toBase58(),
+    );
     assert.deepEqual({ team: {} }, team.participantType);
     assert.equal(
       getAnchorProvider().publicKey.toBase58(),
@@ -66,12 +73,17 @@ describe("Create Participants", () => {
   it("Create Multiple Participants - Category participant count and id increments", async () => {
     const program = anchor.workspace.ProtocolEvent;
 
-    const categoryPk = await createCategory(program, "SPORT", "Sportsball 99");
+    const subcategoryPk = await createSubcategory(
+      program,
+      sportCategoryPda(),
+      "SPORT",
+      "Sportsball 99",
+    );
 
     const code = "EWANM";
     const participant1Pk = await createIndividualParticipant(
       program,
-      categoryPk,
+      subcategoryPk,
       code,
       "Ewan Mcgregor",
     );
@@ -83,7 +95,7 @@ describe("Create Participants", () => {
     const code2 = "EWANM2";
     const participant2Pk = await createIndividualParticipant(
       program,
-      categoryPk,
+      subcategoryPk,
       code2,
       "Ewan Mcgregor II",
     );
@@ -97,7 +109,7 @@ describe("Create Participants", () => {
     const code3 = "EWANM3";
     const participant3Pk = await createTeamParticipant(
       program,
-      categoryPk,
+      subcategoryPk,
       code3,
       "Ewan Mcgregor's Team",
     );
@@ -108,22 +120,23 @@ describe("Create Participants", () => {
     assert.equal(3, participant3.id);
     assert.equal(code3, participant3.code);
 
-    const category = await program.account.category.fetch(categoryPk);
-    assert.equal(3, category.participantCount);
+    const subcategory = await program.account.subcategory.fetch(subcategoryPk);
+    assert.equal(3, subcategory.participantCount);
   });
 
   it("Create Participant - Category authority does not match", async () => {
     const program = anchor.workspace.ProtocolEvent;
 
-    const categoryPk = await createCategory(
+    const subcategoryPk = await createSubcategory(
       program,
+      sportCategoryPda(),
       "CAUTH",
       "CategoryDefaultAuth",
     );
-    const category = await program.account.category.fetch(categoryPk);
+    const subcategory = await program.account.subcategory.fetch(subcategoryPk);
     const participantPk = findParticipantPda(
-      categoryPk,
-      category.participantCount,
+      subcategoryPk,
+      subcategory.participantCount,
       program as Program,
     );
 
@@ -133,7 +146,7 @@ describe("Create Participants", () => {
       .createIndividualParticipant(Date.now().toString(), "Tester")
       .accounts({
         participant: participantPk,
-        category: categoryPk,
+        subcategory: subcategoryPk,
         authority: incorrectAuthority.publicKey,
         systemProgram: SystemProgram.programId,
       })

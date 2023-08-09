@@ -88,7 +88,7 @@ mod tests {
             name: "name".to_string(),
             id: 1,
             participant_type: ParticipantType::Team,
-            category: Pubkey::new_from_array([0; 32]),
+            subcategory: Pubkey::new_from_array([0; 32]),
             payer: Pubkey::new_from_array([0; 32]),
             authority: Default::default(),
             active: true,

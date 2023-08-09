@@ -31,13 +31,13 @@ export async function createEvent() {
 
   const code = process.argv[3];
   const name = process.argv[4];
-  const categoryPk = new PublicKey(process.argv[5]);
+  const subcategoryPk = new PublicKey(process.argv[5]);
   const eventGroupPk = new PublicKey(process.argv[6]);
   const startTime = Number.parseInt(process.argv[7]);
 
   const program = await getProgram();
 
-  const eventPk = await findEventPda(code, program);
+  const eventPk = findEventPda(code, program);
 
   const createEventArgs = {
     eventInfo: {
@@ -53,7 +53,7 @@ export async function createEvent() {
   const createEventAccs = {
     event: eventPk,
     eventGroup: eventGroupPk,
-    category: categoryPk,
+    subcategory: subcategoryPk,
     authority: program.provider.publicKey,
     systemProgram: SystemProgram.programId,
   } as CreateEventAccounts;
@@ -89,7 +89,7 @@ export async function addEventParticipants() {
 
   const addEventParticipantsAccounts = {
     event: eventPk,
-    category: event.category,
+    subcategory: event.category,
     authority: program.provider.publicKey,
   } as AddEventParticipantsAccounts;
 
@@ -127,7 +127,7 @@ export async function removeEventParticipants() {
 
   const removeEventParticipantsAccounts = {
     event: eventPk,
-    category: event.category,
+    subcategory: event.category,
     authority: program.provider.publicKey,
   } as RemoveEventParticipantsAccounts;
 
@@ -158,7 +158,7 @@ export async function activateEvent() {
 
   const activateEventAccounts = {
     event: eventPk,
-    category: event.category,
+    subcategory: event.category,
     authority: program.provider.publicKey,
   } as ActivateEventAccounts;
 
@@ -186,7 +186,7 @@ export async function deactivateEvent() {
 
   const deactivateEventAccounts = {
     event: eventPk,
-    category: event.category,
+    subcategory: event.category,
     authority: program.provider.publicKey,
   } as DeactivateEventAccounts;
 

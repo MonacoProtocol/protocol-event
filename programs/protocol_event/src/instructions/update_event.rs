@@ -35,7 +35,7 @@ pub fn update_name(event: &mut Event, name: String) -> Result<()> {
 pub fn add_participants(
     participants: &mut Vec<u16>,
     participants_to_add: Vec<u16>,
-    category_participant_count: u16,
+    subcategory_participant_count: u16,
 ) -> Result<()> {
     if participants_to_add.is_empty() {
         return Ok(());
@@ -44,7 +44,7 @@ pub fn add_participants(
     require!(
         participants_to_add
             .iter()
-            .all(|&participant| participant > 0 && participant <= category_participant_count),
+            .all(|&participant| participant > 0 && participant <= subcategory_participant_count),
         EventError::InvalidEventParticipants,
     );
 
@@ -212,7 +212,7 @@ mod tests {
 
     fn event() -> Event {
         Event {
-            category: Default::default(),
+            subcategory: Default::default(),
             event_group: Default::default(),
             active: false,
             authority: Default::default(),

@@ -11,7 +11,7 @@ export interface CreateEventArgs {
 export interface CreateEventAccounts {
   event: PublicKey
   eventGroup: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
   systemProgram: PublicKey
 }
@@ -26,7 +26,7 @@ export function createEvent(
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
     { pubkey: accounts.eventGroup, isSigner: false, isWritable: false },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]

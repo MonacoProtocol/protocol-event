@@ -10,7 +10,7 @@ export interface ActivateEventArgs {
 
 export interface ActivateEventAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -23,7 +23,7 @@ export function activateEvent(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([231, 184, 218, 110, 194, 0, 39, 115])

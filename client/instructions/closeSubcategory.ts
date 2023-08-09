@@ -4,37 +4,23 @@ import * as borsh from "@coral-xyz/borsh" // eslint-disable-line @typescript-esl
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface DeactivateEventArgs {
-  code: string
-}
-
-export interface DeactivateEventAccounts {
-  event: PublicKey
+export interface CloseSubcategoryAccounts {
   subcategory: PublicKey
   authority: PublicKey
+  payer: PublicKey
 }
 
-export const layout = borsh.struct([borsh.str("code")])
-
-export function deactivateEvent(
-  args: DeactivateEventArgs,
-  accounts: DeactivateEventAccounts,
+export function closeSubcategory(
+  accounts: CloseSubcategoryAccounts,
   programId: PublicKey = PROGRAM_ID
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: true },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
+    { pubkey: accounts.payer, isSigner: false, isWritable: true },
   ]
-  const identifier = Buffer.from([222, 84, 182, 86, 46, 110, 215, 19])
-  const buffer = Buffer.alloc(1000)
-  const len = layout.encode(
-    {
-      code: args.code,
-    },
-    buffer
-  )
-  const data = Buffer.concat([identifier, buffer]).slice(0, 8 + len)
+  const identifier = Buffer.from([104, 188, 76, 232, 250, 60, 211, 161])
+  const data = identifier
   const ix = new TransactionInstruction({ keys, programId, data })
   return ix
 }

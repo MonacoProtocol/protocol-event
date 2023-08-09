@@ -3,14 +3,26 @@ use anchor_lang::prelude::*;
 use crate::error::EventError;
 use crate::state::category::Category;
 use crate::state::event_group::EventGroup;
+use crate::state::subcategory::Subcategory;
 
-pub fn increment_category_participant_count(category: &mut Category) -> Result<()> {
-    category.participant_count = category.participant_count.checked_add(1).unwrap();
+pub fn increment_subcategory_participant_count(subcategory: &mut Subcategory) -> Result<()> {
+    subcategory.participant_count = subcategory.participant_count.checked_add(1).unwrap();
 
     Ok(())
 }
 
 pub fn update_category_name(category: &mut Category, updated_name: String) -> Result<()> {
+    require!(
+        updated_name.len() <= EventGroup::MAX_NAME_LENGTH,
+        EventError::MaxStringLengthExceeded,
+    );
+
+    category.name = updated_name;
+
+    Ok(())
+}
+
+pub fn update_subcategory_name(category: &mut Subcategory, updated_name: String) -> Result<()> {
     require!(
         updated_name.len() <= EventGroup::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
@@ -57,9 +69,49 @@ mod tests {
         Category {
             code: "code".to_string(),
             name: "name".to_string(),
+            authority: Pubkey::new_unique(),
+            payer: Pubkey::new_unique(),
+        }
+    }
+
+    #[test]
+    fn test_update_subcategory_name() {
+        let mut category = &mut subcategory();
+        let result = update_subcategory_name(&mut category, "new name".to_string());
+        assert!(result.is_ok());
+        assert_eq!(category.name, "new name".to_string());
+    }
+
+    #[test]
+    fn test_update_subcategory_name_name_exceeds_limit() {
+        let result = update_subcategory_name(
+            &mut subcategory(),
+            "012345678901234567890123456789012345678901234567890".to_string(),
+        );
+        assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
+    }
+
+    #[test]
+    fn test_update_subcategory_participant_count() {
+        let mut subcategory = &mut subcategory();
+
+        let result = increment_subcategory_participant_count(&mut subcategory);
+        assert!(result.is_ok());
+        assert_eq!(subcategory.participant_count, 1);
+
+        let result = increment_subcategory_participant_count(&mut subcategory);
+        assert!(result.is_ok());
+        assert_eq!(subcategory.participant_count, 2);
+    }
+
+    fn subcategory() -> Subcategory {
+        Subcategory {
+            code: "code".to_string(),
+            name: "name".to_string(),
             participant_count: 0,
             authority: Pubkey::new_unique(),
             payer: Pubkey::new_unique(),
+            category: Default::default(),
         }
     }
 
@@ -82,7 +134,7 @@ mod tests {
 
     fn event_group() -> EventGroup {
         EventGroup {
-            category: Default::default(),
+            subcategory: Default::default(),
             code: "code".to_string(),
             name: "name".to_string(),
             authority: Pubkey::new_unique(),

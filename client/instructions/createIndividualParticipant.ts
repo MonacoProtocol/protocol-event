@@ -11,7 +11,7 @@ export interface CreateIndividualParticipantArgs {
 
 export interface CreateIndividualParticipantAccounts {
   participant: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
   systemProgram: PublicKey
 }
@@ -25,7 +25,7 @@ export function createIndividualParticipant(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.participant, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: true },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: true },
     { pubkey: accounts.authority, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]

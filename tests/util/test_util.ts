@@ -3,11 +3,12 @@ import { Program } from "@coral-xyz/anchor";
 import { ProtocolEvent } from "../../target/types/protocol_event";
 import { CreateEventInfo } from "./constants";
 import {
+  findSubcategoryPda,
   findCategoryPda,
   findEventGroupPda,
   findEventPda,
   findParticipantPda,
-  footballCategoryPda,
+  footballSubcategoryPda,
 } from "./pda";
 import {
   Keypair,
@@ -23,7 +24,7 @@ const { SystemProgram } = anchor.web3;
 
 export async function createEvent(
   createEventInfo: CreateEventInfo,
-  categoryPk: PublicKey,
+  subcategoryPk: PublicKey,
   eventGroupPk: PublicKey,
   signer?: Keypair,
 ) {
@@ -33,7 +34,7 @@ export async function createEvent(
     .createEvent(createEventInfo)
     .accounts({
       event: eventPk,
-      category: categoryPk,
+      subcategory: subcategoryPk,
       eventGroup: eventGroupPk,
       authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
@@ -58,7 +59,7 @@ export async function addEventParticipants(
     .addEventParticipants(eventCode, participants)
     .accounts({
       event: eventPk,
-      category: footballCategoryPda(),
+      subcategory: footballSubcategoryPda(),
       authority: program.provider.publicKey,
     })
     .rpc()
@@ -79,7 +80,7 @@ export async function removeEventParticipants(
     .removeEventParticipants(eventCode, participants)
     .accounts({
       event: eventPk,
-      category: footballCategoryPda(),
+      subcategory: footballSubcategoryPda(),
       authority: program.provider.publicKey,
     })
     .rpc()
@@ -112,19 +113,52 @@ export async function createCategory(
   return categoryPk;
 }
 
-export async function createEventGroup(
+export async function createSubcategory(
   program: Program<ProtocolEvent>,
   categoryPk: PublicKey,
   code: string,
   name: string,
   signer?: Keypair,
 ) {
-  const eventGroupPk = findEventGroupPda(categoryPk, code, program as Program);
+  const subcategoryPk = findSubcategoryPda(
+    categoryPk,
+    code,
+    program as Program,
+  );
+  await program.methods
+    .createSubcategory(code, name)
+    .accounts({
+      subcategory: subcategoryPk,
+      category: categoryPk,
+      payer: signer ? signer.publicKey : program.provider.publicKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .signers(signer ? [signer] : [])
+    .rpc()
+    .catch((e) => {
+      console.error(e);
+      throw e;
+    });
+  return subcategoryPk;
+}
+
+export async function createEventGroup(
+  program: Program<ProtocolEvent>,
+  subcategoryPk: PublicKey,
+  code: string,
+  name: string,
+  signer?: Keypair,
+) {
+  const eventGroupPk = findEventGroupPda(
+    subcategoryPk,
+    code,
+    program as Program,
+  );
   await program.methods
     .createEventGroup(code, name)
     .accounts({
       eventGroup: eventGroupPk,
-      category: categoryPk,
+      subcategory: subcategoryPk,
       payer: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
@@ -139,23 +173,23 @@ export async function createEventGroup(
 
 export async function createIndividualParticipant(
   program: Program<ProtocolEvent>,
-  categoryPk: PublicKey,
+  subcategoryPk: PublicKey,
   code: string,
   name: string,
   signer?: Keypair,
 ) {
-  const category = await program.account.category.fetch(categoryPk);
+  const subcategory = await program.account.subcategory.fetch(subcategoryPk);
 
   const participantPk = findParticipantPda(
-    categoryPk,
-    category.participantCount,
+    subcategoryPk,
+    subcategory.participantCount,
     program as Program,
   );
   await program.methods
     .createIndividualParticipant(code, name)
     .accounts({
       participant: participantPk,
-      category: categoryPk,
+      subcategory: subcategoryPk,
       authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })
@@ -170,22 +204,22 @@ export async function createIndividualParticipant(
 
 export async function createTeamParticipant(
   program: Program<ProtocolEvent>,
-  categoryPk: PublicKey,
+  subcategoryPk: PublicKey,
   code: string,
   name: string,
   signer?: Keypair,
 ) {
-  const category = await program.account.category.fetch(categoryPk);
+  const subcategory = await program.account.subcategory.fetch(subcategoryPk);
   const participantPk = findParticipantPda(
-    categoryPk,
-    category.participantCount,
+    subcategoryPk,
+    subcategory.participantCount,
     program as Program,
   );
   await program.methods
     .createTeamParticipant(code, name)
     .accounts({
       participant: participantPk,
-      category: categoryPk,
+      subcategory: subcategoryPk,
       authority: signer ? signer.publicKey : program.provider.publicKey,
       systemProgram: SystemProgram.programId,
     })

@@ -8,7 +8,6 @@ export interface CategoryFields {
   authority: PublicKey
   code: string
   name: string
-  participantCount: number
   payer: PublicKey
 }
 
@@ -16,7 +15,6 @@ export interface CategoryJSON {
   authority: string
   code: string
   name: string
-  participantCount: number
   payer: string
 }
 
@@ -24,7 +22,6 @@ export class Category {
   readonly authority: PublicKey
   readonly code: string
   readonly name: string
-  readonly participantCount: number
   readonly payer: PublicKey
 
   static readonly discriminator = Buffer.from([
@@ -35,7 +32,6 @@ export class Category {
     borsh.publicKey("authority"),
     borsh.str("code"),
     borsh.str("name"),
-    borsh.u16("participantCount"),
     borsh.publicKey("payer"),
   ])
 
@@ -43,7 +39,6 @@ export class Category {
     this.authority = fields.authority
     this.code = fields.code
     this.name = fields.name
-    this.participantCount = fields.participantCount
     this.payer = fields.payer
   }
 
@@ -94,7 +89,6 @@ export class Category {
       authority: dec.authority,
       code: dec.code,
       name: dec.name,
-      participantCount: dec.participantCount,
       payer: dec.payer,
     })
   }
@@ -104,7 +98,6 @@ export class Category {
       authority: this.authority.toString(),
       code: this.code,
       name: this.name,
-      participantCount: this.participantCount,
       payer: this.payer.toString(),
     }
   }
@@ -114,7 +107,6 @@ export class Category {
       authority: new PublicKey(obj.authority),
       code: obj.code,
       name: obj.name,
-      participantCount: obj.participantCount,
       payer: new PublicKey(obj.payer),
     })
   }

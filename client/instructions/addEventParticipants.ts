@@ -11,7 +11,7 @@ export interface AddEventParticipantsArgs {
 
 export interface AddEventParticipantsAccounts {
   event: PublicKey
-  category: PublicKey
+  subcategory: PublicKey
   authority: PublicKey
 }
 
@@ -27,7 +27,7 @@ export function addEventParticipants(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.event, isSigner: false, isWritable: true },
-    { pubkey: accounts.category, isSigner: false, isWritable: false },
+    { pubkey: accounts.subcategory, isSigner: false, isWritable: false },
     { pubkey: accounts.authority, isSigner: true, isWritable: false },
   ]
   const identifier = Buffer.from([143, 123, 25, 114, 60, 0, 185, 130])

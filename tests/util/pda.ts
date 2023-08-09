@@ -18,37 +18,54 @@ export function findCategoryPda(code: string, program: Program): PublicKey {
   return pda;
 }
 
-export function findEventGroupPda(
+export function findSubcategoryPda(
   category: PublicKey,
   code: string,
   program: Program,
 ): PublicKey {
   const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("event_group"), category.toBuffer(), Buffer.from(code)],
+    [Buffer.from("subcategory"), category.toBuffer(), Buffer.from(code)],
     program.programId,
   );
   return pda;
 }
 
-export function footballCategoryPda(): PublicKey {
+export function findEventGroupPda(
+  subcategory: PublicKey,
+  code: string,
+  program: Program,
+): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("event_group"), subcategory.toBuffer(), Buffer.from(code)],
+    program.programId,
+  );
+  return pda;
+}
+
+export function sportCategoryPda(): PublicKey {
   const program: anchor.Program = anchor.workspace.ProtocolEvent;
-  return findCategoryPda("FOOTBALL", program);
+  return findCategoryPda("SPORT", program);
+}
+
+export function footballSubcategoryPda(): PublicKey {
+  const program: anchor.Program = anchor.workspace.ProtocolEvent;
+  return findSubcategoryPda(sportCategoryPda(), "FOOTBALL", program);
 }
 
 export function eplEventGroupPda(): PublicKey {
   const program: anchor.Program = anchor.workspace.ProtocolEvent;
-  return findEventGroupPda(footballCategoryPda(), "EPL", program);
+  return findEventGroupPda(footballSubcategoryPda(), "EPL", program);
 }
 
 export function findParticipantPda(
-  category: PublicKey,
+  subcategory: PublicKey,
   id: number,
   program: Program,
 ): PublicKey {
   const [pda] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("participant"),
-      category.toBuffer(),
+      subcategory.toBuffer(),
       Buffer.from(id.toString()),
     ],
     program.programId,

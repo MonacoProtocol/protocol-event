@@ -18,7 +18,7 @@ export async function createCategory() {
 
   const program = await getProgram();
 
-  const categoryPk = await findCategoryPda(code, program);
+  const categoryPk = findCategoryPda(code, program);
 
   const createCategoryArgs = {
     code: code,
@@ -31,10 +31,7 @@ export async function createCategory() {
     systemProgram: SystemProgram.programId,
   } as CreateCategoryAccounts;
 
-  const ix = await clientCreateCategory(
-    createCategoryArgs,
-    createCategoryAccounts,
-  );
+  const ix = clientCreateCategory(createCategoryArgs, createCategoryAccounts);
 
   await sendTransaction([ix]);
 

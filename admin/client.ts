@@ -10,6 +10,7 @@ import { createCategory } from "./category";
 import { createEventGroup } from "./eventGroup";
 import { createParticipant } from "./participant";
 import { close } from "./closeAccount";
+import { createSubcategory } from "./subcategory";
 
 if (process.argv.length < 3) {
   printUsageAndExit();
@@ -26,6 +27,9 @@ switch (script) {
     break;
   case "createCategory":
     createCategory();
+    break;
+  case "createSubcategory":
+    createSubcategory();
     break;
   case "createEventGroup":
     createEventGroup();
