@@ -50,6 +50,33 @@ fn validate_event(event_info: &CreateEventInfo) -> Result<()> {
         event_info.code.len() <= Event::MAX_CODE_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
+
+    validate_event_timestamps(
+        event_info.expected_start_timestamp,
+        event_info.actual_start_timestamp,
+        event_info.actual_end_timestamp,
+    )?;
+
+    Ok(())
+}
+
+pub fn validate_event_timestamps(
+    expected_start_timestamp: i64,
+    actual_start_timestamp: Option<i64>,
+    actual_end_timestamp: Option<i64>,
+) -> Result<()> {
+    if let Some(actual_end_timestamp) = actual_end_timestamp {
+        require!(
+            expected_start_timestamp <= actual_end_timestamp,
+            EventError::InvalidTimestamp
+        );
+        if let Some(actual_start_timestamp) = actual_start_timestamp {
+            require!(
+                actual_start_timestamp <= actual_end_timestamp,
+                EventError::InvalidTimestamp
+            );
+        }
+    }
     Ok(())
 }
 
@@ -144,5 +171,35 @@ mod tests {
         let result = validate_event(&event_info);
 
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
+    }
+
+    #[test]
+    fn test_validate_event_expected_start_after_actual_end() {
+        let event_info = CreateEventInfo {
+            code: "LAFCvLAG@2021-08-28".to_string(),
+            name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
+            expected_start_timestamp: 1630156801,
+            actual_start_timestamp: None,
+            actual_end_timestamp: Some(1630156800),
+        };
+
+        let result = validate_event(&event_info);
+
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
+    }
+
+    #[test]
+    fn test_validate_event_actual_start_after_actual_end() {
+        let event_info = CreateEventInfo {
+            code: "LAFCvLAG@2021-08-28".to_string(),
+            name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
+            expected_start_timestamp: 1630156801,
+            actual_start_timestamp: Some(1630156806),
+            actual_end_timestamp: Some(1630156805),
+        };
+
+        let result = validate_event(&event_info);
+
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
     }
 }
