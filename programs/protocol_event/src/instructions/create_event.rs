@@ -6,7 +6,6 @@ use anchor_lang::prelude::*;
 pub struct CreateEventInfo {
     pub code: String,
     pub name: String,
-    pub participants: Vec<u16>,
     pub expected_start_timestamp: i64,
     pub actual_start_timestamp: Option<i64>,
     pub actual_end_timestamp: Option<i64>,
@@ -18,10 +17,9 @@ pub fn create(
     authority: Pubkey,
     payer: Pubkey,
     subcategory: Pubkey,
-    subcategory_participant_count: u16,
     event_group: Pubkey,
 ) -> Result<()> {
-    validate_event(&event_info, subcategory_participant_count)?;
+    validate_event(&event_info)?;
 
     event.authority = authority;
     event.payer = payer;
@@ -34,7 +32,7 @@ pub fn create(
     event.code = event_info.code;
     event.name = event_info.name;
 
-    event.participants = event_info.participants;
+    event.participants = vec![];
 
     event.expected_start_timestamp = event_info.expected_start_timestamp;
     event.actual_start_timestamp = event_info.actual_start_timestamp;
@@ -43,7 +41,7 @@ pub fn create(
     Ok(())
 }
 
-fn validate_event(event_info: &CreateEventInfo, subcategory_participant_count: u16) -> Result<()> {
+fn validate_event(event_info: &CreateEventInfo) -> Result<()> {
     require!(
         event_info.name.len() <= Event::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
@@ -51,17 +49,6 @@ fn validate_event(event_info: &CreateEventInfo, subcategory_participant_count: u
     require!(
         event_info.code.len() <= Event::MAX_CODE_LENGTH,
         EventError::MaxStringLengthExceeded,
-    );
-    require!(
-        event_info.participants.len() <= Event::MAX_PARTICIPANTS,
-        EventError::MaxParticipantsExceeded,
-    );
-    require!(
-        event_info
-            .participants
-            .iter()
-            .all(|&participant| participant > 0 && participant <= subcategory_participant_count),
-        EventError::InvalidEventParticipants,
     );
     Ok(())
 }
@@ -94,7 +81,6 @@ mod tests {
         let event_info = CreateEventInfo {
             code: "LAFCvLAG@2021-08-28".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
-            participants: vec![1, 2, 3, 4, 5],
             expected_start_timestamp: 1630156800,
             actual_start_timestamp: None,
             actual_end_timestamp: None,
@@ -110,7 +96,6 @@ mod tests {
             authority,
             authority,
             subcategory,
-            10,
             event_group,
         );
 
@@ -125,7 +110,7 @@ mod tests {
             new_event.name,
             "Los Angeles Football Club vs. LA Galaxy".to_string()
         );
-        assert_eq!(new_event.participants, vec![1, 2, 3, 4, 5]);
+        assert_eq!(new_event.participants, vec![]);
         assert_eq!(new_event.expected_start_timestamp, 1630156800);
         assert_eq!(new_event.actual_start_timestamp, None);
         assert_eq!(new_event.actual_end_timestamp, None);
@@ -136,13 +121,12 @@ mod tests {
         let event_info = CreateEventInfo {
             code: "LAFCvLAG@2021-08-28".to_string(),
             name: "012345678901234567890123456789012345678901234567890".to_string(),
-            participants: vec![],
             expected_start_timestamp: 1630156800,
             actual_start_timestamp: None,
             actual_end_timestamp: None,
         };
 
-        let result = validate_event(&event_info, 10);
+        let result = validate_event(&event_info);
 
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
     }
@@ -152,48 +136,13 @@ mod tests {
         let event_info = CreateEventInfo {
             code: "012345678901234567890123456789".to_string(),
             name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
-            participants: vec![],
             expected_start_timestamp: 1630156800,
             actual_start_timestamp: None,
             actual_end_timestamp: None,
         };
 
-        let result = validate_event(&event_info, 10);
+        let result = validate_event(&event_info);
 
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
-    }
-
-    #[test]
-    fn test_validate_event_participants_exceeds_limit() {
-        let participants: Vec<u16> = (1..=301).map(|num| num as u16).collect();
-        let event_info = CreateEventInfo {
-            code: "LAFCvLAG@2021-08-28".to_string(),
-            name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
-            participants,
-            expected_start_timestamp: 1630156800,
-            actual_start_timestamp: None,
-            actual_end_timestamp: None,
-        };
-
-        let result = validate_event(&event_info, 300);
-
-        assert_eq!(result, Err(error!(EventError::MaxParticipantsExceeded)));
-    }
-
-    #[test]
-    fn test_validate_event_participants_not_in_category() {
-        let participants: Vec<u16> = (1..=11).map(|num| num as u16).collect();
-        let event_info = CreateEventInfo {
-            code: "LAFCvLAG@2021-08-28".to_string(),
-            name: "Los Angeles Football Club vs. LA Galaxy".to_string(),
-            participants,
-            expected_start_timestamp: 1630156800,
-            actual_start_timestamp: None,
-            actual_end_timestamp: None,
-        };
-
-        let result = validate_event(&event_info, 10);
-
-        assert_eq!(result, Err(error!(EventError::InvalidEventParticipants)));
     }
 }
