@@ -3,6 +3,7 @@ export type CustomError =
   | MaxParticipantsExceeded
   | InvalidEventParticipants
   | AuthorityMismatch
+  | InvalidTimestamp
 
 export class MaxStringLengthExceeded extends Error {
   static readonly code = 6000
@@ -48,6 +49,17 @@ export class AuthorityMismatch extends Error {
   }
 }
 
+export class InvalidTimestamp extends Error {
+  static readonly code = 6004
+  readonly code = 6004
+  readonly name = "InvalidTimestamp"
+  readonly msg = "Invalid timestamp"
+
+  constructor(readonly logs?: string[]) {
+    super("6004: Invalid timestamp")
+  }
+}
+
 export function fromCode(code: number, logs?: string[]): CustomError | null {
   switch (code) {
     case 6000:
@@ -58,6 +70,8 @@ export function fromCode(code: number, logs?: string[]): CustomError | null {
       return new InvalidEventParticipants(logs)
     case 6003:
       return new AuthorityMismatch(logs)
+    case 6004:
+      return new InvalidTimestamp(logs)
   }
 
   return null

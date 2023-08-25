@@ -10,4 +10,6 @@ pub enum EventError {
     InvalidEventParticipants,
     #[msg("Authority mismatch")]
     AuthorityMismatch,
+    #[msg("Invalid timestamp")]
+    InvalidTimestamp,
 }

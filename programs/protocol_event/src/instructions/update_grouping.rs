@@ -13,7 +13,7 @@ pub fn increment_subcategory_participant_count(subcategory: &mut Subcategory) ->
 
 pub fn update_category_name(category: &mut Category, updated_name: String) -> Result<()> {
     require!(
-        updated_name.len() <= EventGroup::MAX_NAME_LENGTH,
+        updated_name.len() <= Category::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
 
@@ -24,7 +24,7 @@ pub fn update_category_name(category: &mut Category, updated_name: String) -> Re
 
 pub fn update_subcategory_name(category: &mut Subcategory, updated_name: String) -> Result<()> {
     require!(
-        updated_name.len() <= EventGroup::MAX_NAME_LENGTH,
+        updated_name.len() <= Subcategory::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
 
