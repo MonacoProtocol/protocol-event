@@ -16,12 +16,12 @@ export class Subcategories extends AccountQuery<Subcategory> {
   }
 
   filterByAuthority(authority: PublicKey): Subcategories {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 
   filterByCategory(category: PublicKey): Subcategories {
-    this.filters.get("category").setValue(category);
+    this.filters.get("category")?.setValue(category);
     return this;
   }
 }

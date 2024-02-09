@@ -15,7 +15,7 @@ export class Categories extends AccountQuery<Category> {
   }
 
   filterByAuthority(authority: PublicKey): Categories {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 }

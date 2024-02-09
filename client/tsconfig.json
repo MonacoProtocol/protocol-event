@@ -10,15 +10,19 @@
       "preserveConstEnums": true,
       "moduleResolution": "Node",
       "allowSyntheticDefaultImports": true,
+      "baseUrl": ".",
       "downlevelIteration": true,
       "skipLibCheck": true
     },
   "include": [
-    "/accounts/",
-    "/errors/",
-    "/instructions/",
-    "/queries/",
-    "/types/",
+    "accounts/",
+    "errors/",
+    "instructions/",
+    "queries/",
+    "types/",
+    "transactions/",
+    "pdas/",
+    "index.ts",
     "programId.ts"
   ]
   }

@@ -16,12 +16,12 @@ export class EventGroups extends AccountQuery<EventGroup> {
   }
 
   filterByAuthority(authority: PublicKey): EventGroups {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 
   filterBySubcategory(subcategory: PublicKey): EventGroups {
-    this.filters.get("subcategory").setValue(subcategory);
+    this.filters.get("subcategory")?.setValue(subcategory);
     return this;
   }
 }
