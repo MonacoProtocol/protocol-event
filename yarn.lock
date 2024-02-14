@@ -916,6 +916,13 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@babel/runtime@^7.23.4":
+  version "7.23.9"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.9.tgz#47791a15e4603bb5f905bc0753801cf21d6345f7"
+  integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/runtime@^7.8.4":
   version "7.18.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.3.tgz#c7b654b57f6f63cf7f8b418ac9ca04408c4579f4"
@@ -982,14 +989,14 @@
     superstruct "^0.15.4"
     toml "^3.0.0"
 
-"@coral-xyz/anchor@~0.27.0":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@coral-xyz/anchor/-/anchor-0.27.0.tgz#621e5ef123d05811b97e49973b4ed7ede27c705c"
-  integrity sha512-+P/vPdORawvg3A9Wj02iquxb4T0C5m4P6aZBVYysKl4Amk+r6aMPZkUhilBkD6E4Nuxnoajv3CFykUfkGE0n5g==
+"@coral-xyz/anchor@~0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@coral-xyz/anchor/-/anchor-0.29.0.tgz#bd0be95bedfb30a381c3e676e5926124c310ff12"
+  integrity sha512-eny6QNG0WOwqV0zQ7cs/b1tIuzZGmP7U7EcH+ogt4Gdbl8HDmIYVMh/9aTmYZPaFWjtUaI8qSn73uYEXWfATdA==
   dependencies:
-    "@coral-xyz/borsh" "^0.27.0"
+    "@coral-xyz/borsh" "^0.29.0"
+    "@noble/hashes" "^1.3.1"
     "@solana/web3.js" "^1.68.0"
-    base64-js "^1.5.1"
     bn.js "^5.1.2"
     bs58 "^4.0.1"
     buffer-layout "^1.2.2"
@@ -997,24 +1004,23 @@
     cross-fetch "^3.1.5"
     crypto-hash "^1.3.0"
     eventemitter3 "^4.0.7"
-    js-sha256 "^0.9.0"
     pako "^2.0.3"
     snake-case "^3.0.4"
     superstruct "^0.15.4"
     toml "^3.0.0"
 
-"@coral-xyz/borsh@^0.27.0":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@coral-xyz/borsh/-/borsh-0.27.0.tgz#700c647ea5262b1488957ac7fb4e8acf72c72b63"
-  integrity sha512-tJKzhLukghTWPLy+n8K8iJKgBq1yLT/AxaNd10yJrX8mI56ao5+OFAKAqW/h0i79KCvb4BK0VGO5ECmmolFz9A==
-  dependencies:
-    bn.js "^5.1.2"
-    buffer-layout "^1.2.0"
-
 "@coral-xyz/borsh@^0.28.0":
   version "0.28.0"
   resolved "https://registry.yarnpkg.com/@coral-xyz/borsh/-/borsh-0.28.0.tgz#fa368a2f2475bbf6f828f4657f40a52102e02b6d"
   integrity sha512-/u1VTzw7XooK7rqeD7JLUSwOyRSesPUk0U37BV9zK0axJc1q0nRbKFGFLYCQ16OtdOJTTwGfGp11Lx9B45bRCQ==
+  dependencies:
+    bn.js "^5.1.2"
+    buffer-layout "^1.2.0"
+
+"@coral-xyz/borsh@^0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@coral-xyz/borsh/-/borsh-0.29.0.tgz#79f7045df2ef66da8006d47f5399c7190363e71f"
+  integrity sha512-s7VFVa3a0oqpkuRloWVPdCK7hMbAMY270geZOGfCnaqexrP5dTIpbEHL33req6IYPPJ0hYa71cdvJ1h6V55/oQ==
   dependencies:
     bn.js "^5.1.2"
     buffer-layout "^1.2.0"
@@ -1319,6 +1325,13 @@
   dependencies:
     "@noble/hashes" "1.3.1"
 
+"@noble/curves@^1.2.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.3.0.tgz#01be46da4fd195822dab821e72f71bf4aeec635e"
+  integrity sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==
+  dependencies:
+    "@noble/hashes" "1.3.3"
+
 "@noble/ed25519@^1.7.0":
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/@noble/ed25519/-/ed25519-1.7.3.tgz#57e1677bf6885354b466c38e2b620c62f45a7123"
@@ -1328,6 +1341,11 @@
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.1.tgz#8831ef002114670c603c458ab8b11328406953a9"
   integrity sha512-EbqwksQwz9xDRGfDST86whPBgM65E0OH/pCgqW0GBVzO22bNE+NuIbeTb714+IfSjU3aRk47EUvXIb5bTsenKA==
+
+"@noble/hashes@1.3.3", "@noble/hashes@^1.3.1", "@noble/hashes@^1.3.2":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.3.tgz#39908da56a4adc270147bb07968bf3b16cfe1699"
+  integrity sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==
 
 "@noble/hashes@^1.1.2":
   version "1.3.0"
@@ -1386,6 +1404,13 @@
   dependencies:
     buffer "~6.0.3"
 
+"@solana/buffer-layout@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@solana/buffer-layout/-/buffer-layout-4.0.1.tgz#b996235eaec15b1e0b5092a8ed6028df77fa6c15"
+  integrity sha512-E1ImOIAD1tBZFRdjeM4/pzTiTApC0AOBGwyAMS4fwIodCWArzJ3DWdoh8cKxeFM2fElkxBh2Aqts1BPC373rHA==
+  dependencies:
+    buffer "~6.0.3"
+
 "@solana/web3.js@^1.68.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.74.0.tgz#dbcbeabb830dd7cbbcf5e31404ca79c9785cbf2d"
@@ -1405,6 +1430,27 @@
     fast-stable-stringify "^1.0.0"
     jayson "^3.4.4"
     node-fetch "^2.6.7"
+    rpc-websockets "^7.5.1"
+    superstruct "^0.14.2"
+
+"@solana/web3.js@^1.75.0":
+  version "1.90.0"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.90.0.tgz#a0f1364b4235d32a43649b74c52d9fb8bc9436a3"
+  integrity sha512-p0cb/COXb8NNVSMkGMPwqQ6NvObZgUitN80uOedMB+jbYWOKOeJBuPnzhenkIV9RX0krGwyuY1Ltn5O8MGFsEw==
+  dependencies:
+    "@babel/runtime" "^7.23.4"
+    "@noble/curves" "^1.2.0"
+    "@noble/hashes" "^1.3.2"
+    "@solana/buffer-layout" "^4.0.1"
+    agentkeepalive "^4.5.0"
+    bigint-buffer "^1.1.5"
+    bn.js "^5.2.1"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    buffer "6.0.3"
+    fast-stable-stringify "^1.0.0"
+    jayson "^4.1.0"
+    node-fetch "^2.7.0"
     rpc-websockets "^7.5.1"
     superstruct "^0.14.2"
 
@@ -1716,6 +1762,13 @@ agentkeepalive@^4.2.1:
   dependencies:
     debug "^4.1.0"
     depd "^2.0.0"
+    humanize-ms "^1.2.1"
+
+agentkeepalive@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-4.5.0.tgz#2673ad1389b3c418c5a20c5d7364f93ca04be923"
+  integrity sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==
+  dependencies:
     humanize-ms "^1.2.1"
 
 ajv@^6.10.0, ajv@^6.12.4:
@@ -3597,6 +3650,13 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
+node-fetch@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-gyp-build@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.3.0.tgz#9f256b03e5826150be39c764bf51e993946d71a3"
@@ -3853,6 +3913,11 @@ regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
   integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
+
+regenerator-runtime@^0.14.0:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz#356ade10263f685dda125100cd862c1db895327f"
+  integrity sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==
 
 regenerator-transform@^0.15.0:
   version "0.15.0"
