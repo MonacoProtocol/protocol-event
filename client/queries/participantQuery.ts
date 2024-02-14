@@ -19,22 +19,22 @@ export class Participants extends AccountQuery<Participant> {
   }
 
   filterByAuthority(authority: PublicKey): Participants {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 
   filterByCategory(category: PublicKey): Participants {
-    this.filters.get("category").setValue(category);
+    this.filters.get("category")?.setValue(category);
     return this;
   }
 
   filterByParticipantType(participantType: ParticipantTypeKind): Participants {
-    this.filters.get("participantType").setValue(participantType.discriminator);
+    this.filters.get("participantType")?.setValue(participantType.discriminator);
     return this;
   }
 
   filterByActive(active: boolean): Participants {
-    this.filters.get("active").setValue(active);
+    this.filters.get("active")?.setValue(active);
     return this;
   }
 }

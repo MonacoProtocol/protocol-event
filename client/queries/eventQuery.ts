@@ -18,22 +18,22 @@ export class Events extends AccountQuery<Event> {
   }
 
   filterByAuthority(authority: PublicKey): Events {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 
   filterByCategory(category: PublicKey): Events {
-    this.filters.get("category").setValue(category);
+    this.filters.get("category")?.setValue(category);
     return this;
   }
 
   filterByEventGroup(eventGroup: PublicKey): Events {
-    this.filters.get("eventGroup").setValue(eventGroup);
+    this.filters.get("eventGroup")?.setValue(eventGroup);
     return this;
   }
 
   filterByActive(active: boolean): Events {
-    this.filters.get("active").setValue(active);
+    this.filters.get("active")?.setValue(active);
     return this;
   }
 }
