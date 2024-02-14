@@ -22,11 +22,11 @@ pub fn create_category(
 
 fn validate_category(code: &String, name: &String) -> Result<()> {
     require!(
-        code.len() <= Subcategory::MAX_CODE_LENGTH,
+        code.len() <= Category::MAX_CODE_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
     require!(
-        name.len() <= Subcategory::MAX_NAME_LENGTH,
+        name.len() <= Category::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
     );
     Ok(())

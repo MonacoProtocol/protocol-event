@@ -1,4 +1,5 @@
 use crate::error::EventError;
+use crate::instructions::validate_event_timestamps;
 use crate::state::event::Event;
 use anchor_lang::prelude::*;
 
@@ -7,18 +8,39 @@ pub fn update_active_flag(event: &mut Event, active: bool) -> Result<()> {
     Ok(())
 }
 
-pub fn update_expected_start_timestamp(event: &mut Event, timestamp: i64) -> Result<()> {
-    event.expected_start_timestamp = timestamp;
+pub fn update_expected_start_timestamp(
+    event: &mut Event,
+    expected_start_timestamp: i64,
+) -> Result<()> {
+    validate_event_timestamps(
+        expected_start_timestamp,
+        event.actual_start_timestamp,
+        event.actual_end_timestamp,
+    )?;
+
+    event.expected_start_timestamp = expected_start_timestamp;
     Ok(())
 }
 
-pub fn update_actual_start_timestamp(event: &mut Event, timestamp: i64) -> Result<()> {
-    event.actual_start_timestamp = Some(timestamp);
+pub fn update_actual_start_timestamp(event: &mut Event, actual_start_timestamp: i64) -> Result<()> {
+    validate_event_timestamps(
+        event.expected_start_timestamp,
+        Some(actual_start_timestamp),
+        event.actual_end_timestamp,
+    )?;
+
+    event.actual_start_timestamp = Some(actual_start_timestamp);
     Ok(())
 }
 
-pub fn update_actual_end_timestamp(event: &mut Event, timestamp: i64) -> Result<()> {
-    event.actual_end_timestamp = Some(timestamp);
+pub fn update_actual_end_timestamp(event: &mut Event, actual_end_timestamp: i64) -> Result<()> {
+    validate_event_timestamps(
+        event.expected_start_timestamp,
+        event.actual_start_timestamp,
+        Some(actual_end_timestamp),
+    )?;
+
+    event.actual_end_timestamp = Some(actual_end_timestamp);
     Ok(())
 }
 
@@ -92,24 +114,55 @@ mod tests {
     fn test_update_expected_start() {
         let mut event = event();
 
-        assert!(update_expected_start_timestamp(&mut event, 1).is_ok());
-        assert_eq!(event.expected_start_timestamp, 1);
+        assert!(update_expected_start_timestamp(&mut event, 1692698414).is_ok());
+        assert_eq!(event.expected_start_timestamp, 1692698414);
+    }
+
+    #[test]
+    fn test_update_expected_start_timestamp_invalid() {
+        let mut event = event();
+        event.actual_end_timestamp = Some(1692698414);
+
+        let result = update_expected_start_timestamp(&mut event, 1692698415);
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
     }
 
     #[test]
     fn test_update_actual_start() {
         let mut event = event();
 
-        assert!(update_actual_start_timestamp(&mut event, 1).is_ok());
-        assert_eq!(event.actual_start_timestamp, Some(1));
+        assert!(update_actual_start_timestamp(&mut event, 1692698414).is_ok());
+        assert_eq!(event.actual_start_timestamp, Some(1692698414));
+    }
+
+    #[test]
+    fn test_update_actual_start_timestamp_invalid() {
+        let mut event = event();
+        event.actual_end_timestamp = Some(1692698414);
+
+        let result = update_actual_start_timestamp(&mut event, 1692698415);
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
     }
 
     #[test]
     fn test_update_actual_end() {
         let mut event = event();
 
-        assert!(update_actual_end_timestamp(&mut event, 1).is_ok());
-        assert_eq!(event.actual_end_timestamp, Some(1));
+        assert!(update_actual_end_timestamp(&mut event, 1692698414).is_ok());
+        assert_eq!(event.actual_end_timestamp, Some(1692698414));
+    }
+
+    #[test]
+    fn test_update_actual_end_timestamp_invalid() {
+        let mut event = event();
+
+        let result = update_actual_end_timestamp(&mut event, 1692698412);
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
+
+        event.actual_start_timestamp = Some(1692698416);
+
+        let result = update_actual_end_timestamp(&mut event, 1692698415);
+        assert_eq!(result, Err(error!(EventError::InvalidTimestamp)));
     }
 
     #[test]
@@ -220,7 +273,7 @@ mod tests {
             code: "".to_string(),
             name: "".to_string(),
             participants: vec![],
-            expected_start_timestamp: 0,
+            expected_start_timestamp: 1692698413,
             actual_start_timestamp: None,
             actual_end_timestamp: None,
         }
