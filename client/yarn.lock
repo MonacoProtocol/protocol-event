@@ -487,13 +487,6 @@
   "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz"
   "version" "0.14.1"
 
-"rimraf@^5.0.5":
-  "integrity" "sha512-CqDakW+hMe/Bz202FPEymy68P+G50RfMQK+Qo5YUqc9SPipvbGjCGKd0RSKEelbsfQuw3g5NZDSrlZZAJurH1A=="
-  "resolved" "https://registry.npmjs.org/rimraf/-/rimraf-5.0.5.tgz"
-  "version" "5.0.5"
-  dependencies:
-    "glob" "^10.3.7"
-
 "rpc-websockets@^7.5.1":
   "integrity" "sha512-DwKewQz1IUA5wfLvgM8wDpPRcr+nWSxuFxx5CbrI2z/MyyZ4nXLM86TvIA+cI1ZAdqC8JIBR1mZR55dzaLU+Hw=="
   "resolved" "https://registry.npmjs.org/rpc-websockets/-/rpc-websockets-7.9.0.tgz"
