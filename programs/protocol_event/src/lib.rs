@@ -24,7 +24,6 @@ pub mod protocol_event {
             ctx.accounts.authority.key(),
             ctx.accounts.authority.key(),
             ctx.accounts.subcategory.key(),
-            ctx.accounts.subcategory.participant_count,
             ctx.accounts.event_group.key(),
         )?;
         Ok(())
