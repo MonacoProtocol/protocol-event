@@ -30,12 +30,12 @@ export function findEventPda(code: string, program: Program): PublicKey {
   }
 
   export function findEventGroupPda(
-    category: PublicKey,
+    subcategoryPk: PublicKey,
     code: string,
     program: Program,
   ): PublicKey {
     const [pda] = PublicKey.findProgramAddressSync(
-      [Buffer.from("event_group"), category.toBuffer(), Buffer.from(code)],
+      [Buffer.from("event_group"), subcategoryPk.toBuffer(), Buffer.from(code)],
       program.programId,
     );
     return pda;

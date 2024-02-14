@@ -39,7 +39,7 @@ export async function signAndSendInstructions(
       );
       return signature;
     } catch (e) {
-      throw new Error(`Error sending transaction: ${JSON.stringify(e)}`);
+      throw new Error(`Error sending transaction: ${e}`);
     }
   }
 
