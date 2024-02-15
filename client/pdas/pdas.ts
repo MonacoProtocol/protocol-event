@@ -43,14 +43,14 @@ export function findEventPda(code: string, program: Program): PublicKey {
 
   export async function findParticipantPda(
     subcategoryPk: PublicKey,
+    categoryParticipantCount: number,
     program: Program,
   ): Promise<PublicKey> {
-    const category = await program.account.category.fetch(subcategoryPk);
     const [pda] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("participant"),
         subcategoryPk.toBuffer(),
-        Buffer.from(category.participantCount ? category.participantCount.toString() : "0"),
+        Buffer.from(categoryParticipantCount.toString()),
       ],
       program.programId,
     );

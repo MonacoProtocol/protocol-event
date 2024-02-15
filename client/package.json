@@ -1,6 +1,6 @@
 {
   "name": "@monaco-protocol/event-client",
-  "version": "0.3.0-dev",
+  "version": "0.3.0-dev.2",
   "description": "Interface package for the Monaco Protocol Events program on Solana",
   "author": "Monaco Protocol",
   "license": "MIT",
@@ -21,8 +21,8 @@
     "transactions/",
     "queries/",
     "types/",
-    "index.js",
-    "programId.js"
+    "index.*",
+    "programId.*"
   ],
   "main": "index.js",
   "module": "index.js",
@@ -30,6 +30,7 @@
   "scripts": {
     "build": "tsc --downlevelIteration",
     "clean": "tsc --build --clean",
+    "generatePackage": "npm run build && npm pack && npm run clean",
     "publishClient": "npm install && npm publish --access public && npm run clean",
     "publishDevClient": "npm install && npm publish --tag dev --access public && npm run clean",
     "publishRCClient": "npm install && npm publish --tag rc --access public && npm run clean"
