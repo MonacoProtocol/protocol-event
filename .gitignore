@@ -16,5 +16,6 @@ test-ledger/
 client/**/*.js
 client/**/*.d.ts
 client/dist/
+**/*.tgz
 
 .eslintcache
