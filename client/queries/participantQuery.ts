@@ -11,7 +11,7 @@ export class Participants extends AccountQuery<Participant> {
   constructor(connection: Connection) {
     super(connection, Participant, new Map<string, Criterion<unknown>>([
         ["authority", new PublicKeyCriterion(8)],
-        ["category", new PublicKeyCriterion(8 + 32)],
+        ["subcategory", new PublicKeyCriterion(8 + 32)],
         ["participantType", new ByteCriterion(8 + 32 + 32)],
         ["active", new BooleanCriterion(8 + 32 + 32 + 1)]
       ])
@@ -23,8 +23,8 @@ export class Participants extends AccountQuery<Participant> {
     return this;
   }
 
-  filterByCategory(category: PublicKey): Participants {
-    this.filters.get("category")?.setValue(category);
+  filterBySubcategory(subcategory: PublicKey): Participants {
+    this.filters.get("subcategory")?.setValue(subcategory);
     return this;
   }
 
