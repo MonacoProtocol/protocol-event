@@ -70,7 +70,7 @@ pub fn add_participants(
         EventError::InvalidEventParticipants,
     );
 
-    participants.extend(participants_to_add.into_iter());
+    participants.extend(participants_to_add);
     participants.sort_by(|a, b| a.partial_cmp(b).unwrap());
     participants.dedup();
 
@@ -179,9 +179,8 @@ mod tests {
         let mut event = event();
         let result = update_name(
             &mut event,
-            "012345678901234567890123456789012345678901234567890".to_string(),
+            "012345678901234567890123456789012345678901234567890012345678901234567890123456789012345678901234567890".to_string(),
         );
-
         assert_eq!(result, Err(error!(EventError::MaxStringLengthExceeded)));
     }
 
