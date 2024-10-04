@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::error::EventError;
 use crate::instructions::validate_event_timestamps;
 use crate::state::event::Event;
@@ -70,9 +72,13 @@ pub fn add_participants(
         EventError::InvalidEventParticipants,
     );
 
-    participants.extend(participants_to_add.into_iter());
-    participants.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    participants.dedup();
+    fn dedup_participants(participants: &mut Vec<u16>) {
+        let mut seen = HashSet::new();
+        participants.retain(|p| seen.insert(*p));
+    }
+
+    participants.extend(participants_to_add);
+    dedup_participants(participants);
 
     require!(
         participants.len() <= Event::MAX_PARTICIPANTS,
@@ -190,11 +196,11 @@ mod tests {
     #[test]
     fn test_add_participants() {
         let existing_participants = &mut vec![1, 2, 3, 4];
-        let participants_to_add = vec![5, 6, 7, 8];
+        let participants_to_add = vec![8, 7, 6, 5];
 
         add_participants(existing_participants, participants_to_add, 10).unwrap();
 
-        assert_eq!(existing_participants, &vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(existing_participants, &vec![1, 2, 3, 4, 8, 7, 6, 5]);
     }
 
     #[test]
@@ -209,12 +215,12 @@ mod tests {
 
     #[test]
     fn test_add_participants_dedup() {
-        let existing_participants = &mut vec![1, 2, 3, 4, 5];
-        let participants_to_add = vec![5, 6, 7, 8];
+        let existing_participants = &mut vec![5, 4, 1, 3, 2];
+        let participants_to_add = vec![5, 4, 3, 6];
 
         add_participants(existing_participants, participants_to_add, 10).unwrap();
 
-        assert_eq!(existing_participants, &vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(existing_participants, &vec![5, 4, 1, 3, 2, 6]);
     }
 
     #[test]

@@ -44,7 +44,7 @@ describe("Create Event", () => {
 
     // add participants
 
-    const participants = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const participants = [10, 1, 9, 7, 8, 6, 5, 4, 3, 2];
     await addEventParticipants(code, participants);
 
     const eventWithParticipants = await eventProgram.account.event.fetch(
