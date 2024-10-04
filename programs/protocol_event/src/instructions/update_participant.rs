@@ -12,7 +12,7 @@ pub fn update_code(participant: &mut Participant, code: String) -> Result<()> {
     Ok(())
 }
 
-pub fn update_name(participant: &mut Participant, name: String) -> Result<()> {
+pub fn update_participant_name(participant: &mut Participant, name: String) -> Result<()> {
     require!(
         name.len() <= Participant::MAX_NAME_LENGTH,
         EventError::MaxStringLengthExceeded,
@@ -54,14 +54,14 @@ mod tests {
     #[test]
     fn test_update_name() {
         let mut participant = &mut participant();
-        let result = update_name(&mut participant, "new name".to_string());
+        let result = update_participant_name(&mut participant, "new name".to_string());
         assert!(result.is_ok());
         assert_eq!(participant.name, "new name".to_string());
     }
 
     #[test]
     fn test_update_name_name_exceeds_limit() {
-        let result = update_name(
+        let result = update_participant_name(
             &mut participant(),
             "012345678901234567890123456789012345678901234567890".to_string(),
         );

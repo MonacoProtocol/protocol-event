@@ -209,7 +209,7 @@ pub mod protocol_event {
         ctx: Context<UpdateParticipant>,
         updated_name: String,
     ) -> Result<()> {
-        instructions::update_participant::update_name(&mut ctx.accounts.participant, updated_name)
+        instructions::update_participant::update_participant_name(&mut ctx.accounts.participant, updated_name)
     }
 
     pub fn update_participant_code(
