@@ -147,7 +147,7 @@ mod tests {
     fn test_validate_event_name_length_exceeds_limit() {
         let event_info = CreateEventInfo {
             code: "LAFCvLAG@2021-08-28".to_string(),
-            name: "012345678901234567890123456789012345678901234567890".to_string(),
+            name: "012345678901234567890123456789012345678901234567890012345678901234567890123456789012345678901234567890".to_string(),
             expected_start_timestamp: 1630156800,
             actual_start_timestamp: None,
             actual_end_timestamp: None,

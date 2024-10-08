@@ -8,6 +8,5 @@ pub mod update_participant;
 pub use create_event::*;
 pub use create_grouping::*;
 pub use create_participant::*;
-pub use update_event::*;
 pub use update_grouping::*;
 pub use update_participant::*;
