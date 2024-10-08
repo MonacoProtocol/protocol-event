@@ -69,10 +69,16 @@ pub fn add_participants(
             .all(|&participant| participant > 0 && participant <= subcategory_participant_count),
         EventError::InvalidEventParticipants,
     );
-
     participants.extend(participants_to_add);
-    participants.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    participants.dedup();
+
+    let mut participants_copy = participants.clone();
+    participants_copy.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    participants_copy.dedup();
+
+    require!(
+        participants.len() == participants_copy.len(),
+        EventError::InvalidEventParticipants
+    );
 
     require!(
         participants.len() <= Event::MAX_PARTICIPANTS,
@@ -197,6 +203,16 @@ mod tests {
     }
 
     #[test]
+    fn test_add_participants_maintain_order() {
+        let existing_participants = &mut vec![3, 4, 1, 2];
+        let participants_to_add = vec![7, 8, 5, 6];
+
+        add_participants(existing_participants, participants_to_add, 10).unwrap();
+
+        assert_eq!(existing_participants, &vec![3, 4, 1, 2, 7, 8, 5, 6]);
+    }
+
+    #[test]
     fn test_add_participants_empty_vec() {
         let existing_participants = &mut vec![1, 2, 3, 4];
         let participants_to_add = vec![];
@@ -207,13 +223,13 @@ mod tests {
     }
 
     #[test]
-    fn test_add_participants_dedup() {
-        let existing_participants = &mut vec![1, 2, 3, 4, 5];
-        let participants_to_add = vec![5, 6, 7, 8];
+    fn test_add_participants_add_same_participant() {
+        let existing_participants = &mut vec![1, 5, 2, 3, 4];
+        let participants_to_add = vec![5, 6, 7, 8, 1];
 
-        add_participants(existing_participants, participants_to_add, 10).unwrap();
+        let result = add_participants(existing_participants, participants_to_add, 10);
 
-        assert_eq!(existing_participants, &vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(result, Err(error!(EventError::InvalidEventParticipants)));
     }
 
     #[test]
