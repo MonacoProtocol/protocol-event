@@ -77,7 +77,7 @@ pub fn add_participants(
 
     require!(
         participants.len() == participants_copy.len(),
-        EventError::InvalidEventParticipants
+        EventError::DuplicateEventParticipants
     );
 
     require!(
@@ -229,7 +229,7 @@ mod tests {
 
         let result = add_participants(existing_participants, participants_to_add, 10);
 
-        assert_eq!(result, Err(error!(EventError::InvalidEventParticipants)));
+        assert_eq!(result, Err(error!(EventError::DuplicateEventParticipants)));
     }
 
     #[test]
