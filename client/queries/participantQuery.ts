@@ -11,7 +11,7 @@ export class Participants extends AccountQuery<Participant> {
   constructor(connection: Connection) {
     super(connection, Participant, new Map<string, Criterion<unknown>>([
         ["authority", new PublicKeyCriterion(8)],
-        ["category", new PublicKeyCriterion(8 + 32)],
+        ["subcategory", new PublicKeyCriterion(8 + 32)],
         ["participantType", new ByteCriterion(8 + 32 + 32)],
         ["active", new BooleanCriterion(8 + 32 + 32 + 1)]
       ])
@@ -19,22 +19,22 @@ export class Participants extends AccountQuery<Participant> {
   }
 
   filterByAuthority(authority: PublicKey): Participants {
-    this.filters.get("authority").setValue(authority);
+    this.filters.get("authority")?.setValue(authority);
     return this;
   }
 
-  filterByCategory(category: PublicKey): Participants {
-    this.filters.get("category").setValue(category);
+  filterBySubcategory(subcategory: PublicKey): Participants {
+    this.filters.get("subcategory")?.setValue(subcategory);
     return this;
   }
 
   filterByParticipantType(participantType: ParticipantTypeKind): Participants {
-    this.filters.get("participantType").setValue(participantType.discriminator);
+    this.filters.get("participantType")?.setValue(participantType.discriminator);
     return this;
   }
 
   filterByActive(active: boolean): Participants {
-    this.filters.get("active").setValue(active);
+    this.filters.get("active")?.setValue(active);
     return this;
   }
 }

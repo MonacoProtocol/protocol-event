@@ -58,11 +58,11 @@ export abstract class AccountQuery<T> {
 
     try {
       if (publicKeys.length <= GET_MULTIPLE_ACCOUNTS_LIMIT) {
-        accounts = await this.accountClass.fetchMultiple(this.connection, publicKeys);
+        accounts = (await this.accountClass.fetchMultiple(this.connection, publicKeys)).filter((account) => account !== null) as T[];
       } else {
         for (let i = 0; i < publicKeys.length; i += GET_MULTIPLE_ACCOUNTS_LIMIT) {
           const accountsChunk = await this.accountClass.fetchMultiple(this.connection, publicKeys.slice(i, i + GET_MULTIPLE_ACCOUNTS_LIMIT));
-          accounts = accounts.concat(accountsChunk);
+          accounts = accounts.concat(accountsChunk.filter((account) => account !== null) as T[]);
         }
       }
 

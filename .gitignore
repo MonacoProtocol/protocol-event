@@ -12,4 +12,10 @@ build_log
 
 test-ledger/
 
+# npm package
+client/**/*.js
+client/**/*.d.ts
+client/dist/
+**/*.tgz
+
 .eslintcache

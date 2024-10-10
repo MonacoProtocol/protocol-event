@@ -1,6 +1,6 @@
 {
   "name": "@monaco-protocol/event-client",
-  "version": "0.2.1",
+  "version": "0.3.0-dev.4",
   "description": "Interface package for the Monaco Protocol Events program on Solana",
   "author": "Monaco Protocol",
   "license": "MIT",
@@ -17,21 +17,31 @@
     "accounts/",
     "errors/",
     "instructions/",
+    "pdas/",
+    "transactions/",
     "queries/",
     "types/",
-    "programId.ts"
+    "index.js",
+    "index.d.ts",
+    "programId.js",
+    "programId.d.ts"
   ],
-  "main": "index.ts",
-  "module": "index.ts",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "tsc --downlevelIteration",
     "clean": "tsc --build --clean",
-    "publishClient": "npm install && npm publish --access public",
-    "publishDevClient": "npm install && npm publish --tag dev --access public",
-    "publishRCClient": "npm install && npm publish --tag rc --access public"
+    "generatePackage": "npm run build && npm pack && npm run clean",
+    "publishClient": "npm install && npm publish --access public && npm run clean",
+    "publishDevClient": "npm install && npm publish --tag dev --access public && npm run clean",
+    "publishRCClient": "npm install && npm publish --tag rc --access public && npm run clean"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.68.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "@coral-xyz/borsh": "^0.29.0"
+  },
+  "dependencies": {
   }
 }
