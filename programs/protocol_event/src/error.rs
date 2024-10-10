@@ -8,6 +8,8 @@ pub enum EventError {
     MaxParticipantsExceeded,
     #[msg("Attempted to add invalid event participants")]
     InvalidEventParticipants,
+    #[msg("Attempted to add a duplicate participant")]
+    DuplicateEventParticipants,
     #[msg("Authority mismatch")]
     AuthorityMismatch,
     #[msg("Invalid timestamp")]
